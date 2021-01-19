@@ -31,7 +31,7 @@ Fertig.
 
 ## Ordner auf den neusten Stand mit der Cloud bringen
 
-1. git pull
+1. git pull <br />
 Das war's
 
 
