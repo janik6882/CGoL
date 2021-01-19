@@ -1,2 +1,2 @@
 # CGoL#
-First test
+
