@@ -1,6 +1,6 @@
 ## Du willst Mitarbeiten?
 
-1.Schick mir deinen GitHub nutzernamen, sonst wird das hochladen nicht funktionieren.
+1. Schick mir deinen GitHub nutzernamen, sonst wird das hochladen nicht funktionieren.
 2. Du wirst eine E-Mail bekommen, in der du über die Einladung benachrichtigt wirst.
 
 ## Ordner herunterladen (clonen)
