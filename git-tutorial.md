@@ -41,6 +41,8 @@ Für jede neue Funktion die ihr einfügt, erstellt ihr bitte einen neuen sogenan
 1. git branch sinnvoller_name
 2. git checkout sinnvoller_name
 
+###Wenn ihr hier einen push durchführen wollt, wird euch git auffordern etwas einzugeben. Entweder ihr kopiert das oder ihr nehmt das, was ich euch hinschreibe:
+git push --set-upstream origin neuer_name
 
 ##Eine neue Funktion implementieren bzw. in den branch main übernehmen:
 
