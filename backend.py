@@ -3,4 +3,3 @@ class game():
         self.nodes = nodes
         self.boardX = boardX
         self.boardY = boardY
-    
