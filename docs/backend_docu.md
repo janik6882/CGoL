@@ -7,7 +7,7 @@
 ### Variablen:
 |Name der Variable|Aufbau bzw. Syntax der Variable|Funktion der Variable|
 |:---------------:|:-----------------------------:|:-------------------:|
-|self|Instanz der Klasse|
+|self|Objekt|Instanz der Klasse|
 |nodes|[[x koordinate als int, y koordinate als int]]|Speichert die Punkte innerhalb der Klasse und kann diese Ausgeben|
 |boardX|Breite der Simulation als int|Speichert die Breite der Simulation intern|
 |boardY|Höhe der Simulation als int|Speichert die Höhe der Simulation intern|
