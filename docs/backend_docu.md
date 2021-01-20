@@ -4,6 +4,13 @@
 |Name der Klasse|Zweck der Klasse|
 |:-------------:|:--------------:|
 |game|erzeugt eine Klasse, mit welcher das CGoL generiert werden kann|
+### Variablen:
+|Name der Variable|Aufbau bzw. Syntax der Variable|Funktion der Variable|
+|:---------------:|:-----------------------------:|:-------------------:|
+|self|Instanz der Klasse|
+|nodes|[[x koordinate als int, y koordinate als int]]|Speichert die Punkte innerhalb der Klasse und kann diese Ausgeben|
+|boardX|Breite der Simulation als int|Speichert die Breite der Simulation intern|
+|boardY|Höhe der Simulation als int|Speichert die Höhe der Simulation intern|
 ### Funktionen:
 |Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|
 |:---------------:|:-------------------------:|:----------------:|:-----------------:|
