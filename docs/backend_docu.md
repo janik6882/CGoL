@@ -1,5 +1,9 @@
 # Hier wird in kürze die Dokumentation bzw. Planung für das Backend erstehen. Sollten ideen aufkommen, teilt diese bitte über die Issues.
 ## Planung:
+### Klassen:
+|Name der Klasse|Zweck der Klasse|
+|:-------------:|:--------------:|
+|game|erzeugt eine Klasse, mit welcher das CGoL generiert werden kann|
 ### Funktionen:
 |Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|
 |:---------------:|:-------------------------:|:----------------:|:-----------------:|
