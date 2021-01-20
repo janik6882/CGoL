@@ -1,4 +1,4 @@
-##Eine Schritt für Schritt Anleitung, wie du mitarbeiten kannst.
+## Eine Schritt für Schritt Anleitung, wie du mitarbeiten kannst.
 1. Schicke mir deinen GitHub Usernamen, damit ich dich als Kollaborateur hinzufügen kann
 2. lade dir git von [git](https://git-scm.com/) herunter
 3. installiere git
