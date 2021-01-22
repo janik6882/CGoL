@@ -15,3 +15,8 @@
 |Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|
 |:---------------:|:-------------------------:|:----------------:|:-----------------:|
 |init|initialisiert die Funktion |self--name der Instanz<br />optional:<br />nodes--liste der Punkte<br />boardX--X höhe des Bretts<br />boardX--breite des Bretts|Kein Output|
+|add_point()|
+|remove_point()|
+|manipulate_point()|
+|get_points()|
+|get_matrix()|
