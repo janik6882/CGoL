@@ -12,11 +12,11 @@
 |boardX|Breite der Simulation als int|Speichert die Breite der Simulation intern|
 |boardY|Höhe der Simulation als int|Speichert die Höhe der Simulation intern|
 ### Funktionen:
-|Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|
-|:---------------:|:-------------------------:|:----------------:|:-----------------:|
-|init|initialisiert die Funktion |self--name der Instanz<br />optional:<br />nodes--liste der Punkte<br />boardY--y höhe des Bretts<br />boardX--breite des Bretts|Kein Output|
-|add_point()| fügt punkt hinzu| x und y koordinate jeweils einzeln|keins|
-|remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|
-|manipulate_point()|fuegt einen Punkt hinzu, wenn keiner vorhanden ist bzw. fügt einen hinzu wenn der Punkt nicht existiert|self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|
-|get_points()|gibt die Punkte in Form einer Verschachtelten Liste zurück| self--name der Instanz|[[x-Koordinate als int, y-Koordinate als int], [x-Koordinate als int, y-Koordinate als int]]
-|get_matrix()|gibt die aktuelle Matrix in Form einer Matrix zurück| z.B. (Punkt bei (0, 0) und (0, 1)):[[0, 1, 0], [0, 1, 0], [0, 0, 0]]|
+|Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|implementiert|
+|:---------------:|:-------------------------:|:----------------:|:-----------------:|:-----------:|
+|init|initialisiert die Funktion |self--name der Instanz<br />optional:<br />nodes--liste der Punkte<br />boardY--y höhe des Bretts<br />boardX--breite des Bretts|Kein Output|[x]|
+|add_point()| fügt punkt hinzu| x und y koordinate jeweils einzeln|keins|[x]|
+|remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|[x]|
+|manipulate_point()|fuegt einen Punkt hinzu, wenn keiner vorhanden ist bzw. fügt einen hinzu wenn der Punkt nicht existiert|self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|[x]|
+|get_points()|gibt die Punkte in Form einer Verschachtelten Liste zurück| self--name der Instanz|[[x-Koordinate als int, y-Koordinate als int], [x-Koordinate als int, y-Koordinate als int]]|[x]|
+|get_matrix()|gibt die aktuelle Matrix in Form einer Matrix zurück| z.B. (Punkt bei (0, 0) und (0, 1)):[[0, 1, 0], [0, 1, 0], [0, 0, 0]]|[ ]|
