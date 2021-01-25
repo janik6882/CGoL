@@ -15,8 +15,8 @@
 |Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|implementiert|
 |:---------------:|:-------------------------:|:----------------:|:-----------------:|:-----------:|
 |init|initialisiert die Funktion |self--name der Instanz<br />optional:<br />nodes--liste der Punkte<br />boardY--y höhe des Bretts<br />boardX--breite des Bretts|Kein Output|:white_check_mark:|
-|add_point()| fügt punkt hinzu| x und y koordinate jeweils einzeln|gibt die aktuelisierte Knotenliste zurück|:white_check_mark:|
-|remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|gibt die aktue Knotenliste zurück|:white_check_mark:|
+|add_point()| fügt punkt hinzu| x und y koordinate jeweils einzeln|gibt die aktualisierte Knotenliste zurück|:white_check_mark:|
+|remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|gibt die aktualisierte Knotenliste zurück|:white_check_mark:|
 |manipulate_point()|fuegt einen Punkt hinzu, wenn keiner vorhanden ist bzw. fügt einen hinzu wenn der Punkt nicht existiert|self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|gibt die aktualisierte Knotenliste zurück|:white_check_mark:|
 |get_points()|gibt die Punkte in Form einer Verschachtelten Liste zurück| self--name der Instanz|[[x-Koordinate als int, y-Koordinate als int], [x-Koordinate als int, y-Koordinate als int]]|:white_check_mark:|
 |get_matrix()|gibt die aktuelle Matrix in Form einer Matrix zurück| | z.B. (Punkt bei (0, 0) und (0, 1)):[[0, 1, 0], [0, 1, 0], [0, 0, 0]]|:white_check_mark:|
