@@ -19,4 +19,4 @@
 |remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|:white_check_mark:|
 |manipulate_point()|fuegt einen Punkt hinzu, wenn keiner vorhanden ist bzw. fügt einen hinzu wenn der Punkt nicht existiert|self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|:white_check_mark:|
 |get_points()|gibt die Punkte in Form einer Verschachtelten Liste zurück| self--name der Instanz|[[x-Koordinate als int, y-Koordinate als int], [x-Koordinate als int, y-Koordinate als int]]|:white_check_mark:|
-|get_matrix()|gibt die aktuelle Matrix in Form einer Matrix zurück| z.B. (Punkt bei (0, 0) und (0, 1)):[[0, 1, 0], [0, 1, 0], [0, 0, 0]]| |:x:|
+|get_matrix()|gibt die aktuelle Matrix in Form einer Matrix zurück| | z.B. (Punkt bei (0, 0) und (0, 1)):[[0, 1, 0], [0, 1, 0], [0, 0, 0]]|:x:|
