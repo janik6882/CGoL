@@ -63,13 +63,13 @@ class game():
         Output: Matrix mit allen punkten, eine Reihe entspricht einer Liste
         Besonders: Keine Besonderheiten
         """
-        matrix = game.gen_matrix(self.boardX, self.boardY)
+        matrix = game.__gen_matrix(self.boardX, self.boardY)
         for node in self.nodes:
             matrix[node[1]][node[0]] = 1
         return matrix
 
     @classmethod
-    def gen_matrix(self, x, y):
+    def __gen_matrix(self, x, y):
         """
         Kommentar: generiert eine Matrix anhand einer vorgegeben größe
         Input: Name der Instanz, x--breite als int, y--höhe als int
@@ -81,8 +81,8 @@ class game():
 
 
 def debug():
-    test = game()
-    x = game.gen_matrix(10, 10)
+    test = game(boardX=10, boardY=10)
+    x = test.get_matrix()
     for reihe in x:
         print (reihe)
 
