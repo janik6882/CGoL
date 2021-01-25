@@ -44,7 +44,8 @@ class game():
 
     def manipulate_point(self, x, y):
         """
-        Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn vorhanden
+        Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn
+                   vorhanden
         Input: Name der Instanz, x-koordinate als int, y-koordinate als int
         Output: Aktualisierte Knotenliste
         Besonders: Prueft ob Punkt in Knotenliste
