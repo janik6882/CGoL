@@ -14,7 +14,7 @@
 ### Funktionen:
 |Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|
 |:---------------:|:-------------------------:|:----------------:|:-----------------:|
-|init|initialisiert die Funktion |self--name der Instanz<br />optional:<br />nodes--liste der Punkte<br />boardX--X höhe des Bretts<br />boardX--breite des Bretts|Kein Output|
+|init|initialisiert die Funktion |self--name der Instanz<br />optional:<br />nodes--liste der Punkte<br />boardY--y höhe des Bretts<br />boardX--breite des Bretts|Kein Output|
 |add_point()| fügt punkt hinzu| x und y koordinate jeweils einzeln|keins|
 |remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|
 |manipulate_point()|fuegt einen Punkt hinzu, wenn keiner vorhanden ist bzw. fügt einen hinzu wenn der Punkt nicht existiert|self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|
