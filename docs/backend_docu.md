@@ -16,7 +16,7 @@
 |:---------------:|:-------------------------:|:----------------:|:-----------------:|:-----------:|
 |init|initialisiert die Funktion |self--name der Instanz<br />optional:<br />nodes--liste der Punkte<br />boardY--y höhe des Bretts<br />boardX--breite des Bretts|Kein Output|[x]|
 |add_point()| fügt punkt hinzu| x und y koordinate jeweils einzeln|keins|[x]|
-|remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|<ul><li>[x]</li></ul>|
+|remove_point()|entfernt einen Punkt| self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|<ul><li>[x] implementiert</li></ul>|
 |manipulate_point()|fuegt einen Punkt hinzu, wenn keiner vorhanden ist bzw. fügt einen hinzu wenn der Punkt nicht existiert|self --name der Instanz<br /> x--x koordinate des Punktes<br />y--y-Koordinate des Punktes|keines|[x]|
 |get_points()|gibt die Punkte in Form einer Verschachtelten Liste zurück| self--name der Instanz|[[x-Koordinate als int, y-Koordinate als int], [x-Koordinate als int, y-Koordinate als int]]|[x]|
 |get_matrix()|gibt die aktuelle Matrix in Form einer Matrix zurück| z.B. (Punkt bei (0, 0) und (0, 1)):[[0, 1, 0], [0, 1, 0], [0, 0, 0]]|[ ]|
