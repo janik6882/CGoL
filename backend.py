@@ -78,5 +78,6 @@ def debug():
     for reihe in x:
         print (reihe)
 
+
 if __name__ == '__main__':
     debug()
