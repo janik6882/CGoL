@@ -38,8 +38,7 @@ Das war's
 ## Eine neue Funktion hinzufügen:
 Für jede neue Funktion die ihr einfügt, erstellt ihr bitte einen neuen sogenannten Branch.
 
-1. git branch sinnvoller_name
-2. git checkout sinnvoller_name
+1. git checkout -b name_der_neuen_branch
 
 ### Wenn ihr hier einen push durchführen wollt, wird euch git auffordern etwas einzugeben. Entweder ihr kopiert das oder ihr nehmt das, was ich euch hinschreibe:
 git push --set-upstream origin neuer_name
