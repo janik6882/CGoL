@@ -55,12 +55,27 @@ class game():
             out = self.add_point(x, y)
         return out
 
+    def get_matrix(self):
+        """
+        Kommentar: gibt eine Matrix aus, welche alle punkte beeinhaltet
+        Input: name der Instanz
+        Output: Matrix mit allen punkten, eine Reihe entspricht einer Liste
+        Besonders: Keine Besonderheiten
+        """
+        matrix = [[0 for eintrag in range(self.boardX)] for reihe in range(self.boardY)]
+        for node in self.nodes:
+            matrix[node[1]][node[0]] = 1
+        return matrix
+
 
 def debug():
     test = game()
     print (test.get_points())
     print (test.add_point(1, 1))
     print (test.remove_point(1,1))
+    print (test.add_point(1, 0))
+    x =test.get_matrix()
+    for reihe in x: print (reihe)
 
 if __name__ == '__main__':
     debug()
