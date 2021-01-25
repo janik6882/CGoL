@@ -72,10 +72,11 @@ def debug():
     test = game()
     print (test.get_points())
     print (test.add_point(1, 1))
-    print (test.remove_point(1,1))
+    print (test.remove_point(1, 1))
     print (test.add_point(1, 0))
-    x =test.get_matrix()
-    for reihe in x: print (reihe)
+    x = test.get_matrix()
+    for reihe in x:
+        print (reihe)
 
 if __name__ == '__main__':
     debug()
