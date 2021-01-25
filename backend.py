@@ -62,19 +62,26 @@ class game():
         Output: Matrix mit allen punkten, eine Reihe entspricht einer Liste
         Besonders: Keine Besonderheiten
         """
-        matrix = [[0 for eintrag in range(self.boardX)] for reihe in range(self.boardY)]
+        matrix = game.gen_matrix(self.boardX, self.boardY)
         for node in self.nodes:
             matrix[node[1]][node[0]] = 1
+        return matrix
+
+    @classmethod
+    def gen_matrix(self, x, y):
+        """
+        Kommentar: generiert eine Matrix anhand einer vorgegeben größe
+        Input: Name der Instanz, x--breite als int, y--höhe als int
+        Output: Leere Matrix
+        Besonders: Schnellste methode, eine Liste zu erzeugen
+        """
+        matrix = [[0]*x]*y
         return matrix
 
 
 def debug():
     test = game()
-    print (test.get_points())
-    print (test.add_point(1, 1))
-    print (test.remove_point(1, 1))
-    print (test.add_point(1, 0))
-    x = test.get_matrix()
+    x = game.gen_matrix(10, 10)
     for reihe in x:
         print (reihe)
 
