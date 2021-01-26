@@ -44,7 +44,8 @@ class game():
 
     def manipulate_point(self, x, y):
         """
-        Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn vorhanden
+        Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn
+                   vorhanden
         Input: Name der Instanz, x-koordinate als int, y-koordinate als int
         Output: Aktualisierte Knotenliste
         Besonders: Prueft ob Punkt in Knotenliste
@@ -62,18 +63,25 @@ class game():
         Output: Matrix mit allen punkten, eine Reihe entspricht einer Liste
         Besonders: Keine Besonderheiten
         """
-        matrix = [[0 for eintrag in range(self.boardX)] for reihe in range(self.boardY)]
+        matrix = game.__gen_matrix(self.boardX, self.boardY)
         for node in self.nodes:
             matrix[node[1]][node[0]] = 1
         return matrix
 
+    @classmethod
+    def __gen_matrix(self, x, y):
+        """
+        Kommentar: generiert eine Matrix anhand einer vorgegeben größe
+        Input: Name der Instanz, x--breite als int, y--höhe als int
+        Output: Leere Matrix
+        Besonders: Schnellste methode, eine Liste zu erzeugen
+        """
+        matrix = [[0]*x]*y
+        return matrix
+
 
 def debug():
-    test = game()
-    print (test.get_points())
-    print (test.add_point(1, 1))
-    print (test.remove_point(1, 1))
-    print (test.add_point(1, 0))
+    test = game(boardX=10, boardY=10)
     x = test.get_matrix()
     for reihe in x:
         print (reihe)
