@@ -5,7 +5,7 @@ class game():
         self.boardX = boardX
         self.boardY = boardY
 
-    def get_num_neighbours(self, zelle, nachbarn=0):
+    def get_num_neighbours(self, zelle):
         """
         Kommentar: gibt die anzahl der Nachbarn als int aus
         Input: Name der Instanz, Zelle ([x, y]), optional: anz. der nachbarn
@@ -13,6 +13,7 @@ class game():
         Besonders: keine Besonderheiten
         """
         x, y = zelle[0], zelle[1]
+        nachbarn = 0
         nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1],
                           [x+1, y-1], [x+1, y], [x+1, y+1]]
         nachbarn = len(game.get_list_intersection(nachbar_zellen, self.nodes))
