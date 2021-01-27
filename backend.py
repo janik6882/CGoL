@@ -49,16 +49,16 @@ class game():
         bord = []
         nachbarn = []
         nodes = self.nodes
-        for i in nodes:
-            x = nodes[nodes.index(i)][0]
-            y = nodes[nodes.index(i)][1]
+        for node in nodes:  # loop durch alle elemente von self.nodes
+            x = node[0]  # setzt x zur x-koordinate von node
+            y = node[1]  # setzt y zur y-koordinate von node
             nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1],
                               [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
-            for zelle in nachbar_zellen:
+            for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
                 if zelle not in nachbarn and zelle not in nodes:
                     nachbarn.append(zelle)
-            if self.check_regeln(i):
-                bord.append(i)
+            if self.check_regeln(node):
+                bord.append(node)
         for f in nachbarn:
             if self.check_regeln(f):
                 bord.append(f)
