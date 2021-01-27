@@ -1,39 +1,52 @@
+# -*- coding: utf-8 -*-
+import time
 # Vorerst Datei fuer alles Backend stuff.
+
+
 class game():
-    def __init__(self, nodes=[], boardY=30, boardX=30):
+    def __init__(self, nodes=[], boardX=30, boardY=30):
+        """
+        Kommentar: Standard init methode
+        Input: Name der Instanz, optional: nodes--(siehe docs), boardX--Breite
+               der Simulation, boardY--höhe der Simulation
+        Output: Kein Output
+        Besonders: Standard init, nichts besonderes
+        """
         self.nodes = nodes
         self.boardX = boardX
         self.boardY = boardY
 
-    def get_num_neighbours(self, zelle):
+    def get_num_neighbours(self, x, y):
         """
         Kommentar: gibt die anzahl der Nachbarn als int aus
-        Input: Name der Instanz, Zelle ([x, y]), optional: anz. der nachbarn
+        Input: Name der Instanz, x-koordinate, y-koordinate
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        x, y = zelle[0], zelle[1]
         nachbarn = 0
         nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1],
                           [x+1, y-1], [x+1, y], [x+1, y+1]]
+        # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
+        #  und self.nodes (Knotenliste)
         nachbarn = len(game.get_list_intersection(nachbar_zellen, self.nodes))
         return nachbarn
 
-    def check_regeln(self, zelle):
+    def check_regeln(self, x, y):
         """
         Kommentar: gibt aus, ob an der position von zelle eine Zelle erstellt
                     wird in der nächsten Iteration
-        Input: Name der Instanz, Zelle ([x-koordinate, y-koordinate])
+        Input: Name der Instanz, x-koordinate, y-koordinate
         Output: False, wenn keine Zelle, True wenn Zelle in der nächsten
                 Iteration
         Besonders: nutzt get_num_neighbours()
         """
-        nachbarn = self.get_num_neighbours(zelle)
+        zelle = [x, y]
+        nachbarn = self.get_num_neighbours(x, y)  # anzahl Nachbarn der Zelle
         if zelle in self.nodes:
-            if nachbarn < 2 or nachbarn > 3:
-                return False
-            else:
+            if nachbarn in [2, 3]:  # wenn nachbarn gleich 2 oder 3
                 return True
+            else:
+                return False
         else:
             if nachbarn == 3:
                 return True
@@ -56,14 +69,15 @@ class game():
             nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1],
                               [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
             for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
-                if zelle not in nachbarn and zelle not in nodes:
+                if zelle not in nachbarn + nodes:  # wenn zelle nicht nodes und
+                    # nachbarn
                     nachbarn.append(zelle)
-            if self.check_regeln(node):
+            if self.check_regeln(node[0], node[1]):
                 new_board.append(node)
-        for f in nachbarn:
-            if self.check_regeln(f):
-                new_board.append(f)
-        self.nodes = new_board
+        for nachbar in nachbarn:  # loop durch nachbarn
+            if self.check_regeln(nachbar[0], nachbar[1]):
+                new_board.append(nachbar)
+        self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
         return new_board
 
     def get_points(self):
@@ -148,16 +162,20 @@ class game():
 
 
 def debug():
-    test_nodes = [[1, 0], [1, 1], [1, 2]]
-    test = game(nodes=test_nodes, boardX=10, boardY=10)
+    test_pulse = [[1, 0], [1, 1], [1, 2]]
+    test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
+    test = game(nodes=test_gleiter, boardX=10, boardY=10)
     m = test.get_matrix()
-    for i in m:
-        print (i)
-    test.next_board()
-    print ("")
-    m = test.get_matrix()
-    for i in m:
-        print (i)
+    for row in m:
+        print (row)
+    iterationen = 3
+    for i in range(iterationen):
+        time.sleep(2)
+        print ("")
+        test.next_board()
+        m = test.get_matrix()
+        for row in m:
+            print (row)
 
 
 if __name__ == '__main__':
