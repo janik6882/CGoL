@@ -14,9 +14,7 @@ class game():
         """
         x, y = zelle[0], zelle[1]
         nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
-        for i in nachbar_zellen:
-            if i in self.nodes:
-                nachbarn += 1
+        nachbarn = len(game.get_list_intersection(nachbar_zellen, self.nodes))
         return nachbarn
 
     def check_regeln(self, zelle):
@@ -126,6 +124,11 @@ class game():
         for node in points:
             matrix[node[1]][node[0]] = 1
         return matrix
+
+    @classmethod
+    def get_list_intersection(self, listA, listB):
+        intersect = [item for item in listA if item in listB]
+        return intersect
 
     @classmethod
     def __gen_matrix(self, x, y):
