@@ -13,7 +13,8 @@ class game():
         Besonders: keine Besonderheiten
         """
         x, y = zelle[0], zelle[1]
-        nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
+        nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1],
+                          [x+1, y-1], [x+1, y], [x+1, y+1]]
         nachbarn = len(game.get_list_intersection(nachbar_zellen, self.nodes))
         return nachbarn
 
@@ -22,7 +23,8 @@ class game():
         Kommentar: gibt aus, ob an der position von zelle eine Zelle erstellt
                     wird in der nächsten Iteration
         Input: Name der Instanz, Zelle ([x-koordinate, y-koordinate])
-        Output: False, wenn keine Zelle, True wenn Zelle in der nächsten Iteration
+        Output: False, wenn keine Zelle, True wenn Zelle in der nächsten
+                Iteration
         Besonders: nutzt get_num_neighbours()
         """
         nachbarn = self.get_num_neighbours(zelle)
@@ -50,13 +52,15 @@ class game():
         for i in nodes:
             x = nodes[nodes.index(i)][0]
             y = nodes[nodes.index(i)][1]
-            for zelle in [[x-1,y-1],[x-1,y],[x-1,y+1],[x,y-1],[x,y+1],[x+1,y-1],[x+1,y],[x+1,y+1]]:
+            nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1],
+                              [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
+            for zelle in nachbar_zellen:
                 if zelle not in nachbarn and zelle not in nodes:
                     nachbarn.append(zelle)
-            if self.check_regeln(i) == True:
+            if self.check_regeln(i):
                 bord.append(i)
         for f in nachbarn:
-            if self.check_regeln(f) == True:
+            if self.check_regeln(f):
                 bord.append(f)
         self.nodes = bord
         return bord
@@ -144,13 +148,15 @@ class game():
 
 def debug():
     test_nodes = [[1, 0], [1, 1], [1, 2]]
-    test = game(nodes = test_nodes, boardX=10, boardY=10)
+    test = game(nodes=test_nodes, boardX=10, boardY=10)
     m = test.get_matrix()
-    for i in m: print (i)
-    next = test.next_bord()
+    for i in m:
+        print (i)
+    test.next_bord()
     print ("")
     m = test.get_matrix()
-    for i in m: print (i)
+    for i in m:
+        print (i)
 
 
 if __name__ == '__main__':
