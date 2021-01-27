@@ -39,14 +39,14 @@ class game():
             else:
                 return False
 
-    def next_bord(self):
+    def next_board(self):
         """
         Kommentar:erzeugt das neue board und ersetzt das aktuelle mit dem neuen
         Input: name der Instanz
         Output: aktualisierte Knotenliste
         Besonders: nutzt check_regeln
         """
-        bord = []
+        new_board = []
         nachbarn = []
         nodes = self.nodes
         for node in nodes:  # loop durch alle elemente von self.nodes
@@ -58,12 +58,12 @@ class game():
                 if zelle not in nachbarn and zelle not in nodes:
                     nachbarn.append(zelle)
             if self.check_regeln(node):
-                bord.append(node)
+                new_board.append(node)
         for f in nachbarn:
             if self.check_regeln(f):
-                bord.append(f)
-        self.nodes = bord
-        return bord
+                new_board.append(f)
+        self.nodes = new_board
+        return new_board
 
     def get_points(self):
         """
@@ -152,7 +152,7 @@ def debug():
     m = test.get_matrix()
     for i in m:
         print (i)
-    test.next_bord()
+    test.next_board()
     print ("")
     m = test.get_matrix()
     for i in m:
