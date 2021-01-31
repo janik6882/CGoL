@@ -1,67 +1,84 @@
+# -*- coding: utf-8 -*-
+import time
 # Vorerst Datei fuer alles Backend stuff.
+
+
 class game():
-    def __init__(self, nodes=[], boardY=30, boardX=30):
+    def __init__(self, nodes=[], boardX=30, boardY=30):
+        """
+        Kommentar: Standard init methode
+        Input: Name der Instanz, optional: nodes--(siehe docs), boardX--Breite
+               der Simulation, boardY--höhe der Simulation
+        Output: Kein Output
+        Besonders: Standard init, nichts besonderes
+        """
         self.nodes = nodes
         self.boardX = boardX
         self.boardY = boardY
 
-    def get_num_neighbours(self, zelle, nachbarn=0):
+    def get_num_neighbours(self, x, y):
         """
         Kommentar: gibt die anzahl der Nachbarn als int aus
-        Input: Name der Instanz, Zelle ([x, y]), optional: anz. der nachbarn
+        Input: Name der Instanz, x-koordinate, y-koordinate
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        x, y = zelle[0], zelle[1]
-        nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
-        for i in nachbar_zellen:
-            if i in self.nodes:
-                nachbarn += 1
+        nachbarn = 0
+        nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1],
+                          [x+1, y-1], [x+1, y], [x+1, y+1]]
+        # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
+        #  und self.nodes (Knotenliste)
+        nachbarn = len(game.get_list_intersection(nachbar_zellen, self.nodes))
         return nachbarn
 
-    def check_regeln(self, zelle):
+    def check_regeln(self, x, y):
         """
         Kommentar: gibt aus, ob an der position von zelle eine Zelle erstellt
                     wird in der nächsten Iteration
-        Input: Name der Instanz, Zelle ([x-koordinate, y-koordinate])
-        Output: False, wenn keine Zelle, True wenn Zelle in der nächsten Iteration
+        Input: Name der Instanz, x-koordinate, y-koordinate
+        Output: False, wenn keine Zelle, True wenn Zelle in der nächsten
+                Iteration
         Besonders: nutzt get_num_neighbours()
         """
-        nachbarn = self.get_num_neighbours(zelle)
+        zelle = [x, y]
+        nachbarn = self.get_num_neighbours(x, y)  # anzahl Nachbarn der Zelle
         if zelle in self.nodes:
-            if nachbarn < 2 or nachbarn > 3:
-                return False
-            else:
+            if nachbarn in [2, 3]:  # wenn nachbarn gleich 2 oder 3
                 return True
+            else:
+                return False
         else:
             if nachbarn == 3:
                 return True
             else:
                 return False
 
-    def next_bord(self):
+    def next_board(self):
         """
         Kommentar:erzeugt das neue board und ersetzt das aktuelle mit dem neuen
         Input: name der Instanz
         Output: aktualisierte Knotenliste
         Besonders: nutzt check_regeln
         """
-        bord = []
+        new_board = []
         nachbarn = []
         nodes = self.nodes
-        for i in nodes:
-            x = nodes[nodes.index(i)][0]
-            y = nodes[nodes.index(i)][1]
-            for zelle in [[x-1,y-1],[x-1,y],[x-1,y+1],[x,y-1],[x,y+1],[x+1,y-1],[x+1,y],[x+1,y+1]]:
-                if zelle not in nachbarn and zelle not in nodes:
+        for node in nodes:  # loop durch alle elemente von self.nodes
+            x = node[0]  # setzt x zur x-koordinate von node
+            y = node[1]  # setzt y zur y-koordinate von node
+            nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1],
+                              [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
+            for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
+                if zelle not in nachbarn + nodes:  # wenn zelle nicht nodes und
+                    # nachbarn
                     nachbarn.append(zelle)
-            if self.check_regeln(i) == True:
-                bord.append(i)
-        for f in nachbarn:
-            if self.check_regeln(f) == True:
-                bord.append(f)
-        self.nodes = bord
-        return bord
+            if self.check_regeln(node[0], node[1]):
+                new_board.append(node)
+        for nachbar in nachbarn:  # loop durch nachbarn
+            if self.check_regeln(nachbar[0], nachbar[1]):
+                new_board.append(nachbar)
+        self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
+        return new_board
 
     def get_points(self):
         """
@@ -128,6 +145,11 @@ class game():
         return matrix
 
     @classmethod
+    def get_list_intersection(self, listA, listB):
+        intersect = [item for item in listA if item in listB]
+        return intersect
+
+    @classmethod
     def __gen_matrix(self, x, y):
         """
         Kommentar: generiert eine Matrix anhand einer vorgegeben größe
@@ -140,14 +162,20 @@ class game():
 
 
 def debug():
-    test_nodes = [[1, 0], [1, 1], [1, 2]]
-    test = game(nodes = test_nodes, boardX=10, boardY=10)
+    test_pulse = [[1, 0], [1, 1], [1, 2]]
+    test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
+    test = game(nodes=test_gleiter, boardX=10, boardY=10)
     m = test.get_matrix()
-    for i in m: print (i)
-    next = test.next_bord()
-    print ("")
-    m = test.get_matrix()
-    for i in m: print (i)
+    for row in m:
+        print (row)
+    iterationen = 3
+    for i in range(iterationen):
+        time.sleep(2)
+        print ("")
+        test.next_board()
+        m = test.get_matrix()
+        for row in m:
+            print (row)
 
 
 if __name__ == '__main__':
