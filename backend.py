@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+import pickle
 # Vorerst Datei fuer alles Backend stuff.
 
 
@@ -177,6 +178,15 @@ def debug():
         for row in m:
             print (row)
 
+def daten_speichern(daten):
+    directory="saves/"+input("Spielstand speichern: ")
+    with open(directory, 'wb') as f:
+        pickle.dump(daten, f)
+
+def daten_laden():
+    directory=input("Spielstand laden: ")
+    daten=pickle.load(open("saves/"+directory,"rb"))
+    return daten
 
 if __name__ == '__main__':
     debug()
