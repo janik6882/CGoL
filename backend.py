@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 import pickle
+import os
 # Vorerst Datei fuer alles Backend stuff.
 
 
@@ -147,6 +148,7 @@ class game():
 
     @classmethod
     def get_list_intersection(self, listA, listB):
+        # TODO: Dokumentation hinzufuegen
         intersect = [item for item in listA if item in listB]
         return intersect
 
@@ -161,15 +163,35 @@ class game():
         matrix = [[0 for place in range(x)] for row in range(y)]
         return matrix
 
-    def daten_speichern(self, daten):
-        self.directory="saves/"+input("Spielstand speichern: ")
-        with open(self.directory, 'wb') as f:
-            pickle.dump(self.daten, f)
+    @classmethod
+    def __get_dir(self):
+        # TODO: doku hinzufuegen
+        top_dir = next(os.walk("."))[1]
+        return top_dir
 
-    def daten_laden(self):
-        self.directory=input("Spielstand laden: ")
-        self.daten=pickle.load(open("saves/"+self.directory,"rb"))
-            return self.daten
+    @classmethod
+    def __check_dir(self, dir_name):
+        # TODO: Dokumentation hinzufuegen
+        if dir_name not in game.__get_dir():
+            command = "mkdir {dirName}"
+            command = command.format(dirName=dir_name)
+            os.system(command)
+
+
+    @classmethod
+    def daten_speichern(self, data, filename):
+        # TODO: Dokumentation hinzufuegen
+        game.__check_dir("saves")
+        path = os.path.join("saves", filename)
+        pickle.dump(data, open(path, "wb"))
+
+    @classmethod
+    def daten_laden(self, filename):
+        # TODO: Dokumentation hinzufuegen
+        game.__check_dir("saves")
+        path = os.path.join("saves", filename)
+        daten = pickle.load(open(path, "rb"))
+        return daten
 
 
 def debug():
@@ -188,7 +210,17 @@ def debug():
         for row in m:
             print (row)
 
+def check_save():
+    test_pulse = [[1, 0], [1, 1], [1, 2]]
+    test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
+    test = game(nodes=test_gleiter, boardX=10, boardY=10)
+    m = test.get_points()
+    game.daten_speichern(m, "test.game")
+    x = game.daten_laden("test.game")
+    print(x)
+
 
 
 if __name__ == '__main__':
-    debug()
+    # debug()
+    check_save()
