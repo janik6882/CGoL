@@ -161,6 +161,16 @@ class game():
         matrix = [[0 for place in range(x)] for row in range(y)]
         return matrix
 
+    def daten_speichern(self, daten):
+        self.directory="saves/"+input("Spielstand speichern: ")
+        with open(self.directory, 'wb') as f:
+            pickle.dump(self.daten, f)
+
+    def daten_laden(self):
+        self.directory=input("Spielstand laden: ")
+        self.daten=pickle.load(open("saves/"+self.directory,"rb"))
+            return self.daten
+
 
 def debug():
     test_pulse = [[1, 0], [1, 1], [1, 2]]
@@ -178,15 +188,7 @@ def debug():
         for row in m:
             print (row)
 
-def daten_speichern(daten):
-    directory="saves/"+input("Spielstand speichern: ")
-    with open(directory, 'wb') as f:
-        pickle.dump(daten, f)
 
-def daten_laden():
-    directory=input("Spielstand laden: ")
-    daten=pickle.load(open("saves/"+directory,"rb"))
-    return daten
 
 if __name__ == '__main__':
     debug()
