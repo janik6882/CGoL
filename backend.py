@@ -165,29 +165,51 @@ class game():
 
     @classmethod
     def __get_dir(self):
-        # TODO: doku hinzufuegen
+        """
+        Kommentar: Private Classmethod, die alle Top-Level Ordner auflistet
+        Input: Name der Klasse (game in dieser Klasse)
+        Output: Alle Top-Level Ordner
+        Besonders: Nutzt das OS modul (anfangs importiert)
+        """
         top_dir = next(os.walk("."))[1]
         return top_dir
 
     @classmethod
     def __check_dir(self, dir_name):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: Private Classmethod, die überprüft ob ein ordner vorhanden
+                   ist und diesen erstellt, falls nicht.
+        Input: Name der Klasse, Name des Ordners
+        Output: Keins
+        Besonders: Nutzt das os modul, welches am anfang importiert wird
+        """
         if dir_name not in game.__get_dir():
             command = "mkdir {dirName}"
             command = command.format(dirName=dir_name)
             os.system(command)
 
-
     @classmethod
     def daten_speichern(self, data, filename):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: Speichert daten in eine Datei
+        Input: Name der Klasse, Daten, Dateiname
+        Output: Kein Output
+        Besonders: Nutzt das pickle und os modul, daten werden in saves ordner
+                   gespeichert
+        """
         game.__check_dir("saves")
         path = os.path.join("saves", filename)
         pickle.dump(data, open(path, "wb"))
 
     @classmethod
     def daten_laden(self, filename):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: lädt daten aus einer Datei
+        Input: Name der Klasse, Dateiname
+        Output: Geladene Daten
+        Besonders: Nutzt das pickle und os modul, daten werden aus saves ordner
+                   geladen
+        """
         game.__check_dir("saves")
         path = os.path.join("saves", filename)
         daten = pickle.load(open(path, "rb"))
