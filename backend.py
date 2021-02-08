@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-import pickle
+import json
 import os
 # Vorerst Datei fuer alles Backend stuff.
 
@@ -199,7 +199,7 @@ class game():
         """
         game.__check_dir("saves")
         path = os.path.join("saves", filename)
-        pickle.dump(data, open(path, "wb"))
+        json.dump(data, open(path, "wb"))
 
     @classmethod
     def daten_laden(self, filename):
@@ -212,7 +212,7 @@ class game():
         """
         game.__check_dir("saves")
         path = os.path.join("saves", filename)
-        daten = pickle.load(open(path, "rb"))
+        daten = json.load(open(path, "rb"))
         return daten
 
 
