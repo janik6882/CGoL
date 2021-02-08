@@ -2,3 +2,4 @@ implement.py
 *.txt
 /saves/
 /__pycache__/
+*.json
