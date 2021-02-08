@@ -8,11 +8,11 @@ import os
 class game():
     def __init__(self, nodes=[], boardX=30, boardY=30):
         """
-        Kommentar: Standard init methode
+        Kommentar: Standard init Methode
         Input: Name der Instanz, optional: nodes--(siehe docs), boardX--Breite
                der Simulation, boardY--höhe der Simulation
         Output: Kein Output
-        Besonders: Standard init, nichts besonderes
+        Besonders: Standard init, nichts Besonderes
         """
         self.nodes = nodes
         self.boardX = boardX
@@ -20,8 +20,8 @@ class game():
 
     def get_num_neighbours(self, x, y):
         """
-        Kommentar: gibt die anzahl der Nachbarn als int aus
-        Input: Name der Instanz, x-koordinate, y-koordinate
+        Kommentar: gibt die Anzahl der Nachbarn als int aus
+        Input: Name der Instanz, x-Koordinate, y-Koordinate
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
@@ -35,9 +35,9 @@ class game():
 
     def check_regeln(self, x, y):
         """
-        Kommentar: gibt aus, ob an der position von zelle eine Zelle erstellt
+        Kommentar: gibt aus, ob an der Position von Zelle eine Zelle erstellt
                     wird in der nächsten Iteration
-        Input: Name der Instanz, x-koordinate, y-koordinate
+        Input: Name der Instanz, x-Koordinate, y-Koordinate
         Output: False, wenn keine Zelle, True wenn Zelle in der nächsten
                 Iteration
         Besonders: nutzt get_num_neighbours()
@@ -57,7 +57,7 @@ class game():
 
     def next_board(self):
         """
-        Kommentar:erzeugt das neue board und ersetzt das aktuelle mit dem neuen
+        Kommentar:erzeugt das neue board und ersetzt das Aktuelle mit dem neuen
         Input: name der Instanz
         Output: aktualisierte Knotenliste
         Besonders: nutzt check_regeln
@@ -84,7 +84,7 @@ class game():
 
     def get_points(self):
         """
-        Kommentar: gibt die aktuelle knotenliste aus
+        Kommentar: gibt die aktuelle Knotenliste aus
         Input: Name der Instanz
         Output: Knotenliste self.node
         Besonders: Rückgabe mittels return
@@ -93,9 +93,9 @@ class game():
 
     def add_point(self, x, y):
         """
-        Kommentar: Fuegt einen Punkt zur knotenliste self.nodes hinzu
-        Input: name der instanze, x-koordinate als int, y-koordinate als int
-        Output: Aktualisierte knotenliste self.nodes
+        Kommentar: Fuegt einen Punkt zur Knotenliste self.nodes hinzu
+        Input: name der Instanz, x-Koordinate als int, y-Koordinate als int
+        Output: Aktualisierte Knotenliste self.nodes
         Besonders: Weitere Optimierung der Laufzeit
         """
         # TODO: Verhalten besprechen, wenn punkt bereits in Knotenliste
@@ -106,7 +106,7 @@ class game():
     def remove_point(self, x, y):
         """
         Kommentar: Entfernt einen Punkt aus der Knotenliste
-        Input: Name der Instanz, x-koordinate als int, y-koordinate als int
+        Input: Name der Instanz, x-Koordinate als int, y-Koordinate als int
         Output: Aktualisierte Knotenliste self.nodes
         Besonders: Falls Punkt nicht in Knotenliste erfolgt Error
         """
@@ -123,7 +123,7 @@ class game():
         """
         Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn
                    vorhanden
-        Input: Name der Instanz, x-koordinate als int, y-koordinate als int
+        Input: Name der Instanz, x-Koordinate als int, y-Koordinate als int
         Output: Aktualisierte Knotenliste
         Besonders: Prueft ob Punkt in Knotenliste
         """
@@ -135,9 +135,9 @@ class game():
 
     def get_matrix(self):
         """
-        Kommentar: gibt eine Matrix aus, welche alle punkte beeinhaltet
+        Kommentar: gibt eine Matrix aus, welche alle Punkte beinhaltet
         Input: name der Instanz
-        Output: Matrix mit allen punkten, eine Reihe entspricht einer Liste
+        Output: Matrix mit allen Punkten, eine Reihe entspricht einer Liste
         Besonders: Keine Besonderheiten
         """
         matrix = game.__gen_matrix(self.boardX, self.boardY)
@@ -155,10 +155,10 @@ class game():
     @classmethod
     def __gen_matrix(self, x, y):
         """
-        Kommentar: generiert eine Matrix anhand einer vorgegeben größe
+        Kommentar: generiert eine Matrix anhand einer vorgegeben Größe
         Input: Name der Instanz, x--breite als int, y--höhe als int
         Output: Leere Matrix
-        Besonders: Schnellste methode, eine Liste zu erzeugen
+        Besonders: Schnellste Methode, eine Liste zu erzeugen
         """
         matrix = [[0 for place in range(x)] for row in range(y)]
         return matrix
@@ -177,11 +177,11 @@ class game():
     @classmethod
     def __check_dir(self, dir_name):
         """
-        Kommentar: Private Classmethod, die überprüft ob ein ordner vorhanden
+        Kommentar: Private Classmethod, die überprüft ob ein Ordner vorhanden
                    ist und diesen erstellt, falls nicht.
         Input: Name der Klasse, Name des Ordners
         Output: Keins
-        Besonders: Nutzt das os modul, welches am anfang importiert wird
+        Besonders: Nutzt das os modul, welches am Anfang importiert wird
         """
         if dir_name not in game.__get_dir():
             command = "mkdir {dirName}"
@@ -191,10 +191,10 @@ class game():
     @classmethod
     def daten_speichern(self, data, filename):
         """
-        Kommentar: Speichert daten in eine Datei
+        Kommentar: Speichert Daten in eine Datei
         Input: Name der Klasse, Daten, Dateiname
         Output: Kein Output
-        Besonders: Nutzt das pickle und os modul, daten werden in saves ordner
+        Besonders: Nutzt das pickle und os modul, Daten werden in saves Ordner
                    gespeichert
         """
         game.__check_dir("saves")
@@ -207,7 +207,7 @@ class game():
         Kommentar: lädt daten aus einer Datei
         Input: Name der Klasse, Dateiname
         Output: Geladene Daten
-        Besonders: Nutzt das pickle und os modul, daten werden aus saves ordner
+        Besonders: Nutzt das pickle und os modul, Daten werden aus saves Ordner
                    geladen
         """
         game.__check_dir("saves")
