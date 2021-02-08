@@ -47,6 +47,16 @@ class display():
                     pygame.quit()
                     sys.exit()
 
+    def manipulate_point(self, posX, posY):
+        # TODO: Dokumentation hinzufuegen
+        nodeX = posX//10
+        nodeY = posY//10
+        exist = self.game.manipulate_point(nodeX, nodeY)
+        if exist:
+            pygame.draw.rect(self.display, self.black, pygame.Rect(nodeY*10, nodeX*10, 10, 10))
+        else:
+            pygame.draw.rect(self.display, self.white, pygame.Rect(nodeY*10, nodeX*10, 10, 10))
+
     def wait_keypress(self):
         while True:
             for event in pygame.event.get():
@@ -57,8 +67,8 @@ class display():
                     pos = pygame.mouse.get_pos()
                     nodeX = pos[1]//10
                     nodeY = pos[0]//10
-                    pygame.draw.rect(self.display, self.black, pygame.Rect(nodeY*10, nodeX*10, 10, 10))
-                    self.game.add_point(nodeX, nodeY)
+                    self.manipulate_point(pos[1], pos[0])
+                    # self.game.add_point(nodeX, nodeY)
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
