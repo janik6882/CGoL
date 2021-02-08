@@ -4,7 +4,6 @@ from pygame.locals import *
 import time
 from backend import game
 import sys
-import math
 
 
 class display():
@@ -48,9 +47,9 @@ class display():
     def show_board(self, points):
         self.clear_board()
         for point in points:
-            x = point[0]
-            y = point[1]
-            pygame.draw.rect(self.display, self.black, pygame.Rect(y*10, x*10, 10, 10))
+            x = (point[0]*10)+1
+            y = (point[1]*10)+1
+            pygame.draw.rect(self.display, self.black, pygame.Rect(y, x, 9, 9))
         self.update_board()
 
     def check_close(self):
@@ -68,10 +67,12 @@ class display():
         nodeX = posX//10
         nodeY = posY//10
         exist = self.game.manipulate_point(nodeX, nodeY)
+        point_x = (nodeX*10)+1
+        point_y = (nodeY*10)+1
         if exist:
-            pygame.draw.rect(self.display, self.black, pygame.Rect(nodeY*10, nodeX*10, 10, 10))
+            pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))
         else:
-            pygame.draw.rect(self.display, self.white, pygame.Rect(nodeY*10, nodeX*10, 10, 10))
+            pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))
 
     def wait_keypress(self):
         while True:
