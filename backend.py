@@ -129,9 +129,11 @@ class game():
         """
         if [x, y] in self.nodes:
             out = self.remove_point(x, y)
+            res = False
         else:
             out = self.add_point(x, y)
-        return out
+            res = True
+        return res
 
     def get_matrix(self):
         """
