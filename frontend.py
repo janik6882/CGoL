@@ -14,17 +14,33 @@ class display():
         self.windowY = windowY
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
+        self.grey = (173, 173, 173)
         board_sizeX = self.windowX//10
         board_sizeY = self.windowY//10
         self.game = game(nodes=nodes, boardX=board_sizeX, boardY=board_sizeY)
         self.display = pygame.display.set_mode((self.windowX, self.windowY))
 
-    def display_window(self):
-        # TODO: add docu
-        pass
-
     def clear_board(self):
         self.display.fill(self.white)
+        self.draw_grid()
+
+    def draw_grid(self):
+        for x in range(0, self.windowX, 10):
+            start_x = x
+            start_y = 0
+            end_x = x
+            end_y = self.windowY
+            start = (start_x, start_y)
+            end = (end_x, end_y)
+            pygame.draw.line(self.display, self.grey, start, end, width=1)
+        for y in range(0, self.windowY, 10):
+            start_x = 0
+            start_y = y
+            end_x = self.windowX
+            end_y = y
+            start = (start_x, start_y)
+            end = (end_x, end_y)
+            pygame.draw.line(self.display, self.grey, start, end, width=1)
 
     def update_board(self):
         pygame.display.flip()
@@ -65,9 +81,9 @@ class display():
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    nodeX = pos[1]//10
-                    nodeY = pos[0]//10
-                    self.manipulate_point(pos[1], pos[0])
+                    pos_x = pos[1]
+                    pos_y = pos[0]
+                    self.manipulate_point(pos_x, pos_y)
                     # self.game.add_point(nodeX, nodeY)
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
@@ -83,6 +99,7 @@ class display():
         while True:
             points = self.game.get_points()
             self.show_board(points)
+
             # time.sleep(0.05)
             ev = self.wait_keypress()
             self.game.next_board()
@@ -91,7 +108,6 @@ class display():
 
 def main():
     test = Main(1000, 1000)
-    test.display_window()
     test.clear_board()
     test.update_board()
     time.sleep(2)
