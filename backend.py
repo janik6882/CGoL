@@ -242,6 +242,7 @@ def debug():
         for row in m:
             print (row)
 
+
 def check_save():
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
@@ -250,7 +251,6 @@ def check_save():
     game.daten_speichern(m, "test.json")
     x = game.daten_laden("test.json")
     print(x)
-
 
 
 if __name__ == '__main__':
