@@ -128,10 +128,10 @@ class game():
         Besonders: Prueft ob Punkt in Knotenliste
         """
         if [x, y] in self.nodes:
-            out = self.remove_point(x, y)
+            self.remove_point(x, y)
             res = False
         else:
-            out = self.add_point(x, y)
+            self.add_point(x, y)
             res = True
         return res
 
