@@ -199,7 +199,7 @@ class game():
         """
         game.__check_dir("saves")
         path = os.path.join("saves", filename)
-        json.dump(data, open(path, "wb"))
+        json.dump(data, open(path, "w"))
 
     @classmethod
     def daten_laden(self, filename):
@@ -212,7 +212,7 @@ class game():
         """
         game.__check_dir("saves")
         path = os.path.join("saves", filename)
-        daten = json.load(open(path, "rb"))
+        daten = json.load(open(path, "r"))
         return daten
 
 
@@ -237,8 +237,8 @@ def check_save():
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
     test = game(nodes=test_gleiter, boardX=10, boardY=10)
     m = test.get_points()
-    game.daten_speichern(m, "test.game")
-    x = game.daten_laden("test.game")
+    game.daten_speichern(m, "test.json")
+    x = game.daten_laden("test.json")
     print(x)
 
 
