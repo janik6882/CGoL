@@ -1,7 +1,6 @@
-from pygame import *
+# from pygame import *
 import pygame
-from pygame.locals import *
-import time
+# from pygame.locals import *
 from backend import game
 import sys
 
@@ -156,18 +155,15 @@ class display():
         while True:
             points = self.game.get_points()
             self.show_board(points)
-
-            # time.sleep(0.05)
             self.wait_keypress()
             self.game.next_board()
             self.check_close()
 
 
 def main():
-    test = Main(1000, 1000)
-    test.clear_board()
-    test.update_board()
-    time.sleep(2)
+    glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
+    test = display(1000, 1000, glider_top_left)
+    test.mainloop()
 
 
 def debug():
@@ -177,4 +173,5 @@ def debug():
 
 
 if __name__ == '__main__':
-    debug()
+    # debug()
+    main()
