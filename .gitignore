@@ -1,3 +1,4 @@
 implement.py
 *.txt
 /saves/
+/__pycache__/
