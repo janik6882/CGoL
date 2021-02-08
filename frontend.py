@@ -74,9 +74,8 @@ class display():
             points = self.game.get_points()
             self.show_board(points)
             # time.sleep(0.05)
-            self.game.next_board()
             ev = self.wait_keypress()
-            print (ev)
+            self.game.next_board()
             self.check_close()
 
 
