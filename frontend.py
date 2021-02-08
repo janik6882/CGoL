@@ -1,11 +1,14 @@
+from pygame import *
 import pygame
-from backend import *
+from pygame.locals import *
 import time
+from backend import game
 import sys
+import math
 
 
-class Main():
-    def __init__(self, windowX, windowY, nodes=None):
+class display():
+    def __init__(self, windowX, windowY, nodes=[]):
         # TODO: add docu
         self.windowX = windowX
         self.windowY = windowY
@@ -14,10 +17,11 @@ class Main():
         board_sizeX = self.windowX//10
         board_sizeY = self.windowY//10
         self.game = game(nodes=nodes, boardX=board_sizeX, boardY=board_sizeY)
+        self.display = pygame.display.set_mode((self.windowX, self.windowY))
 
     def display_window(self):
         # TODO: add docu
-        self.display = pygame.display.set_mode((self.windowX, self.windowY))
+        pass
 
     def clear_board(self):
         self.display.fill(self.white)
@@ -54,19 +58,21 @@ class Main():
                     nodeX = pos[1]//10
                     nodeY = pos[0]//10
                     pygame.draw.rect(self.display, self.black, pygame.Rect(nodeY*10, nodeX*10, 10, 10))
-                    self.game.add_node(nodeX, nodeY)
+                    self.game.add_point(nodeX, nodeY)
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         return "f"
+                    if event.key == pygame.K_e:
+                        self.game.export_current()
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
 
     def mainloop(self):
         while True:
-            points = self.game.get_nodes()
-            disp.show_board(points)
+            points = self.game.get_points()
+            self.show_board(points)
             # time.sleep(0.05)
             self.game.next_board()
             ev = self.wait_keypress()
@@ -83,8 +89,8 @@ def main():
 
 def debug():
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
-    disp = Main(1000, 1000, glider_top_left)
-    disp.mainloop()
+    test = display(1000, 1000)
+    test.mainloop()
 
 
 

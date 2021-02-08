@@ -146,6 +146,14 @@ class game():
             matrix[node[1]][node[0]] = 1
         return matrix
 
+    def export_current(self):
+        # TODO: add docu
+        export = dict()
+        export["boardX"] = self.boardX
+        export["boardY"] = self.boardY
+        export["nodes"] = self.nodes
+        game.daten_speichern(export, "out.json")
+
     @classmethod
     def get_list_intersection(self, listA, listB):
         # TODO: Dokumentation hinzufuegen
