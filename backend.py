@@ -6,7 +6,7 @@ import os
 
 
 class game():
-    def __init__(self, nodes=[], boardX=30, boardY=30):
+    def __init__(self, nodes=[], boardX=30, boardY=30, premade={}):
         """
         Kommentar: Standard init Methode
         Input: Name der Instanz, optional: nodes--(siehe docs), boardX--Breite
@@ -17,6 +17,10 @@ class game():
         self.nodes = nodes
         self.boardX = boardX
         self.boardY = boardY
+        if premade:
+            self.premade = premade
+        else:
+            self.premade = self.import_premade()
 
     def get_num_neighbours(self, x, y):
         """
@@ -146,6 +150,37 @@ class game():
             matrix[node[1]][node[0]] = 1
         return matrix
 
+    def list_premade(self):
+        # TODO: Dokumentation hinzufuegen
+        res = []
+        for name in list(self.premade.keys()):
+            res.append(name)
+        return res
+
+    def import_premade(self, filename=None):
+        # TODO: Dokumentation hinzufuegen
+        if filename:
+            data = game.load_premade(filename)
+        else:
+            pth = os.path.join("premade", "premade.json")
+            data = game.load_premade(pth)
+        self.premade = data
+        return data
+
+    def add_premade(self, name, posX, posY):
+        # TODO: Dokumentation hinzufuegen
+        to_add = self.premade[name]
+        for point in to_add:
+            point[0] += posX
+            point[1] += posY
+        self.nodes += to_add
+
+    @classmethod
+    def load_premade(self, path):
+        # TODO: Dokumentation hinzufuegen
+        data = json.load(open(path, "r"))
+        return data
+
     @classmethod
     def get_list_intersection(self, listA, listB):
         # TODO: Dokumentation hinzufuegen
@@ -219,7 +254,9 @@ class game():
 def debug():
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = game(nodes=test_gleiter, boardX=10, boardY=10)
+    test = game(nodes=[], boardX=10, boardY=10)
+    test.add_premade("Toad", 0, 0)
+    print(test.list_premade())
     m = test.get_matrix()
     for row in m:
         print (row)
@@ -232,17 +269,7 @@ def debug():
         for row in m:
             print (row)
 
-def check_save():
-    test_pulse = [[1, 0], [1, 1], [1, 2]]
-    test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = game(nodes=test_gleiter, boardX=10, boardY=10)
-    m = test.get_points()
-    game.daten_speichern(m, "test.json")
-    x = game.daten_laden("test.json")
-    print(x)
-
 
 
 if __name__ == '__main__':
-    # debug()
-    check_save()
+    debug()
