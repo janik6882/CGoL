@@ -1,39 +1,94 @@
+# from pygame import *
 import pygame
-from backend import *
-import time
+# from pygame.locals import *
+from backend import game
 import sys
 
 
-class Main():
-    def __init__(self, windowX, windowY, nodes=None):
-        # TODO: add docu
+class display():
+    def __init__(self, windowX, windowY, nodes=[]):
+        """
+        Kommentar: Konstrukter der Klasse display()
+        Input: Name der Klasse, x-Größe des Bildschirms, y-Größe des
+               Bildschirms, optional: knotenliste
+        Output: Kein Output
+        Besonders: Erstellt ein pygame display, erstellt eine Instanz der
+                   game() klasse
+        """
         self.windowX = windowX
         self.windowY = windowY
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
+        self.grey = (173, 173, 173)
         board_sizeX = self.windowX//10
         board_sizeY = self.windowY//10
         self.game = game(nodes=nodes, boardX=board_sizeX, boardY=board_sizeY)
-
-    def display_window(self):
-        # TODO: add docu
         self.display = pygame.display.set_mode((self.windowX, self.windowY))
 
     def clear_board(self):
+        """
+        Kommentar: leert das Bord und erzeugt ein Gitter
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         self.display.fill(self.white)
+        self.draw_grid()
+
+    def draw_grid(self):
+        """
+        Kommentar: erzeugt ein Gitter auf der GUI
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
+        for x in range(0, self.windowX, 10):
+            start_x = x
+            start_y = 0
+            end_x = x
+            end_y = self.windowY
+            start = (start_x, start_y)
+            end = (end_x, end_y)
+            pygame.draw.line(self.display, self.grey, start, end, width=1)
+        for y in range(0, self.windowY, 10):
+            start_x = 0
+            start_y = y
+            end_x = self.windowX
+            end_y = y
+            start = (start_x, start_y)
+            end = (end_x, end_y)
+            pygame.draw.line(self.display, self.grey, start, end, width=1)
 
     def update_board(self):
+        """
+        Kommentar: Bord wird durch den Flip befehl aktualisiert
+        Input: Name der Instanz
+        Output: Keine Output
+        Besonders: Keine Besonderheiten
+        """
         pygame.display.flip()
 
     def show_board(self, points):
+        """
+        Kommentar: Erzeugt die Punkte auf dem Bord
+        Input: Name der Instanz, punkte
+        Output: Kein Output
+        Besonders: Aktualisiert das Bord
+        """
         self.clear_board()
         for point in points:
-            x = point[0]
-            y = point[1]
-            pygame.draw.rect(self.display, self.black, pygame.Rect(y*10, x*10, 10, 10))
+            x = (point[0]*10)+1
+            y = (point[1]*10)+1
+            pygame.draw.rect(self.display, self.black, pygame.Rect(y, x, 9, 9))
         self.update_board()
 
     def check_close(self):
+        """
+        Kommentar: Überprüft, ob der Close button aktiviert wurde
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -43,7 +98,32 @@ class Main():
                     pygame.quit()
                     sys.exit()
 
+    def manipulate_point(self, posX, posY):
+        """
+        Kommentar: Manipuliert einen Punkt (hinzufuegen wenn keiner vorhanden,
+                   entfernen wenn Punhkt vorhanden)
+        Input: Name der Instanz, x-Position des Klicks, y-Position des Klicks
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
+        nodeX = posX//10
+        nodeY = posY//10
+        exist = self.game.manipulate_point(nodeX, nodeY)
+        point_x = (nodeX*10)+1
+        point_y = (nodeY*10)+1
+        if exist:
+            pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))
+        else:
+            pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))
+
     def wait_keypress(self):
+        """
+        Kommentar: wartet auf einen Tastendruck und führt entsprechende Befehle
+                   aus
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -51,42 +131,47 @@ class Main():
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    nodeX = pos[1]//10
-                    nodeY = pos[0]//10
-                    pygame.draw.rect(self.display, self.black, pygame.Rect(nodeY*10, nodeX*10, 10, 10))
-                    self.game.add_node(nodeX, nodeY)
+                    pos_x = pos[1]
+                    pos_y = pos[0]
+                    self.manipulate_point(pos_x, pos_y)
+                    # self.game.add_point(nodeX, nodeY)
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         return "f"
+                    if event.key == pygame.K_e:
+                        self.game.export_current()
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
 
     def mainloop(self):
+        """
+        Kommentar: Mainloop, läuft bis programm beendet wird
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         while True:
-            points = self.game.get_nodes()
-            disp.show_board(points)
-            # time.sleep(0.05)
+            points = self.game.get_points()
+            self.show_board(points)
+            self.wait_keypress()
             self.game.next_board()
-            ev = self.wait_keypress()
-            print (ev)
             self.check_close()
 
 
 def main():
-    test = Main(1000, 1000)
-    test.display_window()
-    test.clear_board()
-    test.update_board()
-    time.sleep(2)
+    glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
+    test = display(1000, 1000, glider_top_left)
+    test.mainloop()
+
 
 def debug():
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
-    disp = Main(1000, 1000, glider_top_left)
-    disp.mainloop()
-
+    test = display(1000, 1000, glider_top_left)
+    test.mainloop()
 
 
 if __name__ == '__main__':
-    debug()
+    # debug()
+    main()

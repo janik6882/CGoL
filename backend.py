@@ -133,10 +133,12 @@ class game():
         Besonders: Prueft ob Punkt in Knotenliste
         """
         if [x, y] in self.nodes:
-            out = self.remove_point(x, y)
+            self.remove_point(x, y)
+            res = False
         else:
-            out = self.add_point(x, y)
-        return out
+            self.add_point(x, y)
+            res = True
+        return res
 
     def get_matrix(self):
         """
@@ -150,6 +152,14 @@ class game():
         for node in points:
             matrix[node[1]][node[0]] = 1
         return matrix
+
+    def export_current(self):
+        # TODO: add docu
+        export = dict()
+        export["boardX"] = self.boardX
+        export["boardY"] = self.boardY
+        export["nodes"] = self.nodes
+        game.daten_speichern(export, "out.json")
 
     def list_premade(self):
         """
@@ -309,6 +319,15 @@ def debug():
         for row in m:
             print (row)
 
+
+def check_save():
+    test_pulse = [[1, 0], [1, 1], [1, 2]]
+    test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
+    test = game(nodes=test_gleiter, boardX=10, boardY=10)
+    m = test.get_points()
+    game.daten_speichern(m, "test.json")
+    x = game.daten_laden("test.json")
+    print(x)
 
 
 if __name__ == '__main__':
