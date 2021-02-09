@@ -6,7 +6,7 @@ import os
 
 
 class game():
-    def __init__(self, nodes=[], boardX=30, boardY=30):
+    def __init__(self, nodes=[], boardX=30, boardY=30, premade={}):
         """
         Kommentar: Standard init Methode
         Input: Name der Instanz, optional: nodes--(siehe docs), boardX--Breite
@@ -17,6 +17,11 @@ class game():
         self.nodes = nodes
         self.boardX = boardX
         self.boardY = boardY
+        if premade:
+            self.premade = premade
+        else:
+            self.premade = {}
+            self.premade = self.import_premade()
 
     def get_num_neighbours(self, x, y):
         """
@@ -156,9 +161,79 @@ class game():
         export["nodes"] = self.nodes
         game.daten_speichern(export, "out.json")
 
+    def list_premade(self):
+        """
+        Kommentar: listet alle vorgefertigten Objekte mit deren Namen auf
+        Input: Name der Instanz
+        Output: Liste mit allen Namen
+        Besonders: Keine Besonderheiten
+        """
+        res = []
+        for name in list(self.premade.keys()):
+            res.append(name)
+        return res
+
+    def import_premade(self, filename=None):
+        """
+        Kommentar: Importiert vorgefertigte Objekte aus einer Json datei
+        Input: Name der Instanz, Optional: Dateiname
+        Output: vorgefertigte Dateien, werden aber automatisch zu self.premade
+                hinzugefuegt
+        Besonders: Wenn kein Dateiname gegeben, wird die standard datei genutzt
+        """
+        if filename:
+            data = game.load_premade(filename)
+        else:
+            pth = os.path.join("premade", "premade.json")
+            data = game.load_premade(pth)
+        self.premade = game.merge_dict(self.premade, data)
+        return data
+
+    def add_premade(self, name, posX, posY):
+        """
+        Kommentar: fuegt an einer gegebenen Position ein vorgefertigtes Objekt
+                   anhand dessen Namen hinzu
+        Input: Name der Instanz, Name des Objekts, x-Koordinate, y-Koordinate
+        Output: Kein Output, Knoten werden an Knotenliste angehängt
+        Besonders: Kein Output, anfügen an Knotenliste
+        """
+        to_add = self.premade[name]
+        for point in to_add:
+            point[0] += posX
+            point[1] += posY
+        self.nodes += to_add
+
+    @classmethod
+    def merge_dict(self, dict1, dict2):
+        """
+        Kommentar: kombiniert zwei Dictionaries, dict2 hat höhere Priorität
+        Input: Name der Klasse, Dict1 und Dict2
+        Output: Kombinitere Dictionaries
+        Besonders: dict2 hat höhere Priorität (dict1 wird bei dopplung
+                   überschrieben)
+        """
+        dict1.update(dict2)
+        return dict2
+
+    @classmethod
+    def load_premade(self, path):
+        """
+        Kommentar: lädt eine json Datei aus einem Pfad
+        Input: Name der Klasse, Pfad zur Datei
+        Output: Daten der Datei
+        Besonders: Keine Besonderheiten
+        """
+        data = json.load(open(path, "r"))
+        return data
+
     @classmethod
     def get_list_intersection(self, listA, listB):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: erzeugt die überschneidung zweier listen
+        Input: Name der Klasse, erste Liste, zweite Liste
+        Output: Überschneidung der Listen
+        Besonders: Keine Besonderheiten
+        """
         intersect = [item for item in listA if item in listB]
         return intersect
 
@@ -229,7 +304,9 @@ class game():
 def debug():
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = game(nodes=test_gleiter, boardX=10, boardY=10)
+    test = game(nodes=[], boardX=10, boardY=10)
+    test.add_premade("Toad", 0, 0)
+    print(test.list_premade())
     m = test.get_matrix()
     for row in m:
         print (row)
@@ -254,5 +331,4 @@ def check_save():
 
 
 if __name__ == '__main__':
-    # debug()
-    check_save()
+    debug()
