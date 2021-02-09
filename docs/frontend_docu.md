@@ -6,7 +6,17 @@
 ### Variablen:
 |Name der Variable|Aufbau bzw. Syntax der Variable|Funktion der Variable|
 |:---------------:|:-----------------------------:|:-------------------:|
-
+|self|Name der Instanz|Für Zugriff auf die Instanz|
+|windowX|Int, Breite des Fensters|Wird intern für die Breite genutzt|
+|windowY|Int, Höhe des Fensters|Wird intern für die Höhe genutzt|
+|self.windowX|wie windowX|wie windowX|
+|self.windowY|wie windowY|wie windowY|
+|nodes|[[x, y], [x, y]]|Fungiert als Knotenliste|
+|self.game|Instanz der Klasse game()|Fungiert als Konstrukter und zum Zugriff auf die Klasse|
+|self.black|(0, 0, 0)|Zum einfacheren und zentralen Zugriff auf die Farbe Schwarz|
+|self.white|(255, 255, 255)|wie self.black|
+|self.grey|(173, 173, 173)|wie self.grey|
+|self.display|Instanz der Klasse pygame.display|Für Zugriff und Konstruktion der Klasse|
 ### Methoden:
 |Name der Funktion|Funktionsweise der Funktion|Input der Funktion|Output der Funktion|implementiert|weiteres|
 |:---------------:|:-------------------------:|:----------------:|:-----------------:|:-----------:|:------:|
@@ -19,4 +29,3 @@
 |manipulate_point|Manipuliert einen Punkt, wenn Punkt vorhanden wird dieser Entfernt, wenn nicht wird ein PUnkt hinzugefuegt|self--Name der Instanz,<br />posX--X-Position des Mausklicks,<br />posY--y-Position des Mausklicks|Kein Output|:white_check_mark:|nutzt game.manipulate_point|
 |wait_keypress|Wartet auf einen Tastendruck und führt den entsprechenden Befehl aus|<self--Name der Instanz|Kein Output (aktuell für Debug zwecke)|:white_check_mark:|nutzt diverse sys und pygame Befehle|
 |mainloop|Mainloop des Programms, läuft bis zur Unterbrechung|self--Name der Instanz|Kein Output|:white_check_mark:|   |
-### Klassenmethoden:
