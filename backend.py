@@ -20,6 +20,7 @@ class game():
         if premade:
             self.premade = premade
         else:
+            self.premade = {}
             self.premade = self.import_premade()
 
     def get_num_neighbours(self, x, y):
@@ -151,24 +152,41 @@ class game():
         return matrix
 
     def list_premade(self):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: listet alle vorgefertigten Objekte mit deren Namen auf
+        Input: Name der Instanz
+        Output: Liste mit allen Namen
+        Besonders: Keine Besonderheiten
+        """
         res = []
         for name in list(self.premade.keys()):
             res.append(name)
         return res
 
     def import_premade(self, filename=None):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: Importiert vorgefertigte Objekte aus einer Json datei
+        Input: Name der Instanz, Optional: Dateiname
+        Output: vorgefertigte Dateien, werden aber automatisch zu self.premade
+                hinzugefuegt
+        Besonders: Wenn kein Dateiname gegeben, wird die standard datei genutzt
+        """
         if filename:
             data = game.load_premade(filename)
         else:
             pth = os.path.join("premade", "premade.json")
             data = game.load_premade(pth)
-        self.premade = data
+        self.premade = game.merge_dict(self.premade, data)
         return data
 
     def add_premade(self, name, posX, posY):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: fuegt an einer gegebenen Position ein vorgefertigtes Objekt
+                   anhand dessen Namen hinzu
+        Input: Name der Instanz, Name des Objekts, x-Koordinate, y-Koordinate
+        Output: Kein Output, Knoten werden an Knotenliste angehängt
+        Besonders: Kein Output, anfügen an Knotenliste
+        """
         to_add = self.premade[name]
         for point in to_add:
             point[0] += posX
@@ -176,14 +194,36 @@ class game():
         self.nodes += to_add
 
     @classmethod
+    def merge_dict(self, dict1, dict2):
+        """
+        Kommentar: kombiniert zwei Dictionaries, dict2 hat höhere Priorität
+        Input: Name der Klasse, Dict1 und Dict2
+        Output: Kombinitere Dictionaries
+        Besonders: dict2 hat höhere Priorität (dict1 wird bei dopplung
+                   überschrieben)
+        """
+        dict1.update(dict2)
+        return dict2
+
+    @classmethod
     def load_premade(self, path):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: lädt eine json Datei aus einem Pfad
+        Input: Name der Klasse, Pfad zur Datei
+        Output: Daten der Datei
+        Besonders: Keine Besonderheiten
+        """
         data = json.load(open(path, "r"))
         return data
 
     @classmethod
     def get_list_intersection(self, listA, listB):
-        # TODO: Dokumentation hinzufuegen
+        """
+        Kommentar: erzeugt die überschneidung zweier listen
+        Input: Name der Klasse, erste Liste, zweite Liste
+        Output: Überschneidung der Listen
+        Besonders: Keine Besonderheiten
+        """
         intersect = [item for item in listA if item in listB]
         return intersect
 
