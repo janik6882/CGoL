@@ -162,7 +162,9 @@ class display():
 
 def main():
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
-    test = display(1000, 1000, glider_top_left)
+    test = display(1000, 1000, [])
+    print(test.game.list_premade())
+    test.game.add_premade("Middle-weight spaceship", 5, 5)
     test.mainloop()
 
 
