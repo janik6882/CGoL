@@ -23,6 +23,13 @@
 |get_num_neighbours()|gibt die anzahl der Nachbarn einer Zelle aus|self--Name der Instanz<br />Zelle([x, y])|Anzahl der Nachbarn als Int|:white_check_mark:|nutzt get_list_intersection()|
 |check_regeln()|überprüft, ob an einer Stelle in der nächsten generation eine Zelle vorhanden sein soll|Name der Instanz<br />Zelle([x, y])|Boolean, ob Zelle vorhanden sein soll|:white_check_mark:|nutzt get_num_neighbours()|
 |next_board()|generiert das nächste Bord, aktualisiert self.nodes zur neuen Knotenliste|Name der Instanz|
+|manipulate_point|Manipuliert einen Punkt, entfernt wenn vorhanden, fügt hinzu wenn nicht|self--Name der Instanz,<br />x--X-Koordinate des Punktes,<br />Y--Y-Koordinate des Punktes| True wenn Punkt hinzugefuegt, False wenn entfernt|:white_check_mark:|   |
 #### Klassenmethoden
+|merge_dict|kombiniert zwei Dictionaries zu einem|self--Name der Klasse,<br />dict1--Ertses Dictionary,<br />dict2--Zweites Dictionary|kombinierte Dictionary|:white_check_mark:|dict2 hat Priorität|
+|load_premade|lädt vorgefertigte Objekte aus einer Json datei|self--Name der Klasse,<br />path--Pfad zur Datei|Daten als Dictionary|:white_check_mark:|   |
 |__gen_matrix()|generiert muliplikativ eine leere Matrix|self--name der Klasse<br />x--breite der Matrix<br />y--Höhe der Matrix| z.B. 3*3 Matrix: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]|:white_check_mark:|zum internen gebrauch vorgesehen, deshalb privat|
 |get_list_intersection()|findet die überschneidungen zweier Listen|Name der Klasse<br />listA--Erste Liste<br />listB--Zweite Liste| Gibt eine Liste mit überschneidungen beider Listen zurück|:white_check_mark:||
+|__get_dir|Listet alle Top Level Ordner auf|self--Name der Klasse|Top Level Ordner als Liste|:white_check_mark|Nutzt das os Modul|
+|__check_dir|überprüft, ob ein ordner vorhanden ist, wenn nicht erstellt es diesen|self--Name der Klasse,<br />dir_name--Name des Ordners|Kein Output|:white_check_mark:|Nutzt das os Modul und führt einen Befehl aus|
+|daten_speichern|Speichert die Spieldaten in den saves ordner|self--Name der Instanz,<br />Daten--Daten, die zu speichern sind,<br />Filename--Name der Datei|Kein Output|:white_check_mark:|   |
+|daten_laden|Importiert die Spieldaten aus einer Json Datei|self--Name der Klasse,<br />filename--Dateiname|Daten der angegebenen Datei|:white_check_mark|   |
