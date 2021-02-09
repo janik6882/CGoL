@@ -213,7 +213,7 @@ class game():
                    überschrieben)
         """
         dict1.update(dict2)
-        return dict2
+        return dict1
 
     @classmethod
     def load_premade(self, path):
