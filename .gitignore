@@ -3,3 +3,5 @@ implement.py
 /saves/
 /__pycache__/
 *.json
+*.docx
+!premade.json
