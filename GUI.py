@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+
 # pygame.path.append("H:\documents\Informatik")
 pygame.init()
 
