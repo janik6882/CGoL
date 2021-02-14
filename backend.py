@@ -77,10 +77,12 @@ class Game():
         nachbarn = []
         nodes = self.nodes
         for node in nodes:  # loop durch alle elemente von self.nodes
-            x = node[0]  # setzt x zur x-koordinate von node
-            y = node[1]  # setzt y zur y-koordinate von node
-            nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1],
-                              [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]]
+            x_koord = node[0]  # setzt x zur x-koordinate von node
+            y_koord = node[1]  # setzt y zur y-koordinate von node
+            nachbar_zellen = [[x_koord-1, y_koord-1], [x_koord-1, y_koord],
+                              [x_koord-1, y_koord+1], [x_koord, y_koord-1],
+                              [x_koord, y_koord+1], [x_koord+1, y_koord-1],
+                              [x_koord+1, y_koord], [x_koord+1, y_koord+1]]
             for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
                 if zelle not in nachbarn + nodes:  # wenn zelle nicht nodes und
                     # nachbarn
@@ -103,8 +105,8 @@ class Game():
         """
         return self.nodes
 
-    def add_point(self, x, y):
-        """Fügt einen Punkt zur Knotenliste hinzu
+    def add_point(self, x_koord, y_koord):
+        """Fügt einen Punkt zur Knotenliste hinzu.
 
         Kommentar: Fuegt einen Punkt zur Knotenliste self.nodes hinzu
         Input: name der Instanz, x-Koordinate als int, y-Koordinate als int
@@ -113,10 +115,10 @@ class Game():
         """
         # TODO: Verhalten besprechen, wenn punkt bereits in Knotenliste
         # OPTIMIZE: Laufzeit optimieren (add, append oder operator?)
-        self.nodes.append([x, y])
+        self.nodes.append([x_koord, y_koord])
         return self.nodes
 
-    def remove_point(self, x, y):
+    def remove_point(self, x_koord, y_koord):
         """Entfernt einen Punkt aus der Knotenliste
 
         Kommentar: Entfernt einen Punkt aus der Knotenliste
@@ -126,14 +128,14 @@ class Game():
         """
         # OPTIMIZE: Laufzeit?
         # DEBUG: Try except pruefen
-        if [x, y] in self.nodes:
-            self.nodes.remove([x, y])
+        if [x_koord, y_koord] in self.nodes:
+            self.nodes.remove([x_koord, y_koord])
             return self.nodes
         else:
             # Ausgabe besprechen
             return "error"
 
-    def manipulate_point(self, x, y):
+    def manipulate_point(self, x_koord, y_koord):
         """Siehe Kommentar.
 
         Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn
@@ -142,11 +144,11 @@ class Game():
         Output: Aktualisierte Knotenliste
         Besonders: Prueft ob Punkt in Knotenliste
         """
-        if [x, y] in self.nodes:
-            self.remove_point(x, y)
+        if [x_koord, y_koord] in self.nodes:
+            self.remove_point(x_koord, y_koord)
             res = False
         else:
-            self.add_point(x, y)
+            self.add_point(x_koord, y_koord)
             res = True
         return res
 
@@ -202,7 +204,7 @@ class Game():
         self.premade = Game.merge_dict(self.premade, data)
         return data
 
-    def add_premade(self, name, posX, posY):
+    def add_premade(self, name, pos_x, pos_y):
         """Fügt ein vorgefertigtes Element zur Knotenliste hinzu.
 
         Kommentar: fuegt an einer gegebenen Position ein vorgefertigtes Objekt
@@ -213,8 +215,8 @@ class Game():
         """
         to_add = self.premade[name]
         for point in to_add:
-            point[0] += posX
-            point[1] += posY
+            point[0] += pos_x
+            point[1] += pos_y
         self.nodes += to_add
 
     @classmethod
@@ -243,7 +245,7 @@ class Game():
         return data
 
     @classmethod
-    def get_list_intersection(cls, listA, listB):
+    def get_list_intersection(cls, list_a, list_b):
         """Gibt die Überschneidung zweier Listen zurück.
 
         Kommentar: erzeugt die überschneidung zweier listen
@@ -251,11 +253,11 @@ class Game():
         Output: Überschneidung der Listen
         Besonders: Keine Besonderheiten
         """
-        intersect = [item for item in listA if item in listB]
+        intersect = [item for item in list_a if item in list_b]
         return intersect
 
     @classmethod
-    def __gen_matrix(cls, x, y):
+    def __gen_matrix(cls, x_koord, y_koord):
         """Generiert eine Leere Matrix.
 
         Kommentar: generiert eine Matrix anhand einer vorgegeben Größe
@@ -263,7 +265,7 @@ class Game():
         Output: Leere Matrix
         Besonders: Schnellste Methode, eine Liste zu erzeugen
         """
-        matrix = [[0 for place in range(x)] for row in range(y)]
+        matrix = [[0 for place in range(x_koord)] for row in range(y_koord)]
         return matrix
 
     @classmethod
@@ -327,19 +329,19 @@ def debug():
     """Debug Funktion."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = Game(nodes=[], boardX=10, boardY=10)
+    test = Game(nodes=[], board_x=10, board_y=10)
     test.add_premade("Toad", 0, 0)
     print(test.list_premade())
-    m = test.get_matrix()
-    for row in m:
+    matrix = test.get_matrix()
+    for row in matrix:
         print(row)
     iterationen = 3
-    for i in range(iterationen):
+    for iteration in range(iterationen):
         time.sleep(2)
         print("")
         test.next_board()
-        m = test.get_matrix()
-        for row in m:
+        matrix = test.get_matrix()
+        for row in matrix:
             print(row)
 
 
@@ -347,11 +349,11 @@ def check_save():
     """Testfunktion für das Speichern und Laden."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = Game(nodes=test_gleiter, boardX=10, boardY=10)
-    m = test.get_points()
-    Game.daten_speichern(m, "test.json")
-    x = Game.daten_laden("test.json")
-    print(x)
+    test = Game(nodes=test_gleiter, board_x=10, board_y=10)
+    matrix = test.get_points()
+    Game.daten_speichern(matrix, "test.json")
+    data = Game.daten_laden("test.json")
+    print(data)
 
 
 if __name__ == '__main__':
