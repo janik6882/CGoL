@@ -1,13 +1,20 @@
-# from pygame import *
+"""Docstring tba."""  # TODO: Add docustring
+import sys
 import pygame
 # from pygame.locals import *
 from backend import game
-import sys
 
 
-class display():
-    def __init__(self, windowX, windowY, nodes=[]):
-        """
+class display():  # Zu Display ändern
+    """Display Klasse.
+
+    Klasse erstellt ein Pygame Display und ersellt eine Instanz von dem aus
+    backend.py importiertem game.
+    """
+
+    def __init__(self, windowX, windowY, nodes=None):
+        """Init Klasse.
+
         Kommentar: Konstrukter der Klasse display()
         Input: Name der Klasse, x-Größe des Bildschirms, y-Größe des
                Bildschirms, optional: knotenliste
@@ -15,6 +22,7 @@ class display():
         Besonders: Erstellt ein pygame display, erstellt eine Instanz der
                    game() klasse
         """
+        nodes = nodes or []
         self.windowX = windowX
         self.windowY = windowY
         self.black = (0, 0, 0)
@@ -26,7 +34,8 @@ class display():
         self.display = pygame.display.set_mode((self.windowX, self.windowY))
 
     def clear_board(self):
-        """
+        """Entfernt alle Objekte vom Bord.
+
         Kommentar: leert das Bord und erzeugt ein Gitter
         Input: Name der Instanz
         Output: Kein Output
@@ -36,13 +45,14 @@ class display():
         self.draw_grid()
 
     def draw_grid(self):
-        """
+        """Zeichnet ein Gitter.
+
         Kommentar: erzeugt ein Gitter auf der GUI
         Input: Name der Instanz
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        for x in range(0, self.windowX, 10):
+        for x in range(0, self.windowX, 10):  # Snake Case beenden
             start_x = x
             start_y = 0
             end_x = x
@@ -50,7 +60,7 @@ class display():
             start = (start_x, start_y)
             end = (end_x, end_y)
             pygame.draw.line(self.display, self.grey, start, end, width=1)
-        for y in range(0, self.windowY, 10):
+        for y in range(0, self.windowY, 10):  # Snake Case beenden
             start_x = 0
             start_y = y
             end_x = self.windowX
@@ -59,8 +69,9 @@ class display():
             end = (end_x, end_y)
             pygame.draw.line(self.display, self.grey, start, end, width=1)
 
-    def update_board(self):
-        """
+    def update_board(self):  # R0201 beheben?
+        """Aktualisiert das Bord.
+
         Kommentar: Bord wird durch den Flip befehl aktualisiert
         Input: Name der Instanz
         Output: Keine Output
@@ -69,7 +80,8 @@ class display():
         pygame.display.flip()
 
     def show_board(self, points):
-        """
+        """Zeigt das Bord an.
+
         Kommentar: Erzeugt die Punkte auf dem Bord
         Input: Name der Instanz, punkte
         Output: Kein Output
@@ -82,8 +94,9 @@ class display():
             pygame.draw.rect(self.display, self.black, pygame.Rect(y, x, 9, 9))
         self.update_board()
 
-    def check_close(self):
-        """
+    def check_close(self):  # R0201 beheben?
+        """Prüft, ob Close Button aktiviert wurde.
+
         Kommentar: Überprüft, ob der Close button aktiviert wurde
         Input: Name der Instanz
         Output: Kein Output
@@ -99,7 +112,8 @@ class display():
                     sys.exit()
 
     def manipulate_point(self, posX, posY):
-        """
+        """Manipulierung eines Punktes.
+
         Kommentar: Manipuliert einen Punkt (hinzufuegen wenn keiner vorhanden,
                    entfernen wenn Punhkt vorhanden)
         Input: Name der Instanz, x-Position des Klicks, y-Position des Klicks
@@ -117,7 +131,8 @@ class display():
             pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))
 
     def wait_keypress(self):
-        """
+        """Wartet auf einen Tastendruck.
+
         Kommentar: wartet auf einen Tastendruck und führt entsprechende Befehle
                    aus
         Input: Name der Instanz
