@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Docstring."""
+"""Docstring beenden."""
 import time
 import json
 import os
