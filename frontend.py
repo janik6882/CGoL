@@ -161,7 +161,8 @@ class display():  # Zu Display ändern
                         sys.exit()
 
     def mainloop(self):
-        """
+        """Mainloop, läuft bis beendet.
+
         Kommentar: Mainloop, läuft bis programm beendet wird
         Input: Name der Instanz
         Output: Kein Output
@@ -176,6 +177,7 @@ class display():  # Zu Display ändern
 
 
 def main():
+    """Funktion zum testen."""
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
     test = display(1000, 1000, [])
     print(test.game.list_premade())
@@ -184,6 +186,7 @@ def main():
 
 
 def debug():
+    """Funktion zum Debugging."""
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
     test = display(1000, 1000, glider_top_left)
     test.mainloop()
