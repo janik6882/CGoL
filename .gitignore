@@ -5,3 +5,4 @@ implement.py
 *.json
 *.docx
 !premade.json
+*.cfg
