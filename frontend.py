@@ -5,7 +5,7 @@ import pygame
 from backend import game
 
 
-class display():  # Zu Display ändern
+class Display():  # Zu Display ändern
     """Display Klasse.
 
     Klasse erstellt ein Pygame Display und ersellt eine Instanz von dem aus
@@ -23,15 +23,15 @@ class display():  # Zu Display ändern
                    game() klasse
         """
         nodes = nodes or []
-        self.windowX = windowX
-        self.windowY = windowY
+        self.window_x = windowX
+        self.window_y = windowY
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
         self.grey = (173, 173, 173)
-        board_sizeX = self.windowX//10
-        board_sizeY = self.windowY//10
-        self.game = game(nodes=nodes, boardX=board_sizeX, boardY=board_sizeY)
-        self.display = pygame.display.set_mode((self.windowX, self.windowY))
+        board_size_x = self.window_x//10
+        board_size_y = self.window_y//10
+        self.game = game(nodes=nodes, boardX=board_size_x, boardY=board_size_y)
+        self.display = pygame.display.set_mode((self.window_x, self.window_y))
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
@@ -52,18 +52,18 @@ class display():  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        for x in range(0, self.windowX, 10):  # Snake Case beenden
+        for x in range(0, self.window_x, 10):  # Snake Case beenden
             start_x = x
             start_y = 0
             end_x = x
-            end_y = self.windowY
+            end_y = self.window_y
             start = (start_x, start_y)
             end = (end_x, end_y)
             pygame.draw.line(self.display, self.grey, start, end, width=1)
-        for y in range(0, self.windowY, 10):  # Snake Case beenden
+        for y in range(0, self.window_y, 10):  # Snake Case beenden
             start_x = 0
             start_y = y
-            end_x = self.windowX
+            end_x = self.window_x
             end_y = y
             start = (start_x, start_y)
             end = (end_x, end_y)
@@ -179,7 +179,7 @@ class display():  # Zu Display ändern
 def main():
     """Funktion zum testen."""
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
-    test = display(1000, 1000, [])
+    test = Display(1000, 1000, [])
     print(test.game.list_premade())
     test.game.add_premade("Middle-weight spaceship", 5, 5)
     test.mainloop()
@@ -188,7 +188,7 @@ def main():
 def debug():
     """Funktion zum Debugging."""
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
-    test = display(1000, 1000, glider_top_left)
+    test = Display(1000, 1000, glider_top_left)
     test.mainloop()
 
 
