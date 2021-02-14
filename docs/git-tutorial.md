@@ -40,7 +40,7 @@ Für jede neue Funktion die ihr einfügt, erstellt ihr bitte einen neuen sogenan
 
 1. git checkout -b name_der_neuen_branch
 2. git add .
-3. git commit -m "hier ein sinnvoller Kommentar"
+3. git commit -m "hier ein sinnvoller Kommentar" <br />
 Und als letztes:
 ### Wenn ihr hier einen push durchführen wollt, wird euch git auffordern etwas einzugeben. Entweder ihr kopiert das oder ihr nehmt das, was ich euch hinschreibe:
 4. git push --set-upstream origin neuer_name
