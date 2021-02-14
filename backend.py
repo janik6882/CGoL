@@ -6,10 +6,10 @@ import os
 # Vorerst Datei fuer alles Backend stuff.
 
 
-class game():
+class Game():
     """Game Klasse, für Backend benutzt."""
 
-    def __init__(self, nodes=None, boardX=30, boardY=30, premade=None):
+    def __init__(self, nodes=None, board_x=30, board_y=30, premade=None):
         """Init Methode.
 
         Kommentar: Standard init Methode
@@ -21,15 +21,15 @@ class game():
         nodes = nodes or []
         premade = premade or dict()
         self.nodes = nodes
-        self.boardX = boardX
-        self.boardY = boardY
+        self.board_x = board_x
+        self.board_y = board_y
         if premade:
             self.premade = premade
         else:
             self.premade = {}
             self.premade = self.import_premade()
 
-    def get_num_neighbours(self, x, y):
+    def get_num_neighbours(self, x_koord, y_koord):
         """Gibt die Anzahl der Nachbarn zurück.
 
         Kommentar: gibt die Anzahl der Nachbarn als int aus
@@ -38,14 +38,16 @@ class game():
         Besonders: keine Besonderheiten
         """
         nachbarn = 0
-        nachbar_zellen = [[x-1, y-1], [x-1, y], [x-1, y+1], [x, y-1], [x, y+1],
-                          [x+1, y-1], [x+1, y], [x+1, y+1]]
+        nachbar_zellen = [[x_koord-1, y_koord-1], [x_koord-1, y_koord],
+                          [x_koord-1, y_koord+1], [x_koord, y_koord-1],
+                          [x_koord, y_koord+1], [x_koord+1, y_koord-1],
+                          [x_koord+1, y_koord], [x_koord+1, y_koord+1]]
         # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
         #  und self.nodes (Knotenliste)
-        nachbarn = len(game.get_list_intersection(nachbar_zellen, self.nodes))
+        nachbarn = len(Game.get_list_intersection(nachbar_zellen, self.nodes))
         return nachbarn
 
-    def check_regeln(self, x, y):
+    def check_regeln(self, x_koord, y_koord):
         """Überprüft die Regeln des CGoL.
 
         Kommentar: gibt aus, ob an der Position von Zelle eine Zelle erstellt
@@ -55,21 +57,16 @@ class game():
                 Iteration
         Besonders: nutzt get_num_neighbours()
         """
-        zelle = [x, y]
-        nachbarn = self.get_num_neighbours(x, y)  # anzahl Nachbarn der Zelle
+        zelle = [x_koord, y_koord]
+        # TODO: nachbarn zu num_nachbarn ändern
+        nachbarn = self.get_num_neighbours(x_koord, y_koord)
         if zelle in self.nodes:
-            if nachbarn in [2, 3]:  # wenn nachbarn gleich 2 oder 3
-                return True
-            else:
-                return False
+            return bool(nachbarn in [2, 3])  # wenn nachbarn gleich 2 oder 3
         else:
-            if nachbarn == 3:
-                return True
-            else:
-                return False
+            return bool(nachbarn == 3)
 
     def next_board(self):
-        """Erzeugt das nächste Bord und gibt dieses zurück
+        """Erzeugt das nächste Bord und gibt dieses zurück.
 
         Kommentar:erzeugt das neue board und ersetzt das Aktuelle mit dem neuen
         Input: name der Instanz
@@ -161,7 +158,7 @@ class game():
         Output: Matrix mit allen Punkten, eine Reihe entspricht einer Liste
         Besonders: Keine Besonderheiten
         """
-        matrix = game.__gen_matrix(self.boardX, self.boardY)
+        matrix = Game.__gen_matrix(self.board_x, self.board_y)
         points = self.nodes
         for node in points:
             matrix[node[1]][node[0]] = 1
@@ -170,10 +167,10 @@ class game():
     def export_current(self):
         """Docsring."""  # TODO: add docu
         export = dict()
-        export["boardX"] = self.boardX
-        export["boardY"] = self.boardY
+        export["boardX"] = self.board_x
+        export["boardY"] = self.board_y
         export["nodes"] = self.nodes
-        game.daten_speichern(export, "out.json")
+        Game.daten_speichern(export, "out.json")
 
     def list_premade(self):
         """Listet alle vorgefertigten Objekte auf.
@@ -198,11 +195,11 @@ class game():
         Besonders: Wenn kein Dateiname gegeben, wird die standard datei genutzt
         """
         if filename:
-            data = game.load_premade(filename)
+            data = Game.load_premade(filename)
         else:
             pth = os.path.join("premade", "premade.json")
-            data = game.load_premade(pth)
-        self.premade = game.merge_dict(self.premade, data)
+            data = Game.load_premade(pth)
+        self.premade = Game.merge_dict(self.premade, data)
         return data
 
     def add_premade(self, name, posX, posY):
@@ -274,7 +271,7 @@ class game():
         """Gibt alle Top-Level Ordner zurück.
 
         Kommentar: Private Classmethod, die alle Top-Level Ordner auflistet
-        Input: Name der Klasse (game in dieser Klasse)
+        Input: Name der Klasse (Game in dieser Klasse)
         Output: Alle Top-Level Ordner
         Besonders: Nutzt das OS modul (anfangs importiert)
         """
@@ -291,7 +288,7 @@ class game():
         Output: Keins
         Besonders: Nutzt das os modul, welches am Anfang importiert wird
         """
-        if dir_name not in game.__get_dir():
+        if dir_name not in Game.__get_dir():
             command = "mkdir {dirName}"
             command = command.format(dirName=dir_name)
             os.system(command)
@@ -306,7 +303,7 @@ class game():
         Besonders: Nutzt das pickle und os modul, Daten werden in saves Ordner
                    gespeichert
         """
-        game.__check_dir("saves")
+        Game.__check_dir("saves")
         path = os.path.join("saves", filename)
         json.dump(data, open(path, "w"))
 
@@ -320,7 +317,7 @@ class game():
         Besonders: Nutzt das pickle und os modul, Daten werden aus saves Ordner
                    geladen
         """
-        game.__check_dir("saves")
+        Game.__check_dir("saves")
         path = os.path.join("saves", filename)
         daten = json.load(open(path, "r"))
         return daten
@@ -330,7 +327,7 @@ def debug():
     """Debug Funktion."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = game(nodes=[], boardX=10, boardY=10)
+    test = Game(nodes=[], boardX=10, boardY=10)
     test.add_premade("Toad", 0, 0)
     print(test.list_premade())
     m = test.get_matrix()
@@ -350,10 +347,10 @@ def check_save():
     """Testfunktion für das Speichern und Laden."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = game(nodes=test_gleiter, boardX=10, boardY=10)
+    test = Game(nodes=test_gleiter, boardX=10, boardY=10)
     m = test.get_points()
-    game.daten_speichern(m, "test.json")
-    x = game.daten_laden("test.json")
+    Game.daten_speichern(m, "test.json")
+    x = Game.daten_laden("test.json")
     print(x)
 
 
