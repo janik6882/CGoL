@@ -7,14 +7,19 @@ import os
 
 
 class game():
-    def __init__(self, nodes=[], boardX=30, boardY=30, premade={}):
-        """
+    """Game Klasse, für Backend benutzt."""
+
+    def __init__(self, nodes=None, boardX=30, boardY=30, premade=None):
+        """Init Methode.
+
         Kommentar: Standard init Methode
         Input: Name der Instanz, optional: nodes--(siehe docs), boardX--Breite
                der Simulation, boardY--höhe der Simulation
         Output: Kein Output
         Besonders: Standard init, nichts Besonderes
         """
+        nodes = nodes or []
+        premade = premade or dict()
         self.nodes = nodes
         self.boardX = boardX
         self.boardY = boardY
@@ -25,7 +30,8 @@ class game():
             self.premade = self.import_premade()
 
     def get_num_neighbours(self, x, y):
-        """
+        """Gibt die Anzahl der Nachbarn zurück.
+
         Kommentar: gibt die Anzahl der Nachbarn als int aus
         Input: Name der Instanz, x-Koordinate, y-Koordinate
         Output: Int mit anzahl der Nachbarn
@@ -40,7 +46,8 @@ class game():
         return nachbarn
 
     def check_regeln(self, x, y):
-        """
+        """Überprüft die Regeln des CGoL.
+
         Kommentar: gibt aus, ob an der Position von Zelle eine Zelle erstellt
                     wird in der nächsten Iteration
         Input: Name der Instanz, x-Koordinate, y-Koordinate
@@ -62,7 +69,8 @@ class game():
                 return False
 
     def next_board(self):
-        """
+        """Erzeugt das nächste Bord und gibt dieses zurück
+
         Kommentar:erzeugt das neue board und ersetzt das Aktuelle mit dem neuen
         Input: name der Instanz
         Output: aktualisierte Knotenliste
@@ -89,7 +97,8 @@ class game():
         return new_board
 
     def get_points(self):
-        """
+        """Gibt die Knotenliste zurück.
+
         Kommentar: gibt die aktuelle Knotenliste aus
         Input: Name der Instanz
         Output: Knotenliste self.node
@@ -98,7 +107,8 @@ class game():
         return self.nodes
 
     def add_point(self, x, y):
-        """
+        """Fügt einen Punkt zur Knotenliste hinzu
+
         Kommentar: Fuegt einen Punkt zur Knotenliste self.nodes hinzu
         Input: name der Instanz, x-Koordinate als int, y-Koordinate als int
         Output: Aktualisierte Knotenliste self.nodes
@@ -110,7 +120,8 @@ class game():
         return self.nodes
 
     def remove_point(self, x, y):
-        """
+        """Entfernt einen Punkt aus der Knotenliste
+
         Kommentar: Entfernt einen Punkt aus der Knotenliste
         Input: Name der Instanz, x-Koordinate als int, y-Koordinate als int
         Output: Aktualisierte Knotenliste self.nodes
@@ -126,7 +137,8 @@ class game():
             return "error"
 
     def manipulate_point(self, x, y):
-        """
+        """Siehe Kommentar.
+
         Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn
                    vorhanden
         Input: Name der Instanz, x-Koordinate als int, y-Koordinate als int
@@ -142,7 +154,8 @@ class game():
         return res
 
     def get_matrix(self):
-        """
+        """Erzeugt einen Matrix aus der Knotenliste.
+
         Kommentar: gibt eine Matrix aus, welche alle Punkte beinhaltet
         Input: name der Instanz
         Output: Matrix mit allen Punkten, eine Reihe entspricht einer Liste
@@ -155,7 +168,7 @@ class game():
         return matrix
 
     def export_current(self):
-        # TODO: add docu
+        """Docsring."""  # TODO: add docu
         export = dict()
         export["boardX"] = self.boardX
         export["boardY"] = self.boardY
@@ -163,7 +176,8 @@ class game():
         game.daten_speichern(export, "out.json")
 
     def list_premade(self):
-        """
+        """Listet alle vorgefertigten Objekte auf.
+
         Kommentar: listet alle vorgefertigten Objekte mit deren Namen auf
         Input: Name der Instanz
         Output: Liste mit allen Namen
@@ -175,7 +189,8 @@ class game():
         return res
 
     def import_premade(self, filename=None):
-        """
+        """Importiert vorgefertigte Elemente aus einer Datei.
+
         Kommentar: Importiert vorgefertigte Objekte aus einer Json datei
         Input: Name der Instanz, Optional: Dateiname
         Output: vorgefertigte Dateien, werden aber automatisch zu self.premade
@@ -191,7 +206,8 @@ class game():
         return data
 
     def add_premade(self, name, posX, posY):
-        """
+        """Fügt ein vorgefertigtes Element zur Knotenliste hinzu.
+
         Kommentar: fuegt an einer gegebenen Position ein vorgefertigtes Objekt
                    anhand dessen Namen hinzu
         Input: Name der Instanz, Name des Objekts, x-Koordinate, y-Koordinate
@@ -205,8 +221,9 @@ class game():
         self.nodes += to_add
 
     @classmethod
-    def merge_dict(self, dict1, dict2):
-        """
+    def merge_dict(cls, dict1, dict2):
+        """Merge zweiter Dicts.
+
         Kommentar: kombiniert zwei Dictionaries, dict2 hat höhere Priorität
         Input: Name der Klasse, Dict1 und Dict2
         Output: Kombinitere Dictionaries
@@ -217,8 +234,9 @@ class game():
         return dict1
 
     @classmethod
-    def load_premade(self, path):
-        """
+    def load_premade(cls, path):
+        """Lädt vorgefertigte Elemente aus einem Pfad.
+
         Kommentar: lädt eine json Datei aus einem Pfad
         Input: Name der Klasse, Pfad zur Datei
         Output: Daten der Datei
@@ -228,8 +246,9 @@ class game():
         return data
 
     @classmethod
-    def get_list_intersection(self, listA, listB):
-        """
+    def get_list_intersection(cls, listA, listB):
+        """Gibt die Überschneidung zweier Listen zurück.
+
         Kommentar: erzeugt die überschneidung zweier listen
         Input: Name der Klasse, erste Liste, zweite Liste
         Output: Überschneidung der Listen
@@ -239,8 +258,9 @@ class game():
         return intersect
 
     @classmethod
-    def __gen_matrix(self, x, y):
-        """
+    def __gen_matrix(cls, x, y):
+        """Generiert eine Leere Matrix.
+
         Kommentar: generiert eine Matrix anhand einer vorgegeben Größe
         Input: Name der Instanz, x--breite als int, y--höhe als int
         Output: Leere Matrix
@@ -250,8 +270,9 @@ class game():
         return matrix
 
     @classmethod
-    def __get_dir(self):
-        """
+    def __get_dir(cls):
+        """Gibt alle Top-Level Ordner zurück.
+
         Kommentar: Private Classmethod, die alle Top-Level Ordner auflistet
         Input: Name der Klasse (game in dieser Klasse)
         Output: Alle Top-Level Ordner
@@ -261,8 +282,9 @@ class game():
         return top_dir
 
     @classmethod
-    def __check_dir(self, dir_name):
-        """
+    def __check_dir(cls, dir_name):
+        """Überprüfung nach Ordner.
+
         Kommentar: Private Classmethod, die überprüft ob ein Ordner vorhanden
                    ist und diesen erstellt, falls nicht.
         Input: Name der Klasse, Name des Ordners
@@ -275,8 +297,9 @@ class game():
             os.system(command)
 
     @classmethod
-    def daten_speichern(self, data, filename):
-        """
+    def daten_speichern(cls, data, filename):
+        """Speichert gegebene Daten in eine Datei.
+
         Kommentar: Speichert Daten in eine Datei
         Input: Name der Klasse, Daten, Dateiname
         Output: Kein Output
@@ -288,8 +311,9 @@ class game():
         json.dump(data, open(path, "w"))
 
     @classmethod
-    def daten_laden(self, filename):
-        """
+    def daten_laden(cls, filename):
+        """Lädt Daten aus einer Datei.
+
         Kommentar: lädt daten aus einer Datei
         Input: Name der Klasse, Dateiname
         Output: Geladene Daten
@@ -303,6 +327,7 @@ class game():
 
 
 def debug():
+    """Debug Funktion."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
     test = game(nodes=[], boardX=10, boardY=10)
@@ -310,18 +335,19 @@ def debug():
     print(test.list_premade())
     m = test.get_matrix()
     for row in m:
-        print (row)
+        print(row)
     iterationen = 3
     for i in range(iterationen):
         time.sleep(2)
-        print ("")
+        print("")
         test.next_board()
         m = test.get_matrix()
         for row in m:
-            print (row)
+            print(row)
 
 
 def check_save():
+    """Testfunktion für das Speichern und Laden."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
     test = game(nodes=test_gleiter, boardX=10, boardY=10)
