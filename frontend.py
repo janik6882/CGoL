@@ -4,7 +4,7 @@
 import sys
 import pygame
 # from pygame.locals import *
-from backend import game
+from backend import Game
 
 
 class Display():  # Zu Display ändern
@@ -32,7 +32,7 @@ class Display():  # Zu Display ändern
         self.grey = (173, 173, 173)
         board_size_x = self.window_x//10
         board_size_y = self.window_y//10
-        self.game = game(nodes=nodes, boardX=board_size_x, boardY=board_size_y)
+        self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)
         self.display = pygame.display.set_mode((self.window_x, self.window_y))
 
     def clear_board(self):
