@@ -3,13 +3,14 @@
 import time
 import json
 import os
+from typing import List
 # Vorerst Datei fuer alles Backend stuff.
 
 
 class Game():
     """Game Klasse, für Backend benutzt."""
 
-    def __init__(self, nodes=None, board_x=30, board_y=30, premade=None):
+    def __init__(self, nodes=None, board_x=30, board_y=30, premade=None) -> None:  # noqa: E501
         """Init Methode.
 
         Kommentar: Standard init Methode
@@ -18,7 +19,7 @@ class Game():
         Output: Kein Output
         Besonders: Standard init, nichts Besonderes
         """
-        nodes = nodes or []
+        nodes = nodes or list()
         premade = premade or dict()
         self.nodes = nodes
         self.board_x = board_x
@@ -29,7 +30,7 @@ class Game():
             self.premade = {}
             self.premade = self.import_premade()
 
-    def get_num_neighbours(self, x_koord, y_koord):
+    def get_num_neighbours(self, x_koord: int, y_koord: int) -> int:
         """Gibt die Anzahl der Nachbarn zurück.
 
         Kommentar: gibt die Anzahl der Nachbarn als int aus
@@ -47,7 +48,7 @@ class Game():
         nachbarn = len(Game.get_list_intersection(nachbar_zellen, self.nodes))
         return nachbarn
 
-    def check_regeln(self, x_koord, y_koord):
+    def check_regeln(self, x_koord: int, y_koord: int) -> bool:
         """Überprüft die Regeln des CGoL.
 
         Kommentar: gibt aus, ob an der Position von Zelle eine Zelle erstellt
@@ -58,14 +59,13 @@ class Game():
         Besonders: nutzt get_num_neighbours()
         """
         zelle = [x_koord, y_koord]
-        # TODO: nachbarn zu num_nachbarn ändern
-        nachbarn = self.get_num_neighbours(x_koord, y_koord)
+        num_nachbarn = self.get_num_neighbours(x_koord, y_koord)
         if zelle in self.nodes:
-            return bool(nachbarn in [2, 3])  # wenn nachbarn gleich 2 oder 3
+            return bool(num_nachbarn in [2, 3])
         else:
-            return bool(nachbarn == 3)
+            return bool(num_nachbarn == 3)
 
-    def next_board(self):
+    def next_board(self) -> list:
         """Erzeugt das nächste Bord und gibt dieses zurück.
 
         Kommentar:erzeugt das neue board und ersetzt das Aktuelle mit dem neuen
@@ -74,7 +74,7 @@ class Game():
         Besonders: nutzt check_regeln
         """
         new_board = []
-        nachbarn = []
+        nachbarn: List[List[int]] = list()
         nodes = self.nodes
         for node in nodes:  # loop durch alle elemente von self.nodes
             x_koord = node[0]  # setzt x zur x-koordinate von node
@@ -119,7 +119,7 @@ class Game():
         return self.nodes
 
     def remove_point(self, x_koord, y_koord):
-        """Entfernt einen Punkt aus der Knotenliste
+        """Entfernt einen Punkt aus der Knotenliste.
 
         Kommentar: Entfernt einen Punkt aus der Knotenliste
         Input: Name der Instanz, x-Koordinate als int, y-Koordinate als int
@@ -329,8 +329,8 @@ def debug():
     """Debug Funktion."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = Game(nodes=[], board_x=10, board_y=10)
-    test.add_premade("Toad", 0, 0)
+    test = Game(nodes=test_pulse, board_x=10, board_y=10)
+    # test.add_premade("Toad", 0, 0)
     print(test.list_premade())
     matrix = test.get_matrix()
     for row in matrix:
