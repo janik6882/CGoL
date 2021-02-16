@@ -14,7 +14,7 @@ class Display():  # Zu Display ändern
     backend.py importiertem game.
     """
 
-    def __init__(self, windowX, windowY, nodes=None):
+    def __init__(self, windowX: int, windowY: int, nodes=None):
         """Init Klasse.
 
         Kommentar: Konstrukter der Klasse display()
@@ -32,7 +32,7 @@ class Display():  # Zu Display ändern
         self.grey = (173, 173, 173)
         board_size_x = self.window_x//10
         board_size_y = self.window_y//10
-        self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)
+        self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.window_x, self.window_y))
 
     def clear_board(self):
@@ -71,7 +71,7 @@ class Display():  # Zu Display ändern
             end = (end_x, end_y)
             pygame.draw.line(self.display, self.grey, start, end, width=1)
 
-    def show_board(self, points):
+    def show_board(self, points: list):
         """Zeigt das Bord an.
 
         Kommentar: Erzeugt die Punkte auf dem Bord
@@ -86,7 +86,7 @@ class Display():  # Zu Display ändern
             pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         Display.update_board()
 
-    def manipulate_point(self, pos_x, pos_y):
+    def manipulate_point(self, pos_x: int, pos_y: int):
         """Manipulierung eines Punktes.
 
         Kommentar: Manipuliert einen Punkt (hinzufuegen wenn keiner vorhanden,
@@ -128,7 +128,7 @@ class Display():  # Zu Display ändern
                     Display.update_board()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
-                        return "f"
+                        return "f"  # TODO: entfernen, dient nur debug zwecken
                     if event.key == pygame.K_e:
                         self.game.export_current()
                     if event.key == pygame.K_ESCAPE:
@@ -151,7 +151,7 @@ class Display():  # Zu Display ändern
             Display.check_close()
 
     @classmethod
-    def check_close(cls):  # R0201 beheben?
+    def check_close(cls):
         """Prüft, ob Close Button aktiviert wurde.
 
         Kommentar: Überprüft, ob der Close button aktiviert wurde
