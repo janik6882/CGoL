@@ -38,15 +38,14 @@ class Game():
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        nachbarn = 0
         nachbar_zellen = [[x_koord-1, y_koord-1], [x_koord-1, y_koord],
                           [x_koord-1, y_koord+1], [x_koord, y_koord-1],
                           [x_koord, y_koord+1], [x_koord+1, y_koord-1],
                           [x_koord+1, y_koord], [x_koord+1, y_koord+1]]
         # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
         #  und self.nodes (Knotenliste)
-        nachbarn = len(Game.get_list_intersection(nachbar_zellen, self.nodes))
-        return nachbarn
+        num_nachbarn = len(Game.get_list_intersection(nachbar_zellen, self.nodes))  # noqa: E501
+        return num_nachbarn
 
     def check_regeln(self, x_koord: int, y_koord: int) -> bool:
         """Überprüft die Regeln des CGoL.
@@ -95,7 +94,7 @@ class Game():
         self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
         return new_board
 
-    def get_points(self):
+    def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
 
         Kommentar: gibt die aktuelle Knotenliste aus
@@ -105,7 +104,7 @@ class Game():
         """
         return self.nodes
 
-    def add_point(self, x_koord, y_koord):
+    def add_point(self, x_koord: int, y_koord: int) -> list:
         """Fügt einen Punkt zur Knotenliste hinzu.
 
         Kommentar: Fuegt einen Punkt zur Knotenliste self.nodes hinzu
@@ -135,7 +134,7 @@ class Game():
             # Ausgabe besprechen
             return "error"
 
-    def manipulate_point(self, x_koord, y_koord):
+    def manipulate_point(self, x_koord: int, y_koord: int) -> bool:
         """Siehe Kommentar.
 
         Kommentar: Fuegt Punkt hinzu, wenn nicht vorhanden, entfernt wenn
@@ -152,7 +151,7 @@ class Game():
             res = True
         return res
 
-    def get_matrix(self):
+    def get_matrix(self) -> list:
         """Erzeugt einen Matrix aus der Knotenliste.
 
         Kommentar: gibt eine Matrix aus, welche alle Punkte beinhaltet
@@ -166,15 +165,16 @@ class Game():
             matrix[node[1]][node[0]] = 1
         return matrix
 
-    def export_current(self):
+    def export_current(self) -> None:
         """Docsring."""  # TODO: add docu
         export = dict()
         export["boardX"] = self.board_x
         export["boardY"] = self.board_y
         export["nodes"] = self.nodes
         Game.daten_speichern(export, "out.json")
+        return None
 
-    def list_premade(self):
+    def list_premade(self) -> list:
         """Listet alle vorgefertigten Objekte auf.
 
         Kommentar: listet alle vorgefertigten Objekte mit deren Namen auf
@@ -182,12 +182,12 @@ class Game():
         Output: Liste mit allen Namen
         Besonders: Keine Besonderheiten
         """
-        res = []
+        res = list()
         for name in list(self.premade.keys()):
             res.append(name)
         return res
 
-    def import_premade(self, filename=None):
+    def import_premade(self, filename=None) -> dict:
         """Importiert vorgefertigte Elemente aus einer Datei.
 
         Kommentar: Importiert vorgefertigte Objekte aus einer Json datei
@@ -204,7 +204,7 @@ class Game():
         self.premade = Game.merge_dict(self.premade, data)
         return data
 
-    def add_premade(self, name, pos_x, pos_y):
+    def add_premade(self, name: str, pos_x: int, pos_y: int) -> None:
         """Fügt ein vorgefertigtes Element zur Knotenliste hinzu.
 
         Kommentar: fuegt an einer gegebenen Position ein vorgefertigtes Objekt
@@ -218,9 +218,10 @@ class Game():
             point[0] += pos_x
             point[1] += pos_y
         self.nodes += to_add
+        return None
 
     @classmethod
-    def merge_dict(cls, dict1, dict2):
+    def merge_dict(cls, dict1: dict, dict2: dict) -> dict:
         """Merge zweiter Dicts.
 
         Kommentar: kombiniert zwei Dictionaries, dict2 hat höhere Priorität
@@ -233,7 +234,7 @@ class Game():
         return dict1
 
     @classmethod
-    def load_premade(cls, path):
+    def load_premade(cls, path: str) -> dict:
         """Lädt vorgefertigte Elemente aus einem Pfad.
 
         Kommentar: lädt eine json Datei aus einem Pfad
@@ -245,7 +246,7 @@ class Game():
         return data
 
     @classmethod
-    def get_list_intersection(cls, list_a, list_b):
+    def get_list_intersection(cls, list_a: list, list_b: list) -> list:
         """Gibt die Überschneidung zweier Listen zurück.
 
         Kommentar: erzeugt die überschneidung zweier listen
@@ -257,7 +258,7 @@ class Game():
         return intersect
 
     @classmethod
-    def __gen_matrix(cls, x_koord, y_koord):
+    def __gen_matrix(cls, x_koord: int, y_koord: int) -> list:
         """Generiert eine Leere Matrix.
 
         Kommentar: generiert eine Matrix anhand einer vorgegeben Größe
@@ -269,7 +270,7 @@ class Game():
         return matrix
 
     @classmethod
-    def __get_dir(cls):
+    def __get_dir(cls) -> list:
         """Gibt alle Top-Level Ordner zurück.
 
         Kommentar: Private Classmethod, die alle Top-Level Ordner auflistet
@@ -281,7 +282,7 @@ class Game():
         return top_dir
 
     @classmethod
-    def __check_dir(cls, dir_name):
+    def __check_dir(cls, dir_name: str) -> None:
         """Überprüfung nach Ordner.
 
         Kommentar: Private Classmethod, die überprüft ob ein Ordner vorhanden
@@ -294,9 +295,10 @@ class Game():
             command = "mkdir {dirName}"
             command = command.format(dirName=dir_name)
             os.system(command)
+        return None
 
     @classmethod
-    def daten_speichern(cls, data, filename):
+    def daten_speichern(cls, data, filename: str) -> None:
         """Speichert gegebene Daten in eine Datei.
 
         Kommentar: Speichert Daten in eine Datei
@@ -308,9 +310,10 @@ class Game():
         Game.__check_dir("saves")
         path = os.path.join("saves", filename)
         json.dump(data, open(path, "w"))
+        return None
 
     @classmethod
-    def daten_laden(cls, filename):
+    def daten_laden(cls, filename: str) -> dict:
         """Lädt Daten aus einer Datei.
 
         Kommentar: lädt daten aus einer Datei
