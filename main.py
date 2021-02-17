@@ -9,12 +9,22 @@ def menu_proc():
     subprocess.call("python GUI.py")
 
 
+def open_menu():
+    """Ruft die menu_proc() methode mit Multiprocessing auf.
+
+    Kommentar: Öffnet das menü über Multiprocessing
+    Input: Kein Input
+    Output: Aktuell kein Output
+    Besonders: Arbeitet mit Multiprocessing, bei Tests immer zu testen!!
+    """
+    proc = multiprocessing.Process(target=menu_proc)
+    proc.start()
+
+
 def main():
     """Doctstring."""  # TODO: docu beenden
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5],
                        [4, 1], [4, 4]]
-    proc = multiprocessing.Process(target=menu_proc)
-    proc.start()
     # proc.join()
     test = Display(1000, 1000, glider_top_left)
     print(test.game.list_premade())

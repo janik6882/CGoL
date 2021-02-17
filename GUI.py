@@ -88,37 +88,37 @@ class Menu():
 
     def mainloop(self):
         run = True
+        settings = dict()
         while run:
             # screen.fill(hg) #Farbe des Bildschirms einstellen
             if self.Play.draw_button():
-                print("Play")
+                yield "Play"
             if self.Pause.draw_button():
-                print("Pause")
+                yield "Pause"
             if self.Save.draw_button():
-                print("Save")
+                yield "Save"
             if self.Load.draw_button():
-                print("Load")
+                yield "Load"
             if self.Rules.draw_button():
-                print("Rules")
+                yield "Rules"
             if self.Forms.draw_button():
-                print("Forms")
+                yield "Forms"
             if self.Manual.draw_button():
-                print("Manual")
+                settings["mode"] = "Manual"
             if self.Auto.draw_button():
-                print("Auto")
+                settings["mode"] = "Auto"
 
+            pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
                     pygame.quit()
-                    sys.exit()
 
-            pygame.display.update()
 
 
 if __name__ == "__main__":
     test = Menu()
-    test.mainloop()
+    print(list(test.mainloop()))
 
 
 #   while True:

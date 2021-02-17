@@ -4,6 +4,8 @@
 import sys
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import multiprocessing
+import subprocess
 import pygame
 # from pygame.locals import *
 from backend import Game
@@ -136,6 +138,24 @@ class Display():  # Zu Display ändern
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
+                    if event.key == pygame.K_m:
+                        self.open_menu()
+
+    def menu_proc(self):
+        """Doctstring."""  # TODO: add docstring
+        subprocess.call("python gui.py")
+
+    def open_menu(self):
+        """Ruft die menu_proc() methode mit Multiprocessing auf.
+
+        Kommentar: Öffnet das menü über Multiprocessing
+        Input: Kein Input
+        Output: Aktuell kein Output
+        Besonders: Arbeitet mit Multiprocessing, bei Tests immer zu testen!!
+        """
+        proc = multiprocessing.Process(target=self.menu_proc())
+        proc.start()
+        proc.join()
 
     def mainloop(self):
         """Mainloop, läuft bis beendet.
