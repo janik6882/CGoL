@@ -1,3 +1,6 @@
+# pylint: disable=E1101
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from pygame.locals import *
 import sys
@@ -21,52 +24,53 @@ red = (255, 0, 0)
 black = (0, 0, 0)
 white = (255, 255, 255)
 
-clicked = False
 
+class button():
+    """Docstring."""  # TODO: add docstring
 
-class button():  # Buttons erstellen
-    button_color = (25, 190, 225)  # Farbcode RGB
-    hover_color = (75, 225, 255)  # wenn man mit Maus drüber fährt
-    click_color = (50, 150, 225)  # wenn clicked
-    text_color = (255, 255, 255)
-    width = 100
-    height = 40
-
-    def __init__(self, x, y, text):
-        self.x = x
-        self.y = y
+    def __init__(self, x_koord, y_koord, text):
+        """Docstring."""  # TODO: docstring hinzufügen
+        self.clicked = False
+        self.button_color = (25, 190, 225)
+        self.hover_color = (75, 225, 255)
+        self.click_color = (50, 150, 225)
+        self.text_color = (255, 255, 255)
+        self.width = 100
+        self.height = 40
+        self.x_koord = x_koord
+        self.y_koord = y_koord
         self.text = text
 
     def draw_button(self):
-        global clicked
+        """Docstring."""   # TODO: add docstring
         action = False
 
         pos = pygame.mouse.get_pos()  # Mausposition
 
-        button_rect = Rect(self.x, self.y, self.width, self.height)  # Rechteck des Buttons; zum Gucken, ob die Maus rüberfährt
+        button_rect = pygame.locals.Rect(self.x_koord, self.y_koord, self.width, self.height)
 
-        if button_rect.collidepoint(pos):  # Maus auf Button?
-            if pygame.mouse.get_pressed()[0] == 1:  # Maus gedrückt?
-                clicked = True
+        if button_rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                self.clicked = True
                 pygame.draw.rect(screen, self.click_color, button_rect)
-            elif pygame.mouse.get_pressed()[0] == 0 and clicked is True:  # Wenn Maus gedrückt und losgelassen wird dann action true setzen und Aktion beginnen
-                clicked = False
+            elif pygame.mouse.get_pressed()[0] == 0 and self.clicked:
+                self.clicked = False
                 action = True
             else:
-                pygame.draw.rect(screen, self.hover_color, button_rect)  # Wenn Maus nur drauf ist ohne gedrückt
+                pygame.draw.rect(screen, self.hover_color, button_rect)
         else:
-            pygame.draw.rect(screen, self.button_color, button_rect)  # Wenn Maus nicht auf Button
+            pygame.draw.rect(screen, self.button_color, button_rect)
 
         # Schattierung
-        pygame.draw.line(screen, white, (self.x, self.y), (self.x + self.width, self.y), 2)
-        pygame.draw.line(screen, white, (self.x, self.y), (self.x, self.y + self.height), 2)
-        pygame.draw.line(screen, black, (self.x, self.y + self.height), (self.x + self.width, self.y + self.height), 2)
-        pygame.draw.line(screen, black, (self.x + self.width, self.y), (self.x + self.width, self.y + self.height), 2)
+        pygame.draw.line(screen, white, (self.x_koord, self.y_koord), (self.x_koord + self.width, self.y_koord), 2)
+        pygame.draw.line(screen, white, (self.x_koord, self.y_koord), (self.x_koord, self.y_koord + self.height), 2)
+        pygame.draw.line(screen, black, (self.x_koord, self.y_koord + self.height), (self.x_koord + self.width, self.y_koord + self.height), 2)
+        pygame.draw.line(screen, black, (self.x_koord + self.width, self.y_koord), (self.x_koord + self.width, self.y_koord + self.height), 2)
 
         # Text
         text_img = font.render(self.text, True, self.text_color)  # Text wird von pygame in ein img konvertiert
         text_len = text_img.get_width()  # wie lang der Text in der Mitte der Button (damit Text zentriert)
-        screen.blit(text_img, (self.x + int(self.width / 2) - int(text_len / 2), self.y + 5))  # self.blit = Funtkion zum Anzeigen von Texten/Img
+        screen.blit(text_img, (self.x_koord + int(self.width / 2) - int(text_len / 2), self.y_koord + 5))  # self.blit = Funtkion zum Anzeigen von Texten/Img
         return action
 
 
@@ -78,9 +82,9 @@ class Menu():
         self.Save = button(325, 200, "Save")
         self.Load = button(325, 250, "Load")
         self.Rules = button(325, 150, "Rules")
-        self.Forms = button(325, 100, "Forms")  # Formen einfuegen
-        self.Manual = button(20, 200, "Manual")  # Manuell Zellen färben
-        self.Auto = button(20, 250, "Auto")  # Automatisch
+        self.Forms = button(325, 100, "Forms")
+        self.Manual = button(20, 200, "Manual")
+        self.Auto = button(20, 250, "Auto")
 
     def mainloop(self):
         run = True
@@ -112,8 +116,9 @@ class Menu():
             pygame.display.update()
 
 
-test = Menu()
-test.mainloop()
+if __name__ == "__main__":
+    test = Menu()
+    test.mainloop()
 
 
 #   while True:
