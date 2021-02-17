@@ -1,5 +1,7 @@
 import pygame
 from pygame.locals import *
+import sys
+
 
 # pygame.path.append("H:\documents\Informatik")
 pygame.init()
@@ -68,43 +70,50 @@ class button():  # Buttons erstellen
         return action
 
 
-# Buttons:
-Play = button(20, 100, "Play")
-Pause = button(20, 150, "Pause")
-Save = button(325, 200, "Save")
-Load = button(325, 250, "Load")
-Rules = button(325, 150, "Rules")
-Forms = button(325, 100, "Forms")  # Formen einfuegen
-Manual = button(20, 200, "Manual")  # Manuell Zellen färben
-Auto = button(20, 250, "Auto")  # Automatisch
+class Menu():
+    def __init__(self):
+        # Buttons:
+        self.Play = button(20, 100, "Play")
+        self.Pause = button(20, 150, "Pause")
+        self.Save = button(325, 200, "Save")
+        self.Load = button(325, 250, "Load")
+        self.Rules = button(325, 150, "Rules")
+        self.Forms = button(325, 100, "Forms")  # Formen einfuegen
+        self.Manual = button(20, 200, "Manual")  # Manuell Zellen färben
+        self.Auto = button(20, 250, "Auto")  # Automatisch
 
-run = True
-while run:
-    # screen.fill(hg) #Farbe des Bildschirms einstellen
-    if Play.draw_button():
-        print("Play")
-    if Pause.draw_button():
-        print("Pause")
-    if Save.draw_button():
-        print("Save")
-    if Load.draw_button():
-        print("Load")
-    if Rules.draw_button():
-        print("Rules")
-    if Forms.draw_button():
-        print("Forms")
-    if Manual.draw_button():
-        print("Manual")
-    if Auto.draw_button():
-        print("Auto")
+    def mainloop(self):
+        run = True
+        while run:
+            # screen.fill(hg) #Farbe des Bildschirms einstellen
+            if self.Play.draw_button():
+                print("Play")
+            if self.Pause.draw_button():
+                print("Pause")
+            if self.Save.draw_button():
+                print("Save")
+            if self.Load.draw_button():
+                print("Load")
+            if self.Rules.draw_button():
+                print("Rules")
+            if self.Forms.draw_button():
+                print("Forms")
+            if self.Manual.draw_button():
+                print("Manual")
+            if self.Auto.draw_button():
+                print("Auto")
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                    pygame.quit()
+                    sys.exit()
 
-    pygame.display.update()
+            pygame.display.update()
 
-pygame.quit()
+
+test = Menu()
+test.mainloop()
 
 
 #   while True:
