@@ -144,6 +144,7 @@ class Display():  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         while True:
+            pygame.init()
             points = self.game.get_points()
             self.show_board(points)
             self.wait_keypress()
