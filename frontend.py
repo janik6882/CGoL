@@ -2,6 +2,8 @@
 # pylint: disable=E1101
 # pylint: disable=C0301
 import sys
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 # from pygame.locals import *
 from backend import Game
@@ -183,6 +185,7 @@ class Display():  # Zu Display ändern
 
 def main():
     """Funktion zum testen."""
+    print("Test")
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5],
                        [4, 1], [4, 4]]
     test = Display(1000, 1000, glider_top_left)
