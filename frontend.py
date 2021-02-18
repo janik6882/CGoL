@@ -133,6 +133,8 @@ class Display():  # Zu Display ändern
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         return "f"  # TODO: entfernen, dient nur debug zwecken
+                    if event.key == pygame.K_m:
+                        return "m"
                     if event.key == pygame.K_e:
                         self.game.export_current()
                     if event.key == pygame.K_ESCAPE:
