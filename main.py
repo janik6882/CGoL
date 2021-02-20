@@ -10,6 +10,7 @@ from frontend import Display
 # manager = multiprocessing.Manager()
 # return_dict = manager.dict()
 
+
 def menu_proc():
     """Öffnet den GUI.py prozess.
 
@@ -50,7 +51,7 @@ def main():
     """Doctstring."""  # TODO: docu beenden
     global choice
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5],
-    [4, 1], [4, 4]]
+                       [4, 1], [4, 4]]
     # proc.join()
     open_menu()
     test = Display(1000, 1000, glider_top_left)
@@ -90,8 +91,6 @@ def main():
         test.game.next_board()
         Display.check_close()
         '''
-
-
 
 
 # Programm wird aus unerklärlichen Gründen doppelt ausgeführt.
