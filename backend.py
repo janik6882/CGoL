@@ -297,35 +297,7 @@ class Game():
             os.system(command)
         return None
 
-    @classmethod
-    def daten_speichern(cls, data, filename: str) -> None:
-        """Speichert gegebene Daten in eine Datei.
 
-        Kommentar: Speichert Daten in eine Datei
-        Input: Name der Klasse, Daten, Dateiname
-        Output: Kein Output
-        Besonders: Nutzt das pickle und os modul, Daten werden in saves Ordner
-                   gespeichert
-        """
-        Game.__check_dir("saves")
-        path = os.path.join("saves", filename)
-        json.dump(data, open(path, "w"))
-        return None
-
-    @classmethod
-    def daten_laden(cls, filename: str) -> dict:
-        """Lädt Daten aus einer Datei.
-
-        Kommentar: lädt daten aus einer Datei
-        Input: Name der Klasse, Dateiname
-        Output: Geladene Daten
-        Besonders: Nutzt das pickle und os modul, Daten werden aus saves Ordner
-                   geladen
-        """
-        Game.__check_dir("saves")
-        path = os.path.join("saves", filename)
-        daten = json.load(open(path, "r"))
-        return daten
 
 
 def debug():

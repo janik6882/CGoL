@@ -6,3 +6,4 @@ implement.py
 *.docx
 !premade.json
 *.cfg
+/.idea/
