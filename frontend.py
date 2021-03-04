@@ -4,6 +4,7 @@
 import sys
 import pygame
 # from pygame.locals import *
+import json
 from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
 
@@ -208,7 +209,8 @@ class Display():  # Zu Display ändern
         )
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
-                file.write(inhalt)
+                json.dump(inhalt, file)
+                # file.write(inhalt)
 
 
 def main():
@@ -223,12 +225,10 @@ def main():
 
 def debug():
     """Funktion zum Debugging."""
-    glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5],
-                       [4, 1], [4, 4]]
-    test = Display(1000, 1000, glider_top_left)
-    test.mainloop()
+    x = [{1:2, 3:2}]
+    Display.save_file(x)
 
 
 if __name__ == '__main__':
-    # debug()
-    main()
+    debug()
+    # main()
