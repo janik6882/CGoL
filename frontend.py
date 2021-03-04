@@ -32,8 +32,8 @@ class Display():  # Zu Display ändern
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
         self.grey = (173, 173, 173)
-        board_size_x = self.window_x//10
-        board_size_y = self.window_y//10
+        board_size_x = self.window_x // 10
+        board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.window_x, self.window_y))
 
@@ -83,8 +83,8 @@ class Display():  # Zu Display ändern
         """
         self.clear_board()
         for point in points:
-            x_koord = (point[0]*10)+1
-            y_koord = (point[1]*10)+1
+            x_koord = (point[0] * 10) + 1
+            y_koord = (point[1] * 10) + 1
             pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         Display.update_board()
 
@@ -97,11 +97,11 @@ class Display():  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        node_x = pos_x//10
-        node_y = pos_y//10
+        node_x = pos_x // 10
+        node_y = pos_y // 10
         exist = self.game.manipulate_point(node_x, node_y)
-        point_x = (node_x*10)+1
-        point_y = (node_y*10)+1
+        point_x = (node_x * 10) + 1
+        point_y = (node_y * 10) + 1
         if exist:
             pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
         else:
@@ -224,8 +224,8 @@ def main():
 
 def debug():
     """Funktion zum Debugging."""
-    x = [{1:2, 3:2}]
-    Display.save_file(x)
+    x = [{1: 2, 3: 2}]
+    main()
 
 
 if __name__ == '__main__':
