@@ -5,6 +5,7 @@ import sys
 import pygame
 # from pygame.locals import *
 from backend import Game
+from tkinter.filedialog import asksaveasfilename, askopenfile
 
 
 class Display():  # Zu Display ändern
@@ -178,6 +179,36 @@ class Display():  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         pygame.display.flip()
+
+    @classmethod
+    def open_file(cls):
+        """Lädt Daten aus einer Datei mit file browser.
+
+        Kommentar: Lädt daten aus einer Datei
+        Input: Name der Klasse
+        Output: Geladene Daten
+        Besonders: Nutzt tkinter lade-Modul, beliebiger Speicherort.
+        """
+        file = askopenfile(mode='r', filetypes=[('Json files', '*.json')])
+        if file is not None:
+            inhalt = file.read()
+        return inhalt
+
+    @classmethod
+    def save_file(cls, inhalt):
+        """Speichert gegebene Daten in eine Datei mit file browser.
+
+        Kommentar: Speichert Daten in eine Datei
+        Input: Name der Klasse, Daten
+        Output: Kein Output
+        Besonders: Nutzt tkinter speicher-Modul, beliebiger Dateiort.
+        """
+        filename = asksaveasfilename(
+            filetypes=[('JSON files', '.json')], initialfile=''
+        )
+        if filename:
+            with open(filename, 'w', encoding='utf-8') as file:
+                file.write(inhalt)
 
 
 def main():
