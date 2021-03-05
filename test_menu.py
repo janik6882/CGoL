@@ -3,7 +3,7 @@ from tkinter import Tk
 from frontend import Display
 
 
-class MyFirstGUI:
+class Startfenster:
     def __init__(self, master):
         self.master = master
         master.title("Conways Game of Life")
@@ -39,7 +39,7 @@ class MyFirstGUI:
 def main():
     root = tk.Tk()
     root.geometry("500x500")
-    my_gui = MyFirstGUI(root)
+    fenster = Startfenster(root)
     root.mainloop()
 
 
