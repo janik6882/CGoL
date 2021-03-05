@@ -168,13 +168,12 @@ class Display:  # Zu Display ändern
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
-<
                     if event.button == 1:
                         self.manipulate_point(pos_x, pos_y)
                         # self.game.add_point(nodeX, nodeY)
                     if event.button ==  3:
-                        mid_x = self.windowX//2
-                        mid_y = self.windowY//2
+                        mid_x = self.window_x//2
+                        mid_y = self.window_y//2
                         verschiebung_x = (mid_x - pos_x)//10
                         verschiebung_y = (mid_y - pos_y)//10
                         points = self.game.get_points()
@@ -207,7 +206,7 @@ class Display:  # Zu Display ändern
             self.show_board(points)
             self.wait_keypress()
             self.game.next_board()
-            self.check_close()            
+            self.check_close()
             Display.check_close()
 
     @classmethod
