@@ -195,7 +195,7 @@ class Game():
         Kommentar: Importiert vorgefertigte Objekte aus einer Json datei
         Input: Name der Instanz, Optional: Dateiname
         Output: vorgefertigte Dateien, werden aber automatisch zu self.premade
-                hinzugefuegt
+                hinzugefügt
         Besonders: Wenn kein Dateiname gegeben, wird die standard datei genutzt
         """
         if filename:
