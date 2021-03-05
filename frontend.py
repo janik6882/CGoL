@@ -201,9 +201,20 @@ class Display:  # Zu Display ändern
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
-                    self.manipulate_point(pos_x, pos_y)
-                    # self.game.add_point(nodeX, nodeY)
-                    Display.update_board()
+                    if event.button == 1:
+                        self.manipulate_point(pos_x, pos_y)
+                        # self.game.add_point(nodeX, nodeY)
+                    if event.button ==  3:
+                        mid_x = self.window_x//2
+                        mid_y = self.window_y//2
+                        verschiebung_x = (mid_x - pos_x)//10
+                        verschiebung_y = (mid_y - pos_y)//10
+                        points = self.game.get_points()
+                        for point in points:
+                            point[0] += verschiebung_x
+                            point[1] += verschiebung_y
+                        self.show_board(points)
+                    self.update_board()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
                     if event.key == pygame.K_f:
@@ -248,6 +259,7 @@ class Display:  # Zu Display ändern
             self.show_board(points)
             self.wait_keypress()
             self.game.next_board()
+            self.check_close()
             Display.check_close()
 
     @classmethod
@@ -308,7 +320,6 @@ class Display:  # Zu Display ändern
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
-
 
 def main():
     """Funktion zum testen."""
