@@ -34,16 +34,18 @@ class Startfenster:
         self.auto_button = Button(master, text="Auto")
         self.auto_button.grid(row=4, column=1, sticky='ew')
 
+        master.columnconfigure(0, weight=1, uniform="commi")
+        master.columnconfigure(1, weight=1, uniform="commi")
+        master.rowconfigure(1, weight=1, uniform="commi")
+        master.rowconfigure(2, weight=1, uniform="commi")
+        master.rowconfigure(3, weight=1, uniform="commi")
+        master.rowconfigure(4, weight=1, uniform="commi")
+
 
 def main():
     root = Tk()
     root.geometry("250x250")
-    root.columnconfigure(0, weight=1, uniform="commi")
-    root.columnconfigure(1, weight=1, uniform="commi")
-    root.rowconfigure(1, weight=1, uniform="commi")
-    root.rowconfigure(2, weight=1, uniform="commi")
-    root.rowconfigure(3, weight=1, uniform="commi")
-    root.rowconfigure(4, weight=1, uniform="commi")
+
     fenster = Startfenster(root)
 
     root.mainloop()
