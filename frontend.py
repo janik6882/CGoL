@@ -79,7 +79,7 @@ class Display:  # Zu Display ändern
         self.master.title("Conways Game of Life")
 
         self.label = Label(self.master, text="Start Menu")
-        self.label.grid(row=0, column=0, columnspan=2, sticky='ew')
+        self.label.grid(row=0, column=0, sticky='ew')
 
         self.play_button = Button(self.master, text="Play")
         self.play_button.grid(row=1, column=0, sticky='ew')
@@ -94,19 +94,19 @@ class Display:  # Zu Display ändern
         self.load_button.grid(row=4, column=0, sticky='ew')
 
         self.rules_button = Button(self.master, text="Rules")
-        self.rules_button.grid(row=1, column=1, sticky='ew')
+        self.rules_button.grid(row=5, column=0, sticky='ew')
 
         self.forms_button = Button(self.master, text="Forms")
-        self.forms_button.grid(row=2, column=1, sticky='ew')
+        self.forms_button.grid(row=6, column=0, sticky='ew')
 
         self.manual_button = Button(self.master, text="Manual")
-        self.manual_button.grid(row=3, column=1, sticky='ew')
+        self.manual_button.grid(row=7, column=0, sticky='ew')
 
         self.auto_button = Button(self.master, text="Auto")
-        self.auto_button.grid(row=4, column=1, sticky='ew')
+        self.auto_button.grid(row=8, column=0, sticky='ew')
 
-        self.master.columnconfigure(0, weight=1, uniform="commi")
-        self.master.columnconfigure(1, weight=1, uniform="commi")
+        self.master.columnconfigure(0, weight=5, uniform="commi")
+        self.master.columnconfigure(1, weight=5, uniform="commi")
         self.master.rowconfigure(1, weight=1, uniform="commi")
         self.master.rowconfigure(2, weight=1, uniform="commi")
         self.master.rowconfigure(3, weight=1, uniform="commi")
