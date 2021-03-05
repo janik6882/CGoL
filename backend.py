@@ -96,6 +96,17 @@ class Game():
         self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
         return new_board
 
+    def replace_points(self, nodes):
+        """ Ersetzt self.nodes durch nodes
+
+        Kommentar: Erstzen der self.nodes durch nodes
+        Input: Name der Instanz, nodes als Knotenliste
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
+        # TODO: doku beenden
+        self.nodes = nodes
+
     def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
 
