@@ -269,7 +269,7 @@ def main():
 
 def debug():
     """Funktion zum Debugging."""
-    fenster = Display(0,0)
+    fenster = Display(1000,1000)
     fenster.mainloop()
 
 if __name__ == '__main__':
