@@ -87,7 +87,7 @@ class Display:  # Zu Display ändern
         self.pause_button = Button(self.master, text="Pause")
         self.pause_button.grid(row=2, column=0, sticky='ew')
 
-        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file())
+        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
         self.save_button.grid(row=3, column=0, sticky='ew')
 
         self.load_button = Button(self.master, text="Load", command=lambda: Display.open_file())
