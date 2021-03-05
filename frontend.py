@@ -7,6 +7,7 @@ import pygame
 import json
 from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
+from tkinter import Button, Label, Tk
 
 
 class Display():  # Zu Display ändern
@@ -16,7 +17,7 @@ class Display():  # Zu Display ändern
     backend.py importiertem game.
     """
 
-    def __init__(self, windowX: int, windowY: int, nodes=None):
+    def __init__(self, master, windowX: int, windowY: int, nodes=None):
         """Init Klasse.
 
         Kommentar: Konstrukter der Klasse display()
@@ -26,6 +27,45 @@ class Display():  # Zu Display ändern
         Besonders: Erstellt ein pygame display, erstellt eine Instanz der
                    game() klasse
         """
+
+        self.master = master
+        master.title("Conways Game of Life")
+
+        self.label = Label(master, text="Start Menu")
+        self.label.grid(row=0, column=0, columnspan=2, sticky='ew')
+
+        self.play_button = Button(master, text="Play")
+        self.play_button.grid(row=1, column=0, sticky='ew')
+
+        self.pause_button = Button(master, text="Pause")
+        self.pause_button.grid(row=2, column=0, sticky='ew')
+
+        self.save_button = Button(master, text="Save", command=lambda: Display.save_file())
+        self.save_button.grid(row=3, column=0, sticky='ew')
+
+        self.load_button = Button(master, text="Load", command=lambda: Display.open_file())
+        self.load_button.grid(row=4, column=0, sticky='ew')
+
+        self.rules_button = Button(master, text="Rules")
+        self.rules_button.grid(row=1, column=1, sticky='ew')
+
+        self.forms_button = Button(master, text="Forms")
+        self.forms_button.grid(row=2, column=1, sticky='ew')
+
+        self.manual_button = Button(master, text="Manual")
+        self.manual_button.grid(row=3, column=1, sticky='ew')
+
+        self.auto_button = Button(master, text="Auto")
+        self.auto_button.grid(row=4, column=1, sticky='ew')
+
+        self.master.columnconfigure(0, weight=1, uniform="commi")
+        self.master.columnconfigure(1, weight=1, uniform="commi")
+        self.master.rowconfigure(1, weight=1, uniform="commi")
+        self.master.rowconfigure(2, weight=1, uniform="commi")
+        self.master.rowconfigure(3, weight=1, uniform="commi")
+        self.master.rowconfigure(4, weight=1, uniform="commi")
+
+
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -36,6 +76,10 @@ class Display():  # Zu Display ändern
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.window_x, self.window_y))
+
+
+
+
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
@@ -222,10 +266,16 @@ def main():
     test.mainloop()
 
 
+
+
 def debug():
     """Funktion zum Debugging."""
-    x = [{1: 2, 3: 2}]
-    main()
+    root = Tk()
+    root.geometry("250x250")
+
+    fenster = Display(root)
+
+    root.mainloop()
 
 
 if __name__ == '__main__':
