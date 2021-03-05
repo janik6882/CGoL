@@ -111,6 +111,10 @@ class Display:  # Zu Display ändern
         self.master.rowconfigure(2, weight=1, uniform="commi")
         self.master.rowconfigure(3, weight=1, uniform="commi")
         self.master.rowconfigure(4, weight=1, uniform="commi")
+        self.master.rowconfigure(5, weight=1, uniform="commi")
+        self.master.rowconfigure(6, weight=1, uniform="commi")
+        self.master.rowconfigure(7, weight=1, uniform="commi")
+        self.master.rowconfigure(8, weight=1, uniform="commi")
         self.master.mainloop()
 
     def draw_grid(self):
@@ -204,7 +208,7 @@ class Display:  # Zu Display ändern
                     if event.button == 1:
                         self.manipulate_point(pos_x, pos_y)
                         # self.game.add_point(nodeX, nodeY)
-                    if event.button ==  3:
+                    if event.button == 3:
                         mid_x = self.window_x//2
                         mid_y = self.window_y//2
                         verschiebung_x = (mid_x - pos_x)//10
