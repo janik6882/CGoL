@@ -179,7 +179,6 @@ class Display:  # Zu Display ändern
         elif self.curr_place_mode == "premade":
             name = self.game.list_premade()[self.curr_num_premade]
             to_draw = self.game.add_premade(name, node_x, node_y)
-            print(to_draw)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
@@ -201,7 +200,6 @@ class Display:  # Zu Display ändern
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # Place/remove Cell
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
@@ -223,7 +221,7 @@ class Display:  # Zu Display ändern
                     # Keypress event listener
                     if event.key == pygame.K_f:
                         # TODO: entfernen, dient nur debug zwecken
-                        return "f"
+                        return None
                     if event.key == pygame.K_e:
                         # TODO: Entfernen, nur zu testzwecken
                         self.game.export_current()
@@ -330,8 +328,8 @@ def main():
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5],
                        [4, 1], [4, 4]]
     test = Display(1000, 1000, glider_top_left)
-    print(test.game.list_premade())
-    test.game.add_premade("Middle-weight spaceship", 5, 5)
+    # print(test.game.list_premade())
+    # test.game.add_premade("Middle-weight spaceship", 5, 5)
     test.mainloop()
 
 
