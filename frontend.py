@@ -29,6 +29,8 @@ class Display():  # Zu Display ändern
         """
 
         self.master = master
+        master.geometry("250x250")
+
         master.title("Conways Game of Life")
 
         self.label = Label(master, text="Start Menu")
@@ -264,10 +266,7 @@ def main():
 def debug():
     """Funktion zum Debugging."""
     root = Tk()
-    root.geometry("250x250")
-
     fenster = Display(root, 0,0)
-
     root.mainloop()
 
 
