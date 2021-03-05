@@ -133,8 +133,19 @@ class display():
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
-                    self.manipulate_point(pos_x, pos_y)
-                    # self.game.add_point(nodeX, nodeY)
+                    if event.button == 1:
+                        self.manipulate_point(pos_x, pos_y)
+                        # self.game.add_point(nodeX, nodeY)
+                    if event.button ==  3:
+                        mid_x = self.windowX//2
+                        mid_y = self.windowY//2
+                        verschiebung_x = (mid_x - pos_x)//10
+                        verschiebung_y = (mid_y - pos_y)//10
+                        points = self.game.get_points()
+                        for point in points:
+                            point[0] += verschiebung_x
+                            point[1] += verschiebung_y
+                        self.show_board(points)
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
@@ -158,7 +169,7 @@ class display():
             self.wait_keypress()
             self.game.next_board()
             self.check_close()
-
+            
 
 def main():
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5], [4, 1], [4, 4]]
