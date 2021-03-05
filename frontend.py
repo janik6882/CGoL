@@ -65,7 +65,6 @@ class Display():  # Zu Display ändern
         self.master.rowconfigure(3, weight=1, uniform="commi")
         self.master.rowconfigure(4, weight=1, uniform="commi")
 
-
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -76,10 +75,6 @@ class Display():  # Zu Display ändern
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.window_x, self.window_y))
-
-
-
-
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
@@ -266,14 +261,12 @@ def main():
     test.mainloop()
 
 
-
-
 def debug():
     """Funktion zum Debugging."""
     root = Tk()
     root.geometry("250x250")
 
-    fenster = Display(root)
+    fenster = Display(root, 0,0)
 
     root.mainloop()
 
