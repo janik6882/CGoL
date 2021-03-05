@@ -107,6 +107,7 @@ class Display:  # Zu Display ändern
 
         self.master.columnconfigure(0, weight=1, uniform="commi")
         self.master.columnconfigure(1, weight=1, uniform="commi")
+        self.master.columnconfigure(2,weight=1, uniform="commi")
         self.master.rowconfigure(1, weight=1, uniform="commi")
         self.master.rowconfigure(2, weight=1, uniform="commi")
         self.master.rowconfigure(3, weight=1, uniform="commi")
@@ -322,8 +323,9 @@ def main():
 
 def debug():
     """Funktion zum Debugging."""
-    fenster = Display(700,700)
+    fenster = Display(700, 700)
     fenster.mainloop()
+
 
 if __name__ == '__main__':
     debug()
