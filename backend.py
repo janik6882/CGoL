@@ -4,6 +4,8 @@ import time
 import json
 import os
 from typing import List
+
+
 # Vorerst Datei fuer alles Backend stuff.
 
 
@@ -38,10 +40,10 @@ class Game():
         Output: Int mit anzahl der Nachbarn
         Besonders: keine Besonderheiten
         """
-        nachbar_zellen = [[x_koord-1, y_koord-1], [x_koord-1, y_koord],
-                          [x_koord-1, y_koord+1], [x_koord, y_koord-1],
-                          [x_koord, y_koord+1], [x_koord+1, y_koord-1],
-                          [x_koord+1, y_koord], [x_koord+1, y_koord+1]]
+        nachbar_zellen = [[x_koord - 1, y_koord - 1], [x_koord - 1, y_koord],
+                          [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
+                          [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
+                          [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
         # setzen der Nachbarn zur länge der Überschneidung von nachbar_zellen
         #  und self.nodes (Knotenliste)
         num_nachbarn = len(Game.get_list_intersection(nachbar_zellen, self.nodes))  # noqa: E501
@@ -78,10 +80,10 @@ class Game():
         for node in nodes:  # loop durch alle elemente von self.nodes
             x_koord = node[0]  # setzt x zur x-koordinate von node
             y_koord = node[1]  # setzt y zur y-koordinate von node
-            nachbar_zellen = [[x_koord-1, y_koord-1], [x_koord-1, y_koord],
-                              [x_koord-1, y_koord+1], [x_koord, y_koord-1],
-                              [x_koord, y_koord+1], [x_koord+1, y_koord-1],
-                              [x_koord+1, y_koord], [x_koord+1, y_koord+1]]
+            nachbar_zellen = [[x_koord - 1, y_koord - 1], [x_koord - 1, y_koord],
+                              [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
+                              [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
+                              [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
             for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
                 if zelle not in nachbarn + nodes:  # wenn zelle nicht nodes und
                     # nachbarn
@@ -193,7 +195,7 @@ class Game():
         Kommentar: Importiert vorgefertigte Objekte aus einer Json datei
         Input: Name der Instanz, Optional: Dateiname
         Output: vorgefertigte Dateien, werden aber automatisch zu self.premade
-                hinzugefuegt
+                hinzugefügt
         Besonders: Wenn kein Dateiname gegeben, wird die standard datei genutzt
         """
         if filename:
@@ -296,8 +298,6 @@ class Game():
             command = command.format(dirName=dir_name)
             os.system(command)
         return None
-
-
 
 
 def debug():

@@ -7,9 +7,10 @@ import pygame
 import json
 from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
+from tkinter import Button, Label, Tk
 
 
-class Display():  # Zu Display ändern
+class Display:  # Zu Display ändern
     """Display Klasse.
 
     Klasse erstellt ein Pygame Display und ersellt eine Instanz von dem aus
@@ -32,8 +33,8 @@ class Display():  # Zu Display ändern
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
         self.grey = (173, 173, 173)
-        board_size_x = self.window_x//10
-        board_size_y = self.window_y//10
+        board_size_x = self.window_x // 10
+        board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.window_x, self.window_y))
 
@@ -47,6 +48,48 @@ class Display():  # Zu Display ändern
         """
         self.display.fill(self.white)
         self.draw_grid()
+
+    def open_menu(self):
+        # TODO: doku hinzufuegen
+        self.master = Tk()
+        self.master.geometry("250x250")
+
+        self.master.title("Conways Game of Life")
+
+        self.label = Label(self.master, text="Start Menu")
+        self.label.grid(row=0, column=0, columnspan=2, sticky='ew')
+
+        self.play_button = Button(self.master, text="Play")
+        self.play_button.grid(row=1, column=0, sticky='ew')
+
+        self.pause_button = Button(self.master, text="Pause")
+        self.pause_button.grid(row=2, column=0, sticky='ew')
+
+        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file())
+        self.save_button.grid(row=3, column=0, sticky='ew')
+
+        self.load_button = Button(self.master, text="Load", command=lambda: Display.open_file())
+        self.load_button.grid(row=4, column=0, sticky='ew')
+
+        self.rules_button = Button(self.master, text="Rules")
+        self.rules_button.grid(row=1, column=1, sticky='ew')
+
+        self.forms_button = Button(self.master, text="Forms")
+        self.forms_button.grid(row=2, column=1, sticky='ew')
+
+        self.manual_button = Button(self.master, text="Manual")
+        self.manual_button.grid(row=3, column=1, sticky='ew')
+
+        self.auto_button = Button(self.master, text="Auto")
+        self.auto_button.grid(row=4, column=1, sticky='ew')
+
+        self.master.columnconfigure(0, weight=1, uniform="commi")
+        self.master.columnconfigure(1, weight=1, uniform="commi")
+        self.master.rowconfigure(1, weight=1, uniform="commi")
+        self.master.rowconfigure(2, weight=1, uniform="commi")
+        self.master.rowconfigure(3, weight=1, uniform="commi")
+        self.master.rowconfigure(4, weight=1, uniform="commi")
+        self.master.mainloop()
 
     def draw_grid(self):
         """Zeichnet ein Gitter.
@@ -83,8 +126,8 @@ class Display():  # Zu Display ändern
         """
         self.clear_board()
         for point in points:
-            x_koord = (point[0]*10)+1
-            y_koord = (point[1]*10)+1
+            x_koord = (point[0] * 10) + 1
+            y_koord = (point[1] * 10) + 1
             pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         Display.update_board()
 
@@ -97,11 +140,11 @@ class Display():  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        node_x = pos_x//10
-        node_y = pos_y//10
+        node_x = pos_x // 10
+        node_y = pos_y // 10
         exist = self.game.manipulate_point(node_x, node_y)
-        point_x = (node_x*10)+1
-        point_y = (node_y*10)+1
+        point_x = (node_x * 10) + 1
+        point_y = (node_y * 10) + 1
         if exist:
             pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
         else:
@@ -136,6 +179,8 @@ class Display():  # Zu Display ändern
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
+                    if event.key == pygame.K_m:
+                        self.open_menu()
 
     def mainloop(self):
         """Mainloop, läuft bis beendet.
@@ -224,9 +269,8 @@ def main():
 
 def debug():
     """Funktion zum Debugging."""
-    x = [{1:2, 3:2}]
-    Display.save_file(x)
-
+    fenster = Display(700,700)
+    fenster.mainloop()
 
 if __name__ == '__main__':
     debug()
