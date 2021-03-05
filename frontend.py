@@ -27,6 +27,9 @@ class Display:  # Zu Display ändern
         Besonders: Erstellt ein pygame display, erstellt eine Instanz der
                    game() klasse
         """
+        self.curr_num_premade = 0
+        self.curr_place_mode = "single"
+        self.place_modes = ["single", "premade"]
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -48,6 +51,25 @@ class Display:  # Zu Display ändern
         """
         self.display.fill(self.white)
         self.draw_grid()
+
+    def next_premade(self):
+        # TODO: Doku beenden
+        self.curr_num_premade += 1
+        if self.curr_num_premade >= (len_premade := (len(self.game.list_premade()))):
+            self.curr_num_premade -= len_premade
+
+    def previous_premade(self):
+        # TODO: Doku beenden
+        self.curr_num_premade -= 1
+        if self.curr_num_premade >= -(len_premade := (len(self.game.list_premade()))):
+            self.curr_num_premade += len_premade
+
+    def change_place_mode(self):
+        # TODO: Doku beenden
+        place_index = self.place_modes.index(self.curr_place_mode)+1
+        if place_index >= len(self.place_modes):
+            place_index -= len(self.place_modes)
+        self.curr_place_mode = self.place_modes[place_index]
 
     def open_menu(self):
         # TODO: doku hinzufuegen
@@ -142,13 +164,23 @@ class Display:  # Zu Display ändern
         """
         node_x = pos_x // 10
         node_y = pos_y // 10
-        exist = self.game.manipulate_point(node_x, node_y)
         point_x = (node_x * 10) + 1
         point_y = (node_y * 10) + 1
-        if exist:
-            pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
-        else:
-            pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
+        if self.curr_place_mode == "single":
+            exist = self.game.manipulate_point(node_x, node_y)
+            if exist:
+                pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
+            else:
+                pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
+        elif self.curr_place_mode == "premade":
+            name = self.game.list_premade()[self.curr_num_premade]
+            to_draw = self.game.add_premade(name, node_x, node_y)
+            print(to_draw)
+            for point in to_draw:
+                point_x = (point[0] * 10) + 1
+                point_y = (point[1] * 10) + 1
+                pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
+        return None
 
     def wait_keypress(self):
         """Wartet auf einen Tastendruck.
@@ -165,6 +197,7 @@ class Display:  # Zu Display ändern
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Place/remove Cell
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
@@ -172,15 +205,35 @@ class Display:  # Zu Display ändern
                     # self.game.add_point(nodeX, nodeY)
                     Display.update_board()
                 if event.type == pygame.KEYDOWN:
+                    # Keypress event listener
                     if event.key == pygame.K_f:
-                        return "f"  # TODO: entfernen, dient nur debug zwecken
+                        # TODO: entfernen, dient nur debug zwecken
+                        return "f"
                     if event.key == pygame.K_e:
+                        # TODO: Entfernen, nur zu testzwecken
                         self.game.export_current()
                     if event.key == pygame.K_ESCAPE:
+                        # Escape -> Close
                         pygame.quit()
                         sys.exit()
                     if event.key == pygame.K_m:
                         self.open_menu()
+                    if event.key == pygame.K_RIGHT:
+                        self.next_premade()
+                        # TODO: Nächstes Premade objekt
+                        pass
+                    if event.key == pygame.K_LEFT:
+                        self.previous_premade()
+                        # TODO: Voriges Premade Objekt
+                        pass
+                    if event.key == pygame.K_p:
+                        # TODO: Toggle von Single zu Premade place mode
+                        self.change_place_mode()
+                        pass
+                    if event.key == pygame.K_g:
+                        # DEBUG: Nur für Debug zwecke
+                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade())
+                        print(out)
 
     def mainloop(self):
         """Mainloop, läuft bis beendet.

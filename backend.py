@@ -206,7 +206,7 @@ class Game():
         self.premade = Game.merge_dict(self.premade, data)
         return data
 
-    def add_premade(self, name: str, pos_x: int, pos_y: int) -> None:
+    def add_premade(self, name: str, pos_x: int, pos_y: int) -> list:
         """Fügt ein vorgefertigtes Element zur Knotenliste hinzu.
 
         Kommentar: fuegt an einer gegebenen Position ein vorgefertigtes Objekt
@@ -216,11 +216,11 @@ class Game():
         Besonders: Kein Output, anfügen an Knotenliste
         """
         to_add = self.premade[name]
+        new_point = []
         for point in to_add:
-            point[0] += pos_x
-            point[1] += pos_y
-        self.nodes += to_add
-        return None
+            new_point.append([point[0]+pos_x, point[1]+pos_y])
+        self.nodes += new_point
+        return new_point
 
     @classmethod
     def merge_dict(cls, dict1: dict, dict2: dict) -> dict:
