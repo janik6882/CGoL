@@ -267,7 +267,7 @@ class Display:  # Zu Display ändern
         )
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
-                json.dump(inhalt, file)
+                json.dump(inhalt, file) 
 
 def main():
     """Funktion zum testen."""
