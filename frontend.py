@@ -10,7 +10,7 @@ from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
 
 
-class Display():  # Zu Display ändern
+class Display:  # Zu Display ändern
     """Display Klasse.
 
     Klasse erstellt ein Pygame Display und ersellt eine Instanz von dem aus
@@ -266,7 +266,7 @@ def main():
 def debug():
     """Funktion zum Debugging."""
     root = Tk()
-    fenster = Display(root, 0,0)
+    fenster = Display(root, 0, 0)
     root.mainloop()
 
 
