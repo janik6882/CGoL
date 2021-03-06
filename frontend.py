@@ -262,6 +262,7 @@ class Display:  # Zu Display ändern
         while True:
             points = self.game.get_points()
             self.show_board(points)
+            print(self.game.nodes)
             self.wait_keypress()
             self.game.next_board()
             self.check_close()
@@ -311,7 +312,7 @@ class Display:  # Zu Display ändern
 
     def open_saved_board(self):
         nodes = self.open_file()
-        Game.replace_points(Game, nodes)
+        self.game.replace_points(nodes)
         self.show_board(nodes)
 
     @classmethod
