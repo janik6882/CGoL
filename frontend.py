@@ -311,7 +311,7 @@ class Display:  # Zu Display ändern
 
     def open_saved_board(self):
         nodes = self.open_file()
-        Game.replace_points(Game, nodes)
+        self.game.replace_points(nodes)
         self.show_board(nodes)
 
     @classmethod
