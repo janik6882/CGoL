@@ -262,7 +262,6 @@ class Display:  # Zu Display ändern
         while True:
             points = self.game.get_points()
             self.show_board(points)
-            print(self.game.nodes)
             self.wait_keypress()
             self.game.next_board()
             self.check_close()
