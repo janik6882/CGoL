@@ -199,13 +199,26 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="single":
+                    mouse_pos = pygame.mouse.get_pos()
+                    pos_x = mouse_pos[0] // 10
+                    pos_y = mouse_pos[1] // 10
+                    self.game.add_point(pos_y, pos_x)
+                    pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                    self.update_board()
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
                     if event.button == 1:
+                        # pressed = pygame.mouse.get_pressed()[0]
+                        # while pressed==True:
+                            # pressed = pygame.mouse.get_pressed()[0]
+                            # print(pressed)
                         self.manipulate_point(pos_x, pos_y)
-                        # self.game.add_point(nodeX, nodeY)
+                            # self.game.add_point(nodeX, nodeY)
+                        # print(pressed)
                     if event.button == 3:
                         mid_x = self.window_x//2
                         mid_y = self.window_y//2
