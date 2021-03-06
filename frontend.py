@@ -78,8 +78,8 @@ class Display:  # Zu Display ändern
 
         self.master.title("Conways Game of Life")
 
-        self.label = Label(self.master, text="Start Menu")
-        self.label.grid(row=0, column=0, sticky='ew')
+        self.title_label = Label(self.master, text="Main Menu")
+        self.title_label.grid(row=0, column=0, sticky='ew')
 
         self.play_button = Button(self.master, text="Play")
         self.play_button.grid(row=1, column=0, sticky='ew')
@@ -105,6 +105,9 @@ class Display:  # Zu Display ändern
         self.auto_button = Button(self.master, text="Auto")
         self.auto_button.grid(row=8, column=0, sticky='ew')
 
+        self.quit_button = Button(self.master, text="Quit", command=lambda:[pygame.quit(), sys.exit()])
+        self.quit_button.grid(row=9, column=0, sticky='ew')
+
         self.master.columnconfigure(0, weight=5, uniform="commi")
         self.master.columnconfigure(1, weight=5, uniform="commi")
         self.master.rowconfigure(1, weight=1, uniform="commi")
@@ -115,6 +118,7 @@ class Display:  # Zu Display ändern
         self.master.rowconfigure(6, weight=1, uniform="commi")
         self.master.rowconfigure(7, weight=1, uniform="commi")
         self.master.rowconfigure(8, weight=1, uniform="commi")
+        self.master.rowconfigure(9, weight=1, uniform="commi")
         self.master.mainloop()
 
     def draw_grid(self):
