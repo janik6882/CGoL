@@ -152,7 +152,6 @@ class Display:  # Zu Display ändern
         """
         self.clear_board()
         for point in points:
-            print("check1")
             x_koord = (point[0] * 10) + 1
             y_koord = (point[1] * 10) + 1
             pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
@@ -306,7 +305,6 @@ class Display:  # Zu Display ändern
         Besonders: Nutzt tkinter lade-Modul, beliebiger Speicherort.
         """
         inhalt = json.load(askopenfile(mode='r', filetypes=[('Json files', '*.json')]))
-        print(type(inhalt))
         return inhalt
 
     def open_saved_board(self):
