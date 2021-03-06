@@ -102,8 +102,8 @@ class Display:  # Zu Display ändern
 
         self.master.title("Conways Game of Life")
 
-        self.label = Label(self.master, text="Start Menu")
-        self.label.grid(row=0, column=0, sticky='ew')
+        self.title_label = Label(self.master, text="Main Menu")
+        self.title_label.grid(row=0, column=0, sticky='ew')
 
         self.play_button = Button(self.master, text="Play")
         self.play_button.grid(row=1, column=0, sticky='ew')
@@ -111,23 +111,30 @@ class Display:  # Zu Display ändern
         self.pause_button = Button(self.master, text="Pause")
         self.pause_button.grid(row=2, column=0, sticky='ew')
 
-        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file())
-        self.save_button.grid(row=3, column=0, sticky='ew')
-
-        self.load_button = Button(self.master, text="Load", command=lambda: Display.open_file())
-        self.load_button.grid(row=4, column=0, sticky='ew')
-
-        self.rules_button = Button(self.master, text="Rules")
-        self.rules_button.grid(row=5, column=0, sticky='ew')
+        self.auto_button = Button(self.master, text="Auto")
+        self.auto_button.grid(row=3, column=0, sticky='ew')
 
         self.forms_button = Button(self.master, text="Forms")
-        self.forms_button.grid(row=6, column=0, sticky='ew')
+        self.forms_button.grid(row=4, column=0, sticky='ew')
+
+        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
+        self.save_button.grid(row=5, column=0, sticky='ew')
+
+        self.load_button = Button(self.master, text="Load", command=lambda: self.open_saved_board())
+        self.load_button.grid(row=6, column=0, sticky='ew')
+
+        self.rules_button = Button(self.master, text="Rules")
+        self.rules_button.grid(row=7, column=0, sticky='ew')
+
+
 
         self.manual_button = Button(self.master, text="Manual")
-        self.manual_button.grid(row=7, column=0, sticky='ew')
+        self.manual_button.grid(row=8, column=0, sticky='ew')
 
-        self.auto_button = Button(self.master, text="Auto")
-        self.auto_button.grid(row=8, column=0, sticky='ew')
+
+
+        self.quit_button = Button(self.master, text="Quit", command=lambda:[pygame.quit(), sys.exit()])
+        self.quit_button.grid(row=9, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
         self.master.columnconfigure(1, weight=5, uniform="commi")
@@ -139,6 +146,7 @@ class Display:  # Zu Display ändern
         self.master.rowconfigure(6, weight=1, uniform="commi")
         self.master.rowconfigure(7, weight=1, uniform="commi")
         self.master.rowconfigure(8, weight=1, uniform="commi")
+        self.master.rowconfigure(9, weight=1, uniform="commi")
         self.master.mainloop()
 
     def draw_grid(self):
@@ -336,10 +344,13 @@ class Display:  # Zu Display ändern
         Output: Geladene Daten
         Besonders: Nutzt tkinter lade-Modul, beliebiger Speicherort.
         """
-        file = askopenfile(mode='r', filetypes=[('Json files', '*.json')])
-        if file is not None:
-            inhalt = file.read()
+        inhalt = json.load(askopenfile(mode='r', filetypes=[('Json files', '*.json')]))
         return inhalt
+
+    def open_saved_board(self):
+        nodes = self.open_file()
+        self.game.replace_points(nodes)
+        self.show_board(nodes)
 
     @classmethod
     def save_file(cls, inhalt):
@@ -355,7 +366,7 @@ class Display:  # Zu Display ändern
         )
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
-                json.dump(inhalt, file)
+                json.dump(inhalt, file) 
 
 def main():
     """Funktion zum testen."""
