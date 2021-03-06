@@ -87,23 +87,27 @@ class Display:  # Zu Display ändern
         self.pause_button = Button(self.master, text="Pause")
         self.pause_button.grid(row=2, column=0, sticky='ew')
 
-        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
-        self.save_button.grid(row=3, column=0, sticky='ew')
-
-        self.load_button = Button(self.master, text="Load", command=lambda: self.open_saved_board())
-        self.load_button.grid(row=4, column=0, sticky='ew')
-
-        self.rules_button = Button(self.master, text="Rules")
-        self.rules_button.grid(row=5, column=0, sticky='ew')
+        self.auto_button = Button(self.master, text="Auto")
+        self.auto_button.grid(row=3, column=0, sticky='ew')
 
         self.forms_button = Button(self.master, text="Forms")
-        self.forms_button.grid(row=6, column=0, sticky='ew')
+        self.forms_button.grid(row=4, column=0, sticky='ew')
+
+        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
+        self.save_button.grid(row=5, column=0, sticky='ew')
+
+        self.load_button = Button(self.master, text="Load", command=lambda: self.open_saved_board())
+        self.load_button.grid(row=6, column=0, sticky='ew')
+
+        self.rules_button = Button(self.master, text="Rules")
+        self.rules_button.grid(row=7, column=0, sticky='ew')
+
+
 
         self.manual_button = Button(self.master, text="Manual")
-        self.manual_button.grid(row=7, column=0, sticky='ew')
+        self.manual_button.grid(row=8, column=0, sticky='ew')
 
-        self.auto_button = Button(self.master, text="Auto")
-        self.auto_button.grid(row=8, column=0, sticky='ew')
+
 
         self.quit_button = Button(self.master, text="Quit", command=lambda:[pygame.quit(), sys.exit()])
         self.quit_button.grid(row=9, column=0, sticky='ew')
