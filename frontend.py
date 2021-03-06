@@ -90,7 +90,7 @@ class Display:  # Zu Display ändern
         self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
         self.save_button.grid(row=3, column=0, sticky='ew')
 
-        self.load_button = Button(self.master, text="Load", command=lambda: Display.open_file())
+        self.load_button = Button(self.master, text="Load", command=lambda: self.open_saved_board())
         self.load_button.grid(row=4, column=0, sticky='ew')
 
         self.rules_button = Button(self.master, text="Rules")
@@ -152,6 +152,7 @@ class Display:  # Zu Display ändern
         """
         self.clear_board()
         for point in points:
+            print("check1")
             x_koord = (point[0] * 10) + 1
             y_koord = (point[1] * 10) + 1
             pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
@@ -304,10 +305,14 @@ class Display:  # Zu Display ändern
         Output: Geladene Daten
         Besonders: Nutzt tkinter lade-Modul, beliebiger Speicherort.
         """
-        file = askopenfile(mode='r', filetypes=[('Json files', '*.json')])
-        if file is not None:
-            inhalt = file.read()
+        inhalt = json.load(askopenfile(mode='r', filetypes=[('Json files', '*.json')]))
+        print(type(inhalt))
         return inhalt
+
+    def open_saved_board(self):
+        nodes = self.open_file()
+        Game.replace_points(Game, nodes)
+        self.show_board(nodes)
 
     @classmethod
     def save_file(cls, inhalt):
