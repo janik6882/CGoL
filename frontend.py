@@ -52,7 +52,7 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        self.display.fill(self.white)
+        pygame.draw.rect(self.display, self.white, pygame.Rect(0, 0, self.window_x, self.window_y))
         self.draw_grid()
 
     def next_premade(self):
@@ -228,6 +228,7 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
+        pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
         pygame.draw.line(self.display,self.black,(self.window_x, 0),(self.window_x,self.window_y),width = 2)
         pygame.draw.line(self.display,self.black,(self.window_x+3,0),(self.window_x+3,self.window_y),width = 2)
         pygame.draw.line(self.display,self.black,(self.window_x,300),(self.display_x,300),width = 1)
@@ -235,13 +236,13 @@ class Display:  # Zu Display ändern
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
         instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Premade platzieren',
                         '','Maustaste 1 - platzieren','Maustaste 2 - Zelle zentrieren','','Iterationen :  '+str(self.game.iterations),'Modus :  '+str(self.curr_place_mode),
-                        'Premade :  '+str(self.curr_num_premade)]
+                        'Premade :  '+str(self.game.list_premade()[self.curr_num_premade])]
         for counter,text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
-        
 
-    
+
+
     def wait_keypress(self):
         """Wartet auf einen Tastendruck.
 
@@ -256,7 +257,7 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="single":
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="single" and pygame.mouse.get_pos()[0]<self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
@@ -299,12 +300,21 @@ class Display:  # Zu Display ändern
                         self.open_menu()
                     if event.key == pygame.K_RIGHT:
                         self.next_premade()
+                        # points = self.game.get_points()
+                        # self.show_board(points)
+                        self.draw_menu()
                         pass
                     if event.key == pygame.K_LEFT:
                         self.previous_premade()
+                        points = self.game.get_points()
+                        self.show_board(points)
+                        self.draw_menu()
                         pass
                     if event.key == pygame.K_p:
                         self.change_place_mode()
+                        points = self.game.get_points()
+                        self.show_board(points)
+                        self.draw_menu()
                         pass
                     if event.key == pygame.K_g:
                         # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
@@ -389,7 +399,7 @@ class Display:  # Zu Display ändern
         )
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
-                json.dump(inhalt, file) 
+                json.dump(inhalt, file)
 
 def main():
     """Funktion zum testen."""
