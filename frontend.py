@@ -11,6 +11,26 @@ from tkinter import Button, Label, Tk
 
 pygame.font.init()
 
+font = pygame.font.SysFont("Arial", 20)
+
+
+class Button:
+    "Create a button, then blit the surface in the while loop"
+ 
+    def __init__(self, text,  x, y, color ="black"):
+        self.x = x
+        self.y = y
+        self.change_text(text, color)
+ 
+    def change_text(self, text, color="black"):
+        self.text = font.render(text, 1, pygame.Color("White"))
+        self.size = self.text.get_size()
+        self.surface = pygame.Surface(self.size)
+        self.surface.fill(color)
+        self.surface.blit(self.text, (0, 0))
+        self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
+
+
 
 class Display:  # Zu Display ändern
     """Display Klasse.
@@ -43,6 +63,7 @@ class Display:  # Zu Display ändern
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
+        self.button1 = Button ("beispiel",self.window_x +10, 500)
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
@@ -247,6 +268,8 @@ class Display:  # Zu Display ändern
         for counter,text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
+
+        self.display.blit(self.button1.surface, (self.button1.x, self.button1.y))
         self.update_board()
 
 
@@ -291,6 +314,11 @@ class Display:  # Zu Display ändern
                                 point[0] += verschiebung_x
                                 point[1] += verschiebung_y
                             self.show_board(points)
+                    else:
+                        if self.button1.rect.collidepoint(pos_y, pos_x):
+                            self.clear_menu()
+                            self.button1.change_text("test", color="red")
+                            self.draw_menu()
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
