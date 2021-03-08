@@ -128,7 +128,10 @@ class Game():
         """
         # TODO: Verhalten besprechen, wenn punkt bereits in Knotenliste
         # OPTIMIZE: Laufzeit optimieren (add, append oder operator?)
-        self.nodes.append([x_koord, y_koord])
+        if [x_koord, y_koord] in self.nodes:
+            pass
+        else:
+            self.nodes.append([x_koord, y_koord])
         return self.nodes
 
     def remove_point(self, x_koord, y_koord):
@@ -141,12 +144,14 @@ class Game():
         """
         # OPTIMIZE: Laufzeit?
         # DEBUG: Try except pruefen
-        if [x_koord, y_koord] in self.nodes:
+        while [x_koord, y_koord] in self.nodes:
             self.nodes.remove([x_koord, y_koord])
-            return self.nodes
-        else:
+        return self.nodes
+
+        # if [x_koord, y_koord] in self.nodes:
+        # else:
             # Ausgabe besprechen
-            return "error"
+            # return "error"
 
     def manipulate_point(self, x_koord: int, y_koord: int) -> bool:
         """Siehe Kommentar.
@@ -347,4 +352,3 @@ def check_save():
 
 if __name__ == '__main__':
     debug()
-

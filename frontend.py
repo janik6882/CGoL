@@ -31,7 +31,7 @@ class Display:  # Zu Display ändern
         """
         self.curr_num_premade = 0
         self.curr_place_mode = "single"
-        self.place_modes = ["single", "premade"]
+        self.place_modes = ["single", "draw", "premade"]
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -56,7 +56,14 @@ class Display:  # Zu Display ändern
         self.draw_grid()
 
     def clear_menu(self):
-        # TODO: Doku beenden
+        """Übermalt den Sidebar bereich weiß.
+
+        Kommentar:Malt ein weißes Rechteck über den sidebar bereich und setzt
+                  diesen dadurch zurück.
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
 
 
@@ -66,14 +73,14 @@ class Display:  # Zu Display ändern
         Kommentar: rotiert in der Premade liste zum nächsten
         Input: Name der Instanz
         Output: Kein Output
-        Besonders: Verändert self.curr_num_premade
+        Besonders: Verändert self.curr_num_premade, nutzt Walrus operator.
         """
         self.curr_num_premade += 1
         if self.curr_num_premade >= (len_premade := (len(self.game.list_premade()))):
             self.curr_num_premade -= len_premade
 
     def previous_premade(self):
-        """Wechselt zum vorherigen vorgefertigten Objekt
+        """Wechselt zum vorherigen vorgefertigten Objekt.
 
         Kommentar: rotiert in der Premade liste zum vorherigen
         Input: Name der Instanz
@@ -194,7 +201,7 @@ class Display:  # Zu Display ändern
         for point in points:
             x_koord = (point[0] * 10) + 1
             y_koord = (point[1] * 10) + 1
-            if y_koord<self.window_y:
+            if y_koord < self.window_y:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         Display.update_board()
 
@@ -265,7 +272,7 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="single" and pygame.mouse.get_pos()[0]<self.window_x:
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="draw" and pygame.mouse.get_pos()[0]<self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
