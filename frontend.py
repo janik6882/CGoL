@@ -219,7 +219,7 @@ class Display:  # Zu Display ändern
                 pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
         elif self.curr_place_mode == "premade":
             name = self.game.list_premade()[self.curr_num_premade]
-            to_draw = self.game.add_premade(name, node_x, node_y)
+            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y) if  cell [1]*10 < self.window_x)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
