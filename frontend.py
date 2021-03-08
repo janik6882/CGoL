@@ -9,6 +9,8 @@ from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
 
+pygame.font.init()
+
 
 class Display:  # Zu Display ändern
     """Display Klasse.
@@ -33,13 +35,14 @@ class Display:  # Zu Display ändern
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
+        self.display_x = windowX + 300
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
         self.grey = (173, 173, 173)
         board_size_x = self.window_x // 10
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
-        self.display = pygame.display.set_mode((self.window_x, self.window_y))
+        self.display = pygame.display.set_mode((self.display_x, self.window_y))
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
@@ -217,6 +220,28 @@ class Display:  # Zu Display ändern
                 pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
         return None
 
+    def draw_menu(self):
+        """Zeichnet ein Seitenmenü.
+
+        Kommentar: Zeichneet ein Seitenmenü, dass auch variablen anzeigt
+        Input: greift auf self.game.iterations , self.curr_place_mode und self.curr_num_premade zu
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
+        pygame.draw.line(self.display,self.black,(self.window_x, 0),(self.window_x,self.window_y),width = 2)
+        pygame.draw.line(self.display,self.black,(self.window_x+3,0),(self.window_x+3,self.window_y),width = 2)
+        pygame.draw.line(self.display,self.black,(self.window_x,300),(self.display_x,300),width = 1)
+
+        myfont = pygame.font.SysFont('Comic Sans MS', 15)
+        instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Premade platzieren',
+                        '','Maustaste 1 - platzieren','Maustaste 2 - Zelle zentrieren','','Iterationen :  '+str(self.game.iterations),'Modus :  '+str(self.curr_place_mode),
+                        'Premade :  '+str(self.curr_num_premade)]
+        for counter,text in enumerate(instructions):
+            textsurface = myfont.render(text, False, (0, 0, 0))
+            self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
+        
+
+    
     def wait_keypress(self):
         """Wartet auf einen Tastendruck.
 
@@ -243,24 +268,20 @@ class Display:  # Zu Display ändern
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
-                    if event.button == 1:
-                        # pressed = pygame.mouse.get_pressed()[0]
-                        # while pressed==True:
-                            # pressed = pygame.mouse.get_pressed()[0]
-                            # print(pressed)
-                        self.manipulate_point(pos_x, pos_y)
+                    if pos_y < self.window_x:
+                        if event.button == 1:
+                            self.manipulate_point(pos_x, pos_y)
                             # self.game.add_point(nodeX, nodeY)
-                        # print(pressed)
-                    if event.button == 3:
-                        mid_x = self.window_x//2
-                        mid_y = self.window_y//2
-                        verschiebung_x = (mid_x - pos_x)//10
-                        verschiebung_y = (mid_y - pos_y)//10
-                        points = self.game.get_points()
-                        for point in points:
-                            point[0] += verschiebung_x
-                            point[1] += verschiebung_y
-                        self.show_board(points)
+                        if event.button == 3:
+                            mid_x = self.window_x//2
+                            mid_y = self.window_y//2
+                            verschiebung_x = (mid_x - pos_x)//10
+                            verschiebung_y = (mid_y - pos_y)//10
+                            points = self.game.get_points()
+                            for point in points:
+                                point[0] += verschiebung_x
+                                point[1] += verschiebung_y
+                            self.show_board(points)
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
@@ -301,6 +322,8 @@ class Display:  # Zu Display ändern
         while True:
             points = self.game.get_points()
             self.show_board(points)
+            self.draw_menu()
+            self.update_board()
             self.wait_keypress()
             self.game.next_board()
             self.check_close()
