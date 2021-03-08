@@ -5,7 +5,6 @@ import json
 import os
 from typing import List
 
-
 # Vorerst Datei fuer alles Backend stuff.
 
 
@@ -97,6 +96,17 @@ class Game():
         self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
         self.iterations += 1
         return new_board
+
+    def replace_points(self, nodes):
+        """ Ersetzt self.nodes durch nodes
+
+        Kommentar: Erstzen der self.nodes durch nodes
+        Input: Name der Instanz, nodes als Knotenliste
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
+        # TODO: doku beenden
+        self.nodes = nodes
 
     def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
@@ -322,6 +332,8 @@ def debug():
             print(row)
 
 
+
+
 def check_save():
     """Testfunktion für das Speichern und Laden."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
@@ -335,3 +347,4 @@ def check_save():
 
 if __name__ == '__main__':
     debug()
+

@@ -56,33 +56,57 @@ class Display:  # Zu Display ändern
         self.draw_grid()
 
     def next_premade(self):
-        # TODO: Doku beenden
+        """Geht zum nächsten Vorgefertigten Objekt.
+
+        Kommentar: rotiert in der Premade liste zum nächsten
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Verändert self.curr_num_premade
+        """
         self.curr_num_premade += 1
         if self.curr_num_premade >= (len_premade := (len(self.game.list_premade()))):
             self.curr_num_premade -= len_premade
 
     def previous_premade(self):
-        # TODO: Doku beenden
+        """Wechselt zum vorherigen vorgefertigten Objekt
+
+        Kommentar: rotiert in der Premade liste zum vorherigen
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Verändert self.curr_num_premade
+        """
         self.curr_num_premade -= 1
         if self.curr_num_premade >= -(len_premade := (len(self.game.list_premade()))):
             self.curr_num_premade += len_premade
 
     def change_place_mode(self):
-        # TODO: Doku beenden
+        """Wechselt den Place mode.
+
+        Kommentar: Wechselt den Place mode zwischen 'single' und 'premade'
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Verändert self.curr_place_mode
+        """
         place_index = self.place_modes.index(self.curr_place_mode)+1
         if place_index >= len(self.place_modes):
             place_index -= len(self.place_modes)
         self.curr_place_mode = self.place_modes[place_index]
 
     def open_menu(self):
-        # TODO: doku hinzufuegen
+        """Öffnet ein TKinter Menü.
+
+        Kommentar: Erstelt ein TKInter Menü und öffnet dieses
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         self.master = Tk()
         self.master.geometry("250x250")
 
         self.master.title("Conways Game of Life")
 
-        self.label = Label(self.master, text="Start Menu")
-        self.label.grid(row=0, column=0, sticky='ew')
+        self.title_label = Label(self.master, text="Main Menu")
+        self.title_label.grid(row=0, column=0, sticky='ew')
 
         self.play_button = Button(self.master, text="Play")
         self.play_button.grid(row=1, column=0, sticky='ew')
@@ -90,23 +114,30 @@ class Display:  # Zu Display ändern
         self.pause_button = Button(self.master, text="Pause")
         self.pause_button.grid(row=2, column=0, sticky='ew')
 
-        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file())
-        self.save_button.grid(row=3, column=0, sticky='ew')
-
-        self.load_button = Button(self.master, text="Load", command=lambda: Display.open_file())
-        self.load_button.grid(row=4, column=0, sticky='ew')
-
-        self.rules_button = Button(self.master, text="Rules")
-        self.rules_button.grid(row=5, column=0, sticky='ew')
+        self.auto_button = Button(self.master, text="Auto")
+        self.auto_button.grid(row=3, column=0, sticky='ew')
 
         self.forms_button = Button(self.master, text="Forms")
-        self.forms_button.grid(row=6, column=0, sticky='ew')
+        self.forms_button.grid(row=4, column=0, sticky='ew')
+
+        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
+        self.save_button.grid(row=5, column=0, sticky='ew')
+
+        self.load_button = Button(self.master, text="Load", command=lambda: self.open_saved_board())
+        self.load_button.grid(row=6, column=0, sticky='ew')
+
+        self.rules_button = Button(self.master, text="Rules")
+        self.rules_button.grid(row=7, column=0, sticky='ew')
+
+
 
         self.manual_button = Button(self.master, text="Manual")
-        self.manual_button.grid(row=7, column=0, sticky='ew')
+        self.manual_button.grid(row=8, column=0, sticky='ew')
 
-        self.auto_button = Button(self.master, text="Auto")
-        self.auto_button.grid(row=8, column=0, sticky='ew')
+
+
+        self.quit_button = Button(self.master, text="Quit", command=lambda:[pygame.quit(), sys.exit()])
+        self.quit_button.grid(row=9, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
         self.master.columnconfigure(1, weight=5, uniform="commi")
@@ -118,6 +149,7 @@ class Display:  # Zu Display ändern
         self.master.rowconfigure(6, weight=1, uniform="commi")
         self.master.rowconfigure(7, weight=1, uniform="commi")
         self.master.rowconfigure(8, weight=1, uniform="commi")
+        self.master.rowconfigure(9, weight=1, uniform="commi")
         self.master.mainloop()
 
     def draw_grid(self):
@@ -182,7 +214,6 @@ class Display:  # Zu Display ändern
         elif self.curr_place_mode == "premade":
             name = self.game.list_premade()[self.curr_num_premade]
             to_draw = self.game.add_premade(name, node_x, node_y)
-            print(to_draw)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
@@ -225,8 +256,15 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="single":
+                    mouse_pos = pygame.mouse.get_pos()
+                    pos_x = mouse_pos[0] // 10
+                    pos_y = mouse_pos[1] // 10
+                    self.game.add_point(pos_y, pos_x)
+                    pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                    self.update_board()
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # Place/remove Cell
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
@@ -248,8 +286,8 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
                     if event.key == pygame.K_f:
-                        # TODO: entfernen, dient nur debug zwecken
-                        return "f"
+                        # TODO: entfernen, geht zur nächsten Generation
+                        return None
                     if event.key == pygame.K_e:
                         # TODO: Entfernen, nur zu testzwecken
                         self.game.export_current()
@@ -261,18 +299,15 @@ class Display:  # Zu Display ändern
                         self.open_menu()
                     if event.key == pygame.K_RIGHT:
                         self.next_premade()
-                        # TODO: Nächstes Premade objekt
                         pass
                     if event.key == pygame.K_LEFT:
                         self.previous_premade()
-                        # TODO: Voriges Premade Objekt
                         pass
                     if event.key == pygame.K_p:
-                        # TODO: Toggle von Single zu Premade place mode
                         self.change_place_mode()
                         pass
                     if event.key == pygame.K_g:
-                        # DEBUG: Nur für Debug zwecke
+                        # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
                         out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade())
                         print(out)
 
@@ -332,10 +367,13 @@ class Display:  # Zu Display ändern
         Output: Geladene Daten
         Besonders: Nutzt tkinter lade-Modul, beliebiger Speicherort.
         """
-        file = askopenfile(mode='r', filetypes=[('Json files', '*.json')])
-        if file is not None:
-            inhalt = file.read()
+        inhalt = json.load(askopenfile(mode='r', filetypes=[('Json files', '*.json')]))
         return inhalt
+
+    def open_saved_board(self):
+        nodes = self.open_file()
+        self.game.replace_points(nodes)
+        self.show_board(nodes)
 
     @classmethod
     def save_file(cls, inhalt):
@@ -351,15 +389,15 @@ class Display:  # Zu Display ändern
         )
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
-                json.dump(inhalt, file)
+                json.dump(inhalt, file) 
 
 def main():
     """Funktion zum testen."""
     glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5],
                        [4, 1], [4, 4]]
     test = Display(1000, 1000, glider_top_left)
-    print(test.game.list_premade())
-    test.game.add_premade("Middle-weight spaceship", 5, 5)
+    # print(test.game.list_premade())
+    # test.game.add_premade("Middle-weight spaceship", 5, 5)
     test.mainloop()
 
 
