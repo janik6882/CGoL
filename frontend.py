@@ -31,7 +31,7 @@ class Display:  # Zu Display ändern
         """
         self.curr_num_premade = 0
         self.curr_place_mode = "single"
-        self.place_modes = ["single", "draw", "premade"]
+        self.place_modes = ["single", "draw", "erase", "premade"]
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -248,7 +248,7 @@ class Display:  # Zu Display ändern
         pygame.draw.line(self.display,self.black,(self.window_x,300),(self.display_x,300),width = 1)
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
-        instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Premade platzieren',
+        instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Draw/Erase/Premade','      platzieren',
                         '','Maustaste 1 - platzieren','Maustaste 2 - Zelle zentrieren','','Iterationen :  '+str(self.game.iterations),'Modus :  '+str(self.curr_place_mode),
                         'Premade :  '+str(self.game.list_premade()[self.curr_num_premade])]
         for counter,text in enumerate(instructions):
@@ -272,14 +272,18 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="draw" and pygame.mouse.get_pos()[0]<self.window_x:
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
-                    self.game.add_point(pos_y, pos_x)
-                    pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
-                    self.update_board()
-
+                    if self.curr_place_mode == "draw":
+                        self.game.add_point(pos_y, pos_x)
+                        pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        self.update_board()
+                    elif self.curr_place_mode == "erase":
+                        self.game.remove_point(pos_y, pos_x)
+                        pygame.draw.rect(self.display, self.white, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        self.update_board()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
