@@ -55,6 +55,11 @@ class Display:  # Zu Display ändern
         pygame.draw.rect(self.display, self.white, pygame.Rect(0, 0, self.window_x, self.window_y))
         self.draw_grid()
 
+    def clear_menu(self):
+        # TODO: Doku beenden
+        pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
+
+
     def next_premade(self):
         """Geht zum nächsten Vorgefertigten Objekt.
 
@@ -189,7 +194,8 @@ class Display:  # Zu Display ändern
         for point in points:
             x_koord = (point[0] * 10) + 1
             y_koord = (point[1] * 10) + 1
-            pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
+            if y_koord<self.window_y:
+                pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         Display.update_board()
 
     def manipulate_point(self, pos_x: int, pos_y: int):
@@ -228,7 +234,8 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
+        self.clear_menu()
+        # pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
         pygame.draw.line(self.display,self.black,(self.window_x, 0),(self.window_x,self.window_y),width = 2)
         pygame.draw.line(self.display,self.black,(self.window_x+3,0),(self.window_x+3,self.window_y),width = 2)
         pygame.draw.line(self.display,self.black,(self.window_x,300),(self.display_x,300),width = 1)
@@ -240,6 +247,7 @@ class Display:  # Zu Display ändern
         for counter,text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
+        self.update_board()
 
 
 
@@ -312,8 +320,8 @@ class Display:  # Zu Display ändern
                         pass
                     if event.key == pygame.K_p:
                         self.change_place_mode()
-                        points = self.game.get_points()
-                        self.show_board(points)
+                        # points = self.game.get_points()
+                        # self.show_board(points)
                         self.draw_menu()
                         pass
                     if event.key == pygame.K_g:
