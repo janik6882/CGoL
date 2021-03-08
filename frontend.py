@@ -81,8 +81,8 @@ class Display:  # Zu Display ändern
         Besonders: Verändert self.curr_num_premade
         """
         self.curr_num_premade -= 1
-        if self.curr_num_premade >= -(len_premade := (len(self.game.list_premade()))):
-            self.curr_num_premade += len_premade
+        if self.curr_num_premade < 0:
+            self.curr_num_premade += len(self.game.list_premade())
 
     def change_place_mode(self):
         """Wechselt den Place mode.
