@@ -44,6 +44,23 @@ class Display:  # Zu Display ändern
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
 
+    def __str__(self):
+        """Für Debugging (Infos etc.).
+
+        Kommentar: Gibt infos+stats über die Instanz aus.
+        Input: Name der Instanz
+        Output: Stats+Infos
+        Besonders: Keine Besonderheiten
+        """
+        nodes = self.game.get_points()
+        num_nodes = len(nodes)
+        res = f"Display(num_nodes={num_nodes})"
+        return res
+
+    def __repr__(self):
+        # TODO: Doku beenden
+        return self.__dict__
+
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
 
@@ -65,7 +82,6 @@ class Display:  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
-
 
     def next_premade(self):
         """Geht zum nächsten Vorgefertigten Objekt.
@@ -243,20 +259,18 @@ class Display:  # Zu Display ändern
         """
         self.clear_menu()
         # pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
-        pygame.draw.line(self.display, self.black, (self.window_x , 0), (self.window_x, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x, 0), (self.window_x, self.window_y), width=2)
         pygame.draw.line(self.display, self.black, (self.window_x+3, 0), (self.window_x+3, self.window_y), width=2)
         pygame.draw.line(self.display, self.black, (self.window_x, 300), (self.display_x, 300), width=1)
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
-        instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Draw/Erase/Premade','      platzieren',
-                        '','Maustaste 1 - platzieren','Maustaste 2 - Zelle zentrieren','','Iterationen :  '+str(self.game.iterations),'Modus :  '+str(self.curr_place_mode),
+        instructions = ['Esc - Programm beenden', 'm - Menü öffnen', 'f - nächste Iteration', '-> - nächstes Premade', '<- - letztes Premade', 'p - Toggle Zelle/Draw/Erase/Premade', '      platzieren',
+                        '', 'Maustaste 1 - platzieren', 'Maustaste 2 - Zelle zentrieren', '', 'Iterationen :  '+str(self.game.iterations), 'Modus :  '+str(self.curr_place_mode),
                         'Premade :  '+str(self.game.list_premade()[self.curr_num_premade])]
-        for counter,text in enumerate(instructions):
+        for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
-            self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
+            self.display.blit(textsurface, (self.window_x+10, 10 + 30*counter))
         self.update_board()
-
-
 
     def wait_keypress(self):
         """Wartet auf einen Tastendruck.
@@ -322,19 +336,16 @@ class Display:  # Zu Display ändern
                         # points = self.game.get_points()
                         # self.show_board(points)
                         self.draw_menu()
-                        pass
                     if event.key == pygame.K_LEFT:
                         self.previous_premade()
                         points = self.game.get_points()
                         self.show_board(points)
                         self.draw_menu()
-                        pass
                     if event.key == pygame.K_p:
                         self.change_place_mode()
                         # points = self.game.get_points()
                         # self.show_board(points)
                         self.draw_menu()
-                        pass
                     if event.key == pygame.K_g:
                         # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
                         out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade())
@@ -419,6 +430,7 @@ class Display:  # Zu Display ändern
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
+
 
 def main():
     """Funktion zum testen."""
