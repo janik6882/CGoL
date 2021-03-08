@@ -23,6 +23,7 @@ class Game():
         """
         nodes = nodes or list()
         premade = premade or dict()
+        self.iterations = 0
         self.nodes = nodes
         self.board_x = board_x
         self.board_y = board_y
@@ -94,6 +95,7 @@ class Game():
             if self.check_regeln(nachbar[0], nachbar[1]):
                 new_board.append(nachbar)
         self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
+        self.iterations += 1
         return new_board
 
     def get_points(self) -> list:
