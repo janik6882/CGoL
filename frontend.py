@@ -243,9 +243,9 @@ class Display:  # Zu Display ändern
         """
         self.clear_menu()
         # pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
-        pygame.draw.line(self.display,self.black,(self.window_x, 0),(self.window_x,self.window_y),width = 2)
-        pygame.draw.line(self.display,self.black,(self.window_x+3,0),(self.window_x+3,self.window_y),width = 2)
-        pygame.draw.line(self.display,self.black,(self.window_x,300),(self.display_x,300),width = 1)
+        pygame.draw.line(self.display, self.black, (self.window_x , 0), (self.window_x, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x+3, 0), (self.window_x+3, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x, 300), (self.display_x, 300), width=1)
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
         instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Draw/Erase/Premade','      platzieren',
