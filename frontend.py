@@ -432,10 +432,10 @@ class Display:  # Zu Display ändern
         Besonders: Nutzt tkinter speicher-Modul, beliebiger Dateiort.
         """
         filename = asksaveasfilename(
-            filetypes=[('JSON files', '.json')], initialfile=''
+            filetypes=[('JSON files', '.json')], initialfile='',
+            defaultextension=".json"
         )
         if filename:
-            filename += ".json"
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
 
