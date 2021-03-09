@@ -435,6 +435,7 @@ class Display:  # Zu Display ändern
             filetypes=[('JSON files', '.json')], initialfile=''
         )
         if filename:
+            filename += ".json"
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
 
