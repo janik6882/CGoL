@@ -248,7 +248,6 @@ class Display:  # Zu Display ändern
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
                 pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
-        return None
 
     def draw_menu(self):
         """Zeichnet ein Seitenmenü.
@@ -350,7 +349,7 @@ class Display:  # Zu Display ändern
                         self.draw_menu()
                     if event.key == pygame.K_g:
                         # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
-                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade())
+                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade()) + str(self)
                         print(out)
 
     def mainloop(self):
@@ -417,6 +416,13 @@ class Display:  # Zu Display ändern
             return False
 
     def open_saved_board(self):
+        """Importiert eine Welt aus einer .json Datei.
+
+        Kommentar: Öffnet eine Welt aus einer Datei
+        Input: Name der Instanz
+        Output: Kein direktes Output
+        Besonders: Nutzt self.open_file()
+        """
         nodes = self.open_file()
         if nodes is not False:
             self.game.replace_points(nodes)
