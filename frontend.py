@@ -9,7 +9,6 @@ from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
 
-pygame.font.init()
 
 
 class Display:  # Zu Display ändern
@@ -29,6 +28,7 @@ class Display:  # Zu Display ändern
         Besonders: Erstellt ein pygame display, erstellt eine Instanz der
                    game() klasse
         """
+        pygame.font.init()
         self.curr_num_premade = 0
         self.curr_place_mode = "single"
         self.place_modes = ["single", "draw", "erase", "premade"]
@@ -205,7 +205,7 @@ class Display:  # Zu Display ändern
             end = (end_x, end_y)
             pygame.draw.line(self.display, self.grey, start, end, width=1)
 
-    def show_board(self, points: list):
+    def show_board(self, points=None):
         """Zeigt das Bord an.
 
         Kommentar: Erzeugt die Punkte auf dem Bord
@@ -213,6 +213,7 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Aktualisiert das Bord
         """
+        points = points or self.game.get_points()
         self.clear_board()
         for point in points:
             x_koord = (point[0] * 10) + 1
@@ -253,7 +254,8 @@ class Display:  # Zu Display ändern
         """Zeichnet ein Seitenmenü.
 
         Kommentar: Zeichneet ein Seitenmenü, dass auch variablen anzeigt
-        Input: greift auf self.game.iterations , self.curr_place_mode und self.curr_num_premade zu
+        Input: greift auf self.game.iterations , self.curr_place_mode und
+               self.curr_num_premade zu
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
@@ -265,8 +267,8 @@ class Display:  # Zu Display ändern
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
         instructions = ['Esc - Programm beenden', 'm - Menü öffnen', 'f - nächste Iteration', '-> - nächstes Premade', '<- - letztes Premade', 'p - Toggle Zelle/Draw/Erase/Premade', '      platzieren',
-                        '', 'Maustaste 1 - platzieren', 'Maustaste 2 - Zelle zentrieren', '', 'Iterationen :  '+str(self.game.iterations), 'Modus :  '+str(self.curr_place_mode),
-                        'Premade :  '+str(self.game.list_premade()[self.curr_num_premade])]
+                        '', 'Maustaste 1 - platzieren', 'Maustaste 2 - Zelle zentrieren', '', f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
+                        f'Premade :  {self.game.list_premade()[self.curr_num_premade]}']
         for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface, (self.window_x+10, 10 + 30*counter))
@@ -407,12 +409,17 @@ class Display:  # Zu Display ändern
         Output: Geladene Daten
         Besonders: Nutzt tkinter lade-Modul, beliebiger Speicherort.
         """
-        inhalt = json.load(askopenfile(mode='r', filetypes=[('Json files', '*.json')]))
-        return inhalt
+        filename = askopenfile(mode='r', filetypes=[('Json files', '*.json')])
+        if filename is not None:
+            inhalt = json.load(filename)
+            return inhalt
+        else:
+            return False
 
     def open_saved_board(self):
         nodes = self.open_file()
-        self.game.replace_points(nodes)
+        if nodes is not False:
+            self.game.replace_points(nodes)
         self.show_board(nodes)
 
     @classmethod

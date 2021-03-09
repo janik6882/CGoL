@@ -75,18 +75,17 @@ class Game():
         Besonders: nutzt check_regeln
         """
         new_board = []
-        nachbarn: List[List[int]] = list()
+        nachbarn = []
         nodes = self.nodes
-        for node in nodes:  # loop durch alle elemente von self.nodes
-            x_koord = node[0]  # setzt x zur x-koordinate von node
-            y_koord = node[1]  # setzt y zur y-koordinate von node
+        for node in nodes:
+            x_koord = node[0]
+            y_koord = node[1]
             nachbar_zellen = [[x_koord - 1, y_koord - 1], [x_koord - 1, y_koord],
                               [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
                               [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
                               [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
-            for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
-                if zelle not in nachbarn + nodes:  # wenn zelle nicht nodes und
-                    # nachbarn
+            for zelle in nachbar_zellen:
+                if zelle not in nachbarn + nodes:
                     nachbarn.append(zelle)
             if self.check_regeln(node[0], node[1]):
                 new_board.append(node)
@@ -97,7 +96,7 @@ class Game():
         self.iterations += 1
         return new_board
 
-    def replace_points(self, nodes):
+    def replace_points(self, nodes) -> list:
         """ Ersetzt self.nodes durch nodes
 
         Kommentar: Erstzen der self.nodes durch nodes
@@ -107,6 +106,7 @@ class Game():
         """
         # TODO: doku beenden
         self.nodes = nodes
+        return self.nodes
 
     def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
@@ -128,9 +128,7 @@ class Game():
         """
         # TODO: Verhalten besprechen, wenn punkt bereits in Knotenliste
         # OPTIMIZE: Laufzeit optimieren (add, append oder operator?)
-        if [x_koord, y_koord] in self.nodes:
-            pass
-        else:
+        if [x_koord, y_koord] not in self.nodes:
             self.nodes.append([x_koord, y_koord])
         return self.nodes
 
@@ -147,11 +145,6 @@ class Game():
         while [x_koord, y_koord] in self.nodes:
             self.nodes.remove([x_koord, y_koord])
         return self.nodes
-
-        # if [x_koord, y_koord] in self.nodes:
-        # else:
-            # Ausgabe besprechen
-            # return "error"
 
     def manipulate_point(self, x_koord: int, y_koord: int) -> bool:
         """Siehe Kommentar.
