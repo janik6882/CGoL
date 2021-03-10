@@ -8,6 +8,7 @@ import json
 from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
+import itertools
 
 
 
@@ -425,8 +426,11 @@ class Display:  # Zu Display ändern
         """
         nodes = self.open_file()
         if nodes is not False:
-            self.game.replace_points(nodes)
-        self.show_board(nodes)
+            nodes.sort()
+            # to_load = list(nodes for nodes, _ in itertools.groupby(nodes))
+            to_load = nodes
+            self.game.replace_points(to_load)
+        self.show_board(to_load)
 
     @classmethod
     def save_file(cls, inhalt):
