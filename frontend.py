@@ -12,7 +12,7 @@ from tkinter import Button, Label, Tk
 pygame.font.init()
 
 
-class Button:
+class Button_py:
     "Create a button, then blit the surface in the while loop"
  
     def __init__(self,  x, y):
@@ -63,7 +63,7 @@ class Display:  # Zu Display ändern
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
-        self.button1 = Button (self.window_x +10, 500)
+        self.button1 = Button_py (self.window_x +10, 500)
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
