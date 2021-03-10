@@ -22,7 +22,7 @@ class Button:
         self.change_state()
  
     def change_state(self):
-        self.surface = pygame.image.load(self.state+'.png')
+        self.surface = pygame.image.load('img/'+self.state+'.png')
         self.size = self.surface.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
         if self.state == 'play':
