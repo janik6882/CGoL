@@ -164,6 +164,7 @@ class Game():
         return res
 
     def get_matrix(self) -> list:
+        # REMOVE: Nirgendwo genutzt!
         """Erzeugt einen Matrix aus der Knotenliste.
 
         Kommentar: gibt eine Matrix aus, welche alle Punkte beinhaltet
@@ -176,15 +177,6 @@ class Game():
         for node in points:
             matrix[node[1]][node[0]] = 1
         return matrix
-
-    def export_current(self) -> None:
-        """Docsring."""  # TODO: add docu
-        export = dict()
-        export["boardX"] = self.board_x
-        export["boardY"] = self.board_y
-        export["nodes"] = self.nodes
-        Game.daten_speichern(export, "out.json")
-        return None
 
     def list_premade(self) -> list:
         """Listet alle vorgefertigten Objekte auf.
@@ -229,7 +221,8 @@ class Game():
         new_point = []
         for point in to_add:
             new_point.append([point[0]+pos_x, point[1]+pos_y])
-        self.nodes += new_point
+        for point in new_point:
+            self.add_point(point[0], point[1])
         return new_point
 
     @classmethod
@@ -259,6 +252,8 @@ class Game():
 
     @classmethod
     def get_list_intersection(cls, list_a: list, list_b: list) -> list:
+        # TODO: NICHT ENTFERNEN, essenziell
+        # OPTIMIZE: Optimierung der Laufzeit?
         """Gibt die Überschneidung zweier Listen zurück.
 
         Kommentar: erzeugt die überschneidung zweier listen
@@ -271,6 +266,7 @@ class Game():
 
     @classmethod
     def __gen_matrix(cls, x_koord: int, y_koord: int) -> list:
+        # REMOVE: Nirgendwo genutzt. Entfernen?
         """Generiert eine Leere Matrix.
 
         Kommentar: generiert eine Matrix anhand einer vorgegeben Größe
@@ -283,6 +279,7 @@ class Game():
 
     @classmethod
     def __get_dir(cls) -> list:
+        # REMOVE: Nur in check_dir verwendet!
         """Gibt alle Top-Level Ordner zurück.
 
         Kommentar: Private Classmethod, die alle Top-Level Ordner auflistet
@@ -295,6 +292,7 @@ class Game():
 
     @classmethod
     def __check_dir(cls, dir_name: str) -> None:
+        # REMOVE: Remove? Nicht verwendet!
         """Überprüfung nach Ordner.
 
         Kommentar: Private Classmethod, die überprüft ob ein Ordner vorhanden
@@ -344,4 +342,5 @@ def check_save():
 
 
 if __name__ == '__main__':
-    debug()
+    # debug()
+    check_save()

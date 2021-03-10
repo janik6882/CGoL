@@ -9,7 +9,7 @@ from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
 import itertools
-
+import collections
 
 
 class Display:  # Zu Display ändern
@@ -324,9 +324,6 @@ class Display:  # Zu Display ändern
                     if event.key == pygame.K_f:
                         # TODO: entfernen, geht zur nächsten Generation
                         return None
-                    if event.key == pygame.K_e:
-                        # TODO: Entfernen, nur zu testzwecken
-                        self.game.export_current()
                     if event.key == pygame.K_ESCAPE:
                         # Escape -> Close
                         pygame.quit()
