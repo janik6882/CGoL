@@ -410,6 +410,7 @@ class Display:  # Zu Display ändern
                                 self.input_iterations.change_text('')
                                 self.play_but.change_state()
                                 self.draw_menu()
+                    pygame.display.flip()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
                     if event.key == pygame.K_f:
@@ -462,6 +463,16 @@ class Display:  # Zu Display ändern
                             self.play_but.change_state()
                             self.draw_menu()
                             return True
+                    if event.button == 3 and pos_y < self.window_x:
+                        mid_x = self.window_x//2
+                        mid_y = self.window_y//2
+                        verschiebung_x = (mid_x - pos_x)//10
+                        verschiebung_y = (mid_y - pos_y)//10
+                        points = self.game.get_points()
+                        for point in points:
+                            point[0] += verschiebung_x
+                            point[1] += verschiebung_y
+                        self.show_board(points)
         return False
 
 
