@@ -7,7 +7,6 @@ from typing import List
 
 # Vorerst Datei fuer alles Backend stuff.
 
-
 class Game():
     """Game Klasse, für Backend benutzt."""
 
@@ -33,6 +32,7 @@ class Game():
             self.premade = self.import_premade()
 
     def get_num_neighbours(self, x_koord: int, y_koord: int) -> int:
+        # NOTE: Aufruf 5403x in denis.json welt. Optimierung?
         """Gibt die Anzahl der Nachbarn zurück.
 
         Kommentar: gibt die Anzahl der Nachbarn als int aus
@@ -50,6 +50,7 @@ class Game():
         return num_nachbarn
 
     def check_regeln(self, x_koord: int, y_koord: int) -> bool:
+        # NOTE: Aufruf 5400x in denis.json welt. Optimierung?
         """Überprüft die Regeln des CGoL.
 
         Kommentar: gibt aus, ob an der Position von Zelle eine Zelle erstellt
@@ -164,6 +165,7 @@ class Game():
 
     def get_matrix(self) -> list:
         # REMOVE: Nirgendwo genutzt!
+        # NOTE: 0 Aufrufe, entfernen!
         """Erzeugt einen Matrix aus der Knotenliste.
 
         Kommentar: gibt eine Matrix aus, welche alle Punkte beinhaltet
@@ -253,6 +255,7 @@ class Game():
     def get_list_intersection(cls, list_a: list, list_b: list) -> list:
         # TODO: NICHT ENTFERNEN, essenziell
         # OPTIMIZE: Optimierung der Laufzeit? (alternative zur Iteration)
+        # NOTE: Wird bei testwelt denis.json über 5000x aufgerufen in der ersten Iteration
         """Gibt die Überschneidung zweier Listen zurück.
 
         Kommentar: erzeugt die überschneidung zweier listen
@@ -281,7 +284,7 @@ class Game():
 
     @classmethod
     def __get_dir(cls) -> list:
-        # REMOVE: Nur in check_dir verwendet!
+        # REMOVE: Nur in check_dir verwendet (nicht verwendet)!
         """Gibt alle Top-Level Ordner zurück.
 
         Kommentar: Private Classmethod, die alle Top-Level Ordner auflistet
