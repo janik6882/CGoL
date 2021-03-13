@@ -47,12 +47,13 @@ class Input:
 
     def update (self):
         width = max(self.origin_width,self.text_surface.get_width()+10)
-        #if width+10 + self.x <
-        print(pygame.display.get_surface())
-
         pygame.draw.rect(self.screen,pygame.Color('white'),pygame.Rect(self.x,self.y,max(width,self.width+10),self.hight+10))
-        self.rect.width = width
-        self.width = self.rect.width
+        if width+10 + self.x < self.screen.get_size()[0]:
+            self.rect.width = width
+            self.width = self.rect.width
+        else:
+            self.text = self.text[:-1]
+            self.text_surface = self.font.render (self.text,True,self.color)
         pygame.display.flip
         self.draw()
 
@@ -71,10 +72,12 @@ class Input:
                         self.text_surface = self.font.render (self.text,True,self.color)
                         self.update()
                     elif event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        return self.text
+                        self.text = ''
+                        self.text_surface = self.font.render (self.text,True,self.color)
+                        self.change_state                   
                     elif event.key == pygame.K_RETURN :
                         self.change_state()
+                        return True
                     else:
                         if event.unicode.isnumeric() or self.mode != 'int':
                             self.text += event.unicode
@@ -396,17 +399,23 @@ class Display:  # Zu Display ändern
                                 point[1] += verschiebung_y
                             self.show_board(points)
                     else:
-                        if self.play_button.rect.collidepoint(pos_y, pos_x):# hier muss die funktion zum wechsel zum auto-Modus hin
+                        if self.play_button.rect.collidepoint(pos_y, pos_x):
                             self.play_button.change_state()
                             self.draw_menu()
                         if self.input_iterations.rect.collidepoint(pos_y,pos_x):
-                            self.play_button.change_state()
-                            self.draw_menu()
-                            iterations = self.input_iterations.change_state()
-                            if iterations:
+                            if self.input_iterations.change_state() == True:
+                                iterations = int(self.input_iterations.text)
+                                self.play_button.change_state()
                                 for iteration in reversed(range(iterations)):
                                     self.autoplay()
+                                    self.game.next_board()
                                     self.input_iterations.change_text(str(iteration))
+                                    self.draw_menu()
+                                    points = self.game.get_points()
+                                    self.show_board(points)
+                                self.input_iterations.change_text('')
+                                self.play_button.change_state()
+                                self.draw_menu()
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
