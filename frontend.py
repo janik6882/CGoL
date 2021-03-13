@@ -137,7 +137,7 @@ class Display:  # Zu Display ändern
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
-        self.play_button = Button_py (self.window_x +10, 500,['play','pause'])
+        self.play_but = Button_py (self.window_x +10, 500,['play','pause'])
         self.input_iterations = Input(self.window_x+10,600,100,40,self.display,mode = 'int')
 
     def clear_board(self):
@@ -344,7 +344,7 @@ class Display:  # Zu Display ändern
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
 
-        self.display.blit(self.play_button.surface, (self.play_button.x, self.play_button.y))
+        self.display.blit(self.play_but.surface, (self.play_but.x, self.play_but.y))
         self.input_iterations.update()
         self.update_board()
 
@@ -359,7 +359,7 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        while self.play_button.state=='play':
+        while self.play_but.state=='play':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -391,13 +391,13 @@ class Display:  # Zu Display ändern
                                 point[1] += verschiebung_y
                             self.show_board(points)
                     else:
-                        if self.play_button.rect.collidepoint(pos_y, pos_x):
-                            self.play_button.change_state()
+                        if self.play_but.rect.collidepoint(pos_y, pos_x):
+                            self.play_but.change_state()
                             self.draw_menu()
                         if self.input_iterations.rect.collidepoint(pos_y,pos_x):
                             if self.input_iterations.change_state() == True:
                                 iterations = int(self.input_iterations.text)
-                                self.play_button.change_state()
+                                self.play_but.change_state()
                                 self.draw_menu()
                                 for iteration in reversed(range(iterations)):
                                     if self.autoplay():
@@ -408,7 +408,7 @@ class Display:  # Zu Display ändern
                                     points = self.game.get_points()
                                     self.show_board(points)
                                 self.input_iterations.change_text('')
-                                self.play_button.change_state()
+                                self.play_but.change_state()
                                 self.draw_menu()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
@@ -458,8 +458,8 @@ class Display:  # Zu Display ändern
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
-                    if self.play_button.rect.collidepoint(pos_y, pos_x):
-                            self.play_button.change_state()
+                    if self.play_but.rect.collidepoint(pos_y, pos_x):
+                            self.play_but.change_state()
                             self.draw_menu()
                             return True
         return False
@@ -480,9 +480,9 @@ class Display:  # Zu Display ändern
             self.show_board(points)
             self.draw_menu()
             self.update_board()
-            if self.play_button.state == 'play':
+            if self.play_but.state == 'play':
                 self.wait_keypress()
-            if self.play_button.state == 'pause':
+            if self.play_but.state == 'pause':
                 stop = self.autoplay()
             if stop == False:
                 self.game.next_board()
