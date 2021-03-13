@@ -6,6 +6,8 @@ import os
 from typing import List
 
 # Vorerst Datei fuer alles Backend stuff.
+# DEBUG: Funktions counter:
+funk_counter = 0
 
 
 class Game():
@@ -33,6 +35,7 @@ class Game():
             self.premade = self.import_premade()
 
     def get_num_neighbours(self, x_koord: int, y_koord: int) -> int:
+        # NOTE: Aufruf 5403x in denis.json welt. Optimierung?
         """Gibt die Anzahl der Nachbarn zurück.
 
         Kommentar: gibt die Anzahl der Nachbarn als int aus
@@ -50,6 +53,7 @@ class Game():
         return num_nachbarn
 
     def check_regeln(self, x_koord: int, y_koord: int) -> bool:
+        # NOTE: Aufruf 5400x in denis.json welt. Optimierung?
         """Überprüft die Regeln des CGoL.
 
         Kommentar: gibt aus, ob an der Position von Zelle eine Zelle erstellt
@@ -67,6 +71,7 @@ class Game():
             return bool(num_nachbarn == 3)
 
     def next_board(self) -> list:
+        # OPTIMIZE: Aufruf von self.check_regeln optimieren
         """Erzeugt das nächste Bord und gibt dieses zurück.
 
         Kommentar:erzeugt das neue board und ersetzt das Aktuelle mit dem neuen
@@ -75,29 +80,30 @@ class Game():
         Besonders: nutzt check_regeln
         """
         new_board = []
-        nachbarn: List[List[int]] = list()
-        nodes = self.nodes
-        for node in nodes:  # loop durch alle elemente von self.nodes
-            x_koord = node[0]  # setzt x zur x-koordinate von node
-            y_koord = node[1]  # setzt y zur y-koordinate von node
+        nachbarn = []
+        nodes = self.get_points()
+        for node in nodes:
+            x_koord = node[0]
+            y_koord = node[1]
             nachbar_zellen = [[x_koord - 1, y_koord - 1], [x_koord - 1, y_koord],
                               [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
                               [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
                               [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
-            for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
-                if zelle not in nachbarn + nodes:  # wenn zelle nicht nodes und
-                    # nachbarn
+            for zelle in nachbar_zellen:
+                if zelle not in nachbarn + nodes:
                     nachbarn.append(zelle)
-            if self.check_regeln(node[0], node[1]):
-                new_board.append(node)
+            if node not in new_board:
+                if self.check_regeln(node[0], node[1]):
+                    new_board.append(node)
         for nachbar in nachbarn:  # loop durch nachbarn
-            if self.check_regeln(nachbar[0], nachbar[1]):
-                new_board.append(nachbar)
-        self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
+            if nachbar not in new_board:
+                if self.check_regeln(nachbar[0], nachbar[1]):
+                    new_board.append(nachbar)
+        self.replace_points(new_board)
         self.iterations += 1
         return new_board
 
-    def replace_points(self, nodes):
+    def replace_points(self, nodes) -> list:
         """ Ersetzt self.nodes durch nodes
 
         Kommentar: Erstzen der self.nodes durch nodes
@@ -107,6 +113,7 @@ class Game():
         """
         # TODO: doku beenden
         self.nodes = nodes
+        return self.nodes
 
     def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
@@ -126,9 +133,9 @@ class Game():
         Output: Aktualisierte Knotenliste self.nodes
         Besonders: Weitere Optimierung der Laufzeit
         """
-        # TODO: Verhalten besprechen, wenn punkt bereits in Knotenliste
         # OPTIMIZE: Laufzeit optimieren (add, append oder operator?)
-        self.nodes.append([x_koord, y_koord])
+        if [x_koord, y_koord] not in self.nodes:
+            self.nodes.append([x_koord, y_koord])
         return self.nodes
 
     def remove_point(self, x_koord, y_koord):
@@ -141,12 +148,9 @@ class Game():
         """
         # OPTIMIZE: Laufzeit?
         # DEBUG: Try except pruefen
-        if [x_koord, y_koord] in self.nodes:
+        while [x_koord, y_koord] in self.nodes:
             self.nodes.remove([x_koord, y_koord])
-            return self.nodes
-        else:
-            # Ausgabe besprechen
-            return "error"
+        return self.nodes
 
     def manipulate_point(self, x_koord: int, y_koord: int) -> bool:
         """Siehe Kommentar.
@@ -166,6 +170,8 @@ class Game():
         return res
 
     def get_matrix(self) -> list:
+        # REMOVE: Nirgendwo genutzt!
+        # NOTE: 0 Aufrufe, entfernen!
         """Erzeugt einen Matrix aus der Knotenliste.
 
         Kommentar: gibt eine Matrix aus, welche alle Punkte beinhaltet
@@ -178,15 +184,6 @@ class Game():
         for node in points:
             matrix[node[1]][node[0]] = 1
         return matrix
-
-    def export_current(self) -> None:
-        """Docsring."""  # TODO: add docu
-        export = dict()
-        export["boardX"] = self.board_x
-        export["boardY"] = self.board_y
-        export["nodes"] = self.nodes
-        Game.daten_speichern(export, "out.json")
-        return None
 
     def list_premade(self) -> list:
         """Listet alle vorgefertigten Objekte auf.
@@ -231,7 +228,8 @@ class Game():
         new_point = []
         for point in to_add:
             new_point.append([point[0]+pos_x, point[1]+pos_y])
-        self.nodes += new_point
+        for point in new_point:
+            self.add_point(point[0], point[1])
         return new_point
 
     @classmethod
@@ -261,6 +259,9 @@ class Game():
 
     @classmethod
     def get_list_intersection(cls, list_a: list, list_b: list) -> list:
+        # TODO: NICHT ENTFERNEN, essenziell
+        # OPTIMIZE: Optimierung der Laufzeit? (alternative zur Iteration)
+        # NOTE: Wird bei testwelt denis.json 5403x aufgerufen in der ersten Iteration
         """Gibt die Überschneidung zweier Listen zurück.
 
         Kommentar: erzeugt die überschneidung zweier listen
@@ -268,11 +269,19 @@ class Game():
         Output: Überschneidung der Listen
         Besonders: Keine Besonderheiten
         """
-        intersect = [item for item in list_a if item in list_b]
+        # DEBUG: funk_counter entfernen
+        global funk_counter
+        funk_counter += 1
+        print(funk_counter)
+        if len(list_a) > len(list_b):
+            intersect = [item for item in list_b if item in list_a]
+        else:
+            intersect = [item for item in list_a if item in list_b]
         return intersect
 
     @classmethod
     def __gen_matrix(cls, x_koord: int, y_koord: int) -> list:
+        # REMOVE: Nirgendwo genutzt. Entfernen?
         """Generiert eine Leere Matrix.
 
         Kommentar: generiert eine Matrix anhand einer vorgegeben Größe
@@ -285,6 +294,7 @@ class Game():
 
     @classmethod
     def __get_dir(cls) -> list:
+        # REMOVE: Nur in check_dir verwendet (nicht verwendet)!
         """Gibt alle Top-Level Ordner zurück.
 
         Kommentar: Private Classmethod, die alle Top-Level Ordner auflistet
@@ -297,6 +307,7 @@ class Game():
 
     @classmethod
     def __check_dir(cls, dir_name: str) -> None:
+        # REMOVE: Remove? Nicht verwendet!
         """Überprüfung nach Ordner.
 
         Kommentar: Private Classmethod, die überprüft ob ein Ordner vorhanden
@@ -332,8 +343,6 @@ def debug():
             print(row)
 
 
-
-
 def check_save():
     """Testfunktion für das Speichern und Laden."""
     test_pulse = [[1, 0], [1, 1], [1, 2]]
@@ -346,5 +355,5 @@ def check_save():
 
 
 if __name__ == '__main__':
-    debug()
-
+    # debug()
+    check_save()

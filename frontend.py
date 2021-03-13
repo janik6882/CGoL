@@ -9,8 +9,8 @@ import json
 from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
-
-pygame.font.init()
+import itertools
+import collections
 
 class Input:
 
@@ -38,7 +38,7 @@ class Input:
         self.update()
         if self.active:
             return self.mainloop()
-        
+
     def change_text(self,text):
         self.text = text
         self.update()
@@ -57,7 +57,7 @@ class Input:
     def draw(self):
         self.screen.blit(self.text_surface,(self.x+5,self.y+5))
         pygame.draw.rect(self.screen,self.color,self.rect,2)
-        pygame.display.flip()   
+        pygame.display.flip()
 
 
     def mainloop(self):
@@ -68,7 +68,7 @@ class Input:
                         self.change_text(self.text[:-1])
                     elif event.key == pygame.K_ESCAPE:
                         self.change_text('')
-                        self.change_state()                
+                        self.change_state()
                     elif event.key == pygame.K_RETURN :
                         self.change_state()
                         return True
@@ -86,19 +86,19 @@ class Input:
 
 class Button_py:
     "Create a button, then blit the surface in the while loop"
- 
+
     def __init__(self,  x, y,states):
         self.x = x
         self.y = y
         self.states = states
         self.state = self.states[0]
         self.update_button()
- 
+
     def change_state(self):
         self.states.append(self.states.pop(0))
         self.state = self.states[0]
         self.update_button()
-        
+
     def update_button(self):
         self.surface = pygame.image.load('img/'+self.state+'.png')
         self.size = self.surface.get_size()
@@ -123,9 +123,10 @@ class Display:  # Zu Display ändern
         Besonders: Erstellt ein pygame display, erstellt eine Instanz der
                    game() klasse
         """
+        pygame.font.init()
         self.curr_num_premade = 0
         self.curr_place_mode = "single"
-        self.place_modes = ["single", "premade"]
+        self.place_modes = ["single", "draw", "erase", "premade"]
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -140,6 +141,23 @@ class Display:  # Zu Display ändern
         self.play_but = Button_py (self.window_x +10, 500,['play','pause'])
         self.input_iterations = Input(self.window_x+10,600,100,40,self.display,mode = 'int')
 
+    def __str__(self):
+        """Für Debugging (Infos etc.).
+
+        Kommentar: Gibt infos+stats über die Instanz aus.
+        Input: Name der Instanz
+        Output: Stats+Infos
+        Besonders: Keine Besonderheiten
+        """
+        nodes = self.game.get_points()
+        num_nodes = len(nodes)
+        res = f"Display(num_nodes={num_nodes})"
+        return res
+
+    def __repr__(self):
+        # TODO: Doku beenden
+        return self.__dict__
+
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
 
@@ -152,9 +170,15 @@ class Display:  # Zu Display ändern
         self.draw_grid()
 
     def clear_menu(self):
-        # TODO: Doku beenden
-        pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
+        """Übermalt den Sidebar bereich weiß.
 
+        Kommentar:Malt ein weißes Rechteck über den sidebar bereich und setzt
+                  diesen dadurch zurück.
+        Input: Name der Instanz
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
+        pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
 
     def next_premade(self):
         """Geht zum nächsten Vorgefertigten Objekt.
@@ -162,14 +186,14 @@ class Display:  # Zu Display ändern
         Kommentar: rotiert in der Premade liste zum nächsten
         Input: Name der Instanz
         Output: Kein Output
-        Besonders: Verändert self.curr_num_premade
+        Besonders: Verändert self.curr_num_premade, nutzt Walrus operator.
         """
         self.curr_num_premade += 1
         if self.curr_num_premade >= (len_premade := (len(self.game.list_premade()))):
             self.curr_num_premade -= len_premade
 
     def previous_premade(self):
-        """Wechselt zum vorherigen vorgefertigten Objekt
+        """Wechselt zum vorherigen vorgefertigten Objekt.
 
         Kommentar: rotiert in der Premade liste zum vorherigen
         Input: Name der Instanz
@@ -278,7 +302,7 @@ class Display:  # Zu Display ändern
             end = (end_x, end_y)
             pygame.draw.line(self.display, self.grey, start, end, width=1)
 
-    def show_board(self, points: list):
+    def show_board(self, points=None):
         """Zeigt das Bord an.
 
         Kommentar: Erzeugt die Punkte auf dem Bord
@@ -286,11 +310,12 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Aktualisiert das Bord
         """
+        points = points or self.game.get_points()
         self.clear_board()
         for point in points:
             x_koord = (point[0] * 10) + 1
             y_koord = (point[1] * 10) + 1
-            if y_koord<self.window_y:
+            if y_koord < self.window_y:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         Display.update_board()
 
@@ -320,35 +345,33 @@ class Display:  # Zu Display ändern
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
                 pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
-        return None
 
     def draw_menu(self):
         """Zeichnet ein Seitenmenü.
 
         Kommentar: Zeichneet ein Seitenmenü, dass auch variablen anzeigt
-        Input: greift auf self.game.iterations , self.curr_place_mode und self.curr_num_premade zu
+        Input: greift auf self.game.iterations , self.curr_place_mode und
+               self.curr_num_premade zu
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
         self.clear_menu()
         # pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
-        pygame.draw.line(self.display,self.black,(self.window_x, 0),(self.window_x,self.window_y),width = 2)
-        pygame.draw.line(self.display,self.black,(self.window_x+3,0),(self.window_x+3,self.window_y),width = 2)
-        pygame.draw.line(self.display,self.black,(self.window_x,300),(self.display_x,300),width = 1)
+        pygame.draw.line(self.display, self.black, (self.window_x, 0), (self.window_x, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x+3, 0), (self.window_x+3, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x, 300), (self.display_x, 300), width=1)
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
-        instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Premade platzieren',
-                        '','Maustaste 1 - platzieren','Maustaste 2 - Zelle zentrieren','','Iterationen :  '+str(self.game.iterations),'Modus :  '+str(self.curr_place_mode),
-                        'Premade :  '+str(self.game.list_premade()[self.curr_num_premade])]
-        for counter,text in enumerate(instructions):
+        instructions = ['Esc - Programm beenden', 'm - Menü öffnen', 'f - nächste Iteration', '-> - nächstes Premade', '<- - letztes Premade', 'p - Toggle Zelle/Draw/Erase/Premade', '      platzieren',
+                        '', 'Maustaste 1 - platzieren', 'Maustaste 2 - Zelle zentrieren', '', f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
+                        f'Premade :  {self.game.list_premade()[self.curr_num_premade]}']
+        for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
-            self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
+            self.display.blit(textsurface, (self.window_x + 10, 10 + 30*counter))
 
         self.display.blit(self.play_but.surface, (self.play_but.x, self.play_but.y))
         self.input_iterations.update()
         self.update_board()
-
-
 
     def wait_keypress(self):
         """Wartet auf einen Tastendruck.
@@ -364,14 +387,18 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="single" and pygame.mouse.get_pos()[0]<self.window_x:
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
-                    self.game.add_point(pos_y, pos_x)
-                    pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
-                    self.update_board()
-
+                    if self.curr_place_mode == "draw":
+                        self.game.add_point(pos_y, pos_x)
+                        pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        self.update_board()
+                    elif self.curr_place_mode == "erase":
+                        self.game.remove_point(pos_y, pos_x)
+                        pygame.draw.rect(self.display, self.white, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        self.update_board()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
@@ -379,6 +406,7 @@ class Display:  # Zu Display ändern
                     if pos_y < self.window_x:
                         if event.button == 1:
                             self.manipulate_point(pos_x, pos_y)
+                            self.show_board()
                             # self.game.add_point(nodeX, nodeY)
                         if event.button == 3:
                             mid_x = self.window_x//2
@@ -415,9 +443,6 @@ class Display:  # Zu Display ändern
                     if event.key == pygame.K_f:
                         # TODO: entfernen, geht zur nächsten Generation
                         return None
-                    if event.key == pygame.K_e:
-                        # TODO: Entfernen, nur zu testzwecken
-                        self.game.export_current()
                     if event.key == pygame.K_ESCAPE:
                         # Escape -> Close
                         pygame.quit()
@@ -429,22 +454,19 @@ class Display:  # Zu Display ändern
                         # points = self.game.get_points()
                         # self.show_board(points)
                         self.draw_menu()
-                        pass
                     if event.key == pygame.K_LEFT:
                         self.previous_premade()
                         points = self.game.get_points()
                         self.show_board(points)
                         self.draw_menu()
-                        pass
                     if event.key == pygame.K_p:
                         self.change_place_mode()
                         # points = self.game.get_points()
                         # self.show_board(points)
                         self.draw_menu()
-                        pass
                     if event.key == pygame.K_g:
                         # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
-                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade())
+                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade()) + str(self)
                         print(out)
 
     def autoplay(self):
@@ -527,13 +549,28 @@ class Display:  # Zu Display ändern
         Output: Geladene Daten
         Besonders: Nutzt tkinter lade-Modul, beliebiger Speicherort.
         """
-        inhalt = json.load(askopenfile(mode='r', filetypes=[('Json files', '*.json')]))
-        return inhalt
+        filename = askopenfile(mode='r', filetypes=[('Json files', '*.json')])
+        if filename is not None:
+            inhalt = json.load(filename)
+            return inhalt
+        else:
+            return False
 
     def open_saved_board(self):
+        """Importiert eine Welt aus einer .json Datei.
+
+        Kommentar: Öffnet eine Welt aus einer Datei
+        Input: Name der Instanz
+        Output: Kein direktes Output
+        Besonders: Nutzt self.open_file()
+        """
         nodes = self.open_file()
-        self.game.replace_points(nodes)
-        self.show_board(nodes)
+        if nodes is not False:
+            nodes.sort()
+            # to_load = list(nodes for nodes, _ in itertools.groupby(nodes))
+            to_load = nodes
+            self.game.replace_points(to_load)
+        self.show_board(to_load)
 
     @classmethod
     def save_file(cls, inhalt):
@@ -545,11 +582,13 @@ class Display:  # Zu Display ändern
         Besonders: Nutzt tkinter speicher-Modul, beliebiger Dateiort.
         """
         filename = asksaveasfilename(
-            filetypes=[('JSON files', '.json')], initialfile=''
+            filetypes=[('JSON files', '.json')], initialfile='',
+            defaultextension=".json"
         )
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
+
 
 def main():
     """Funktion zum testen."""
