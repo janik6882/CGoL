@@ -126,7 +126,6 @@ class Game():
         Output: Aktualisierte Knotenliste self.nodes
         Besonders: Weitere Optimierung der Laufzeit
         """
-        # TODO: Verhalten besprechen, wenn punkt bereits in Knotenliste
         # OPTIMIZE: Laufzeit optimieren (add, append oder operator?)
         if [x_koord, y_koord] not in self.nodes:
             self.nodes.append([x_koord, y_koord])
@@ -261,7 +260,10 @@ class Game():
         Output: Überschneidung der Listen
         Besonders: Keine Besonderheiten
         """
-        intersect = [item for item in list_a if item in list_b]
+        if len(list_a) > len(list_b):
+            intersect = [item for item in list_b if item in list_a]
+        else:
+            intersect = [item for item in list_a if item in list_b]
         return intersect
 
     @classmethod
