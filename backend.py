@@ -6,6 +6,9 @@ import os
 from typing import List
 
 # Vorerst Datei fuer alles Backend stuff.
+# DEBUG: Funktions counter:
+funk_counter = 0
+
 
 class Game():
     """Game Klasse, für Backend benutzt."""
@@ -68,6 +71,7 @@ class Game():
             return bool(num_nachbarn == 3)
 
     def next_board(self) -> list:
+        # OPTIMIZE: Aufruf von self.check_regeln optimieren
         """Erzeugt das nächste Bord und gibt dieses zurück.
 
         Kommentar:erzeugt das neue board und ersetzt das Aktuelle mit dem neuen
@@ -77,7 +81,7 @@ class Game():
         """
         new_board = []
         nachbarn = []
-        nodes = self.nodes
+        nodes = self.get_points()
         for node in nodes:
             x_koord = node[0]
             y_koord = node[1]
@@ -89,11 +93,14 @@ class Game():
                 if zelle not in nachbarn + nodes:
                     nachbarn.append(zelle)
             if self.check_regeln(node[0], node[1]):
-                new_board.append(node)
+                if node not in new_board:
+                    new_board.append(node)
+        print(len(nachbarn))
         for nachbar in nachbarn:  # loop durch nachbarn
             if self.check_regeln(nachbar[0], nachbar[1]):
-                new_board.append(nachbar)
-        self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
+                if nachbar not in new_board:
+                    new_board.append(nachbar)
+        self.replace_points(new_board)
         self.iterations += 1
         return new_board
 
@@ -255,7 +262,7 @@ class Game():
     def get_list_intersection(cls, list_a: list, list_b: list) -> list:
         # TODO: NICHT ENTFERNEN, essenziell
         # OPTIMIZE: Optimierung der Laufzeit? (alternative zur Iteration)
-        # NOTE: Wird bei testwelt denis.json über 5000x aufgerufen in der ersten Iteration
+        # NOTE: Wird bei testwelt denis.json 5403x aufgerufen in der ersten Iteration
         """Gibt die Überschneidung zweier Listen zurück.
 
         Kommentar: erzeugt die überschneidung zweier listen
@@ -263,10 +270,14 @@ class Game():
         Output: Überschneidung der Listen
         Besonders: Keine Besonderheiten
         """
+        # DEBUG: funk_counter entfernen
+        # global funk_counter
+        # funk_counter += 1
         if len(list_a) > len(list_b):
             intersect = [item for item in list_b if item in list_a]
         else:
             intersect = [item for item in list_a if item in list_b]
+        # print(funk_counter)
         return intersect
 
     @classmethod
