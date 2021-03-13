@@ -252,7 +252,7 @@ class Game():
     @classmethod
     def get_list_intersection(cls, list_a: list, list_b: list) -> list:
         # TODO: NICHT ENTFERNEN, essenziell
-        # OPTIMIZE: Optimierung der Laufzeit?
+        # OPTIMIZE: Optimierung der Laufzeit? (alternative zur Iteration)
         """Gibt die Überschneidung zweier Listen zurück.
 
         Kommentar: erzeugt die überschneidung zweier listen
@@ -328,8 +328,6 @@ def debug():
         matrix = test.get_matrix()
         for row in matrix:
             print(row)
-
-
 
 
 def check_save():
