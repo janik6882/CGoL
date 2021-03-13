@@ -92,13 +92,12 @@ class Game():
             for zelle in nachbar_zellen:
                 if zelle not in nachbarn + nodes:
                     nachbarn.append(zelle)
-            if self.check_regeln(node[0], node[1]):
-                if node not in new_board:
+            if node not in new_board:
+                if self.check_regeln(node[0], node[1]):
                     new_board.append(node)
-        print(len(nachbarn))
         for nachbar in nachbarn:  # loop durch nachbarn
-            if self.check_regeln(nachbar[0], nachbar[1]):
-                if nachbar not in new_board:
+            if nachbar not in new_board:
+                if self.check_regeln(nachbar[0], nachbar[1]):
                     new_board.append(nachbar)
         self.replace_points(new_board)
         self.iterations += 1
@@ -271,13 +270,13 @@ class Game():
         Besonders: Keine Besonderheiten
         """
         # DEBUG: funk_counter entfernen
-        # global funk_counter
-        # funk_counter += 1
+        global funk_counter
+        funk_counter += 1
+        print(funk_counter)
         if len(list_a) > len(list_b):
             intersect = [item for item in list_b if item in list_a]
         else:
             intersect = [item for item in list_a if item in list_b]
-        # print(funk_counter)
         return intersect
 
     @classmethod
