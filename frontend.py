@@ -3,6 +3,7 @@
 # pylint: disable=C0301
 import sys
 import pygame
+import time
 # from pygame.locals import *
 import json
 from backend import Game
@@ -11,24 +12,102 @@ from tkinter import Button, Label, Tk
 
 pygame.font.init()
 
+class Input:
+
+    def __init__(self,x,y,width,hight,screen,text = '',mode = ''):
+        self.x = x
+        self.y = y
+        self.hight = hight
+        self.width = width
+        self.origin_width = width
+        self.rect = pygame.Rect(self.x,self.y,width,hight)
+        self.font = pygame.font.Font(None,32)
+        self.color_inactive = pygame.Color('lightskyblue3')
+        self.color_active = pygame.Color('midnightblue')
+        self.color = self.color_inactive
+        self.text = text
+        self.text_surface = self.font.render(self.text, True ,self.color)
+        self.active = False
+        self.screen = screen
+        self.mode = mode
+        self.update()
+
+    def change_state(self):
+        self.active = not self.active
+        self.color = self.color_active if self.active else self.color_inactive
+        self.text_surface = self.font.render (self.text,True,self.color)
+        self.update()
+        if self.active:
+            return self.mainloop()
+        
+    def change_text(self,text):
+        self.text = text
+        self.text_surface = self.font.render(self.text, True ,self.color)
+        self.update()
+
+    def update (self):
+        width = max(self.origin_width,self.text_surface.get_width()+10)
+        #if width+10 + self.x <
+        print(pygame.display.get_surface())
+
+        pygame.draw.rect(self.screen,pygame.Color('white'),pygame.Rect(self.x,self.y,max(width,self.width+10),self.hight+10))
+        self.rect.width = width
+        self.width = self.rect.width
+        pygame.display.flip
+        self.draw()
+
+    def draw(self):
+        self.screen.blit(self.text_surface,(self.x+5,self.y+5))
+        pygame.draw.rect(self.screen,self.color,self.rect,2)
+        pygame.display.flip()   
+
+
+    def mainloop(self):
+        while self.active:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.text = self.text[:-1]
+                        self.text_surface = self.font.render (self.text,True,self.color)
+                        self.update()
+                    elif event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        return self.text
+                    elif event.key == pygame.K_RETURN :
+                        self.change_state()
+                    else:
+                        if event.unicode.isnumeric() or self.mode != 'int':
+                            self.text += event.unicode
+                        self.text_surface = self.font.render(self.text,True,self.color)
+                        self.update()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    pos_x = pos[1]
+                    pos_y = pos[0]
+                    if self.rect.collidepoint(pos_y, pos_x) == False:
+                        self.change_state()
+
+
 
 class Button_py:
     "Create a button, then blit the surface in the while loop"
  
-    def __init__(self,  x, y):
+    def __init__(self,  x, y,states):
         self.x = x
         self.y = y
-        self.state = 'play'
-        self.change_state()
+        self.states = states
+        self.state = self.states[0]
+        self.update_button()
  
     def change_state(self):
+        self.states.append(self.states.pop(0))
+        self.state = self.states[0]
+        self.update_button()
+        
+    def update_button(self):
         self.surface = pygame.image.load('img/'+self.state+'.png')
         self.size = self.surface.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
-        if self.state == 'play':
-            self.state = 'pause'
-        elif self.state == 'pause':
-            self.state = 'play'
 
 
 
@@ -63,7 +142,8 @@ class Display:  # Zu Display ändern
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
-        self.button1 = Button_py (self.window_x +10, 500)
+        self.play_button = Button_py (self.window_x +10, 500,['play','pause'])
+        self.input_iterations = Input(self.window_x+10,600,100,40,self.display,mode = 'int')
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
@@ -269,7 +349,8 @@ class Display:  # Zu Display ändern
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
 
-        self.display.blit(self.button1.surface, (self.button1.x, self.button1.y))
+        self.display.blit(self.play_button.surface, (self.play_button.x, self.play_button.y))
+        self.input_iterations.update()
         self.update_board()
 
 
@@ -283,7 +364,7 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        while True:
+        while self.play_button.state=='play':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -315,10 +396,17 @@ class Display:  # Zu Display ändern
                                 point[1] += verschiebung_y
                             self.show_board(points)
                     else:
-                        if self.button1.rect.collidepoint(pos_y, pos_x):# hier muss die funktion zum wechsel zum auto-Modus hin
-                            self.clear_menu()
-                            self.button1.change_state()
+                        if self.play_button.rect.collidepoint(pos_y, pos_x):# hier muss die funktion zum wechsel zum auto-Modus hin
+                            self.play_button.change_state()
                             self.draw_menu()
+                        if self.input_iterations.rect.collidepoint(pos_y,pos_x):
+                            self.play_button.change_state()
+                            self.draw_menu()
+                            iterations = self.input_iterations.change_state()
+                            if iterations:
+                                for iteration in reversed(range(iterations)):
+                                    self.autoplay()
+                                    self.input_iterations.change_text(str(iteration))
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
@@ -357,6 +445,25 @@ class Display:  # Zu Display ändern
                         out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade())
                         print(out)
 
+    def autoplay(self):
+        start_time = time.time()
+        while time.time()-start_time < 0.6:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    pos_x = pos[1]
+                    pos_y = pos[0]
+                    if self.play_button.rect.collidepoint(pos_y, pos_x):
+                            self.play_button.change_state()
+                            self.draw_menu()
+                            return True
+        return False
+
+
+
     def mainloop(self):
         """Mainloop, läuft bis beendet.
 
@@ -366,12 +473,17 @@ class Display:  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         while True:
+            stop = False
             points = self.game.get_points()
             self.show_board(points)
             self.draw_menu()
             self.update_board()
-            self.wait_keypress()
-            self.game.next_board()
+            if self.play_button.state == 'play':
+                self.wait_keypress()
+            if self.play_button.state == 'pause':
+                stop = self.autoplay()
+            if stop == False:
+                self.game.next_board()
             self.check_close()
             Display.check_close()
 
