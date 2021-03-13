@@ -35,26 +35,23 @@ class Input:
     def change_state(self):
         self.active = not self.active
         self.color = self.color_active if self.active else self.color_inactive
-        self.text_surface = self.font.render (self.text,True,self.color)
         self.update()
         if self.active:
             return self.mainloop()
         
     def change_text(self,text):
         self.text = text
-        self.text_surface = self.font.render(self.text, True ,self.color)
         self.update()
 
     def update (self):
+        self.text_surface = self.font.render(self.text, True ,self.color)
         width = max(self.origin_width,self.text_surface.get_width()+10)
         pygame.draw.rect(self.screen,pygame.Color('white'),pygame.Rect(self.x,self.y,max(width,self.width+10),self.hight+10))
         if width+10 + self.x < self.screen.get_size()[0]:
             self.rect.width = width
             self.width = self.rect.width
         else:
-            self.text = self.text[:-1]
-            self.text_surface = self.font.render (self.text,True,self.color)
-        pygame.display.flip
+            self.change_text(self.text[:-1])
         self.draw()
 
     def draw(self):
@@ -68,21 +65,16 @@ class Input:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKSPACE:
-                        self.text = self.text[:-1]
-                        self.text_surface = self.font.render (self.text,True,self.color)
-                        self.update()
+                        self.change_text(self.text[:-1])
                     elif event.key == pygame.K_ESCAPE:
-                        self.text = ''
-                        self.text_surface = self.font.render (self.text,True,self.color)
-                        self.change_state                   
+                        self.change_text('')
+                        self.change_state()                
                     elif event.key == pygame.K_RETURN :
                         self.change_state()
                         return True
                     else:
                         if event.unicode.isnumeric() or self.mode != 'int':
-                            self.text += event.unicode
-                        self.text_surface = self.font.render(self.text,True,self.color)
-                        self.update()
+                            self.change_text(self.text + event.unicode)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
@@ -406,8 +398,10 @@ class Display:  # Zu Display ändern
                             if self.input_iterations.change_state() == True:
                                 iterations = int(self.input_iterations.text)
                                 self.play_button.change_state()
+                                self.draw_menu()
                                 for iteration in reversed(range(iterations)):
-                                    self.autoplay()
+                                    if self.autoplay():
+                                        return
                                     self.game.next_board()
                                     self.input_iterations.change_text(str(iteration))
                                     self.draw_menu()
@@ -416,7 +410,6 @@ class Display:  # Zu Display ändern
                                 self.input_iterations.change_text('')
                                 self.play_button.change_state()
                                 self.draw_menu()
-                    self.update_board()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
                     if event.key == pygame.K_f:
