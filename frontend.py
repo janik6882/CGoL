@@ -12,6 +12,26 @@ import itertools
 import collections
 
 
+class Button_py:
+    "Create a button, then blit the surface in the while loop"
+
+    def __init__(self,  x, y):
+        self.x = x
+        self.y = y
+        self.state = 'play'
+        self.change_state()
+
+    def change_state(self):
+        self.surface = pygame.image.load('img/'+self.state+'.png')
+        self.size = self.surface.get_size()
+        self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
+        if self.state == 'play':
+            self.state = 'pause'
+        elif self.state == 'pause':
+            self.state = 'play'
+
+
+
 class Display:  # Zu Display ändern
     """Display Klasse.
 
@@ -44,6 +64,7 @@ class Display:  # Zu Display ändern
         board_size_y = self.window_y // 10
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
+        self.button1 = Button_py (self.window_x +10, 500)
 
     def __str__(self):
         """Für Debugging (Infos etc.).
@@ -244,7 +265,7 @@ class Display:  # Zu Display ändern
                 pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
         elif self.curr_place_mode == "premade":
             name = self.game.list_premade()[self.curr_num_premade]
-            to_draw = self.game.add_premade(name, node_x, node_y)
+            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y) if  cell [1]*10 < self.window_x)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
@@ -271,7 +292,9 @@ class Display:  # Zu Display ändern
                         f'Premade :  {self.game.list_premade()[self.curr_num_premade]}']
         for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
-            self.display.blit(textsurface, (self.window_x+10, 10 + 30*counter))
+            self.display.blit(textsurface, (self.window_x + 10, 10 + 30*counter))
+
+        self.display.blit(self.button1.surface, (self.button1.x, self.button1.y))
         self.update_board()
 
     def wait_keypress(self):
@@ -318,6 +341,11 @@ class Display:  # Zu Display ändern
                                 point[0] += verschiebung_x
                                 point[1] += verschiebung_y
                             self.show_board(points)
+                    else:
+                        if self.button1.rect.collidepoint(pos_y, pos_x):# hier muss die funktion zum wechsel zum auto-Modus hin
+                            self.clear_menu()
+                            self.button1.change_state()
+                            self.draw_menu()
                     self.update_board()
                 if event.type == pygame.KEYDOWN:
                     # Keypress event listener
