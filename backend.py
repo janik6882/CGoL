@@ -112,8 +112,10 @@ class Game():
         Besonders: Keine Besonderheiten
         """
         # TODO: doku beenden
-        self.nodes = nodes
+        self.nodes = Game.remove_duplicates(nodes) 
         return self.nodes
+
+    
 
     def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
@@ -278,6 +280,15 @@ class Game():
         else:
             intersect = [item for item in list_a if item in list_b]
         return intersect
+    
+    @classmethod
+    def remove_duplicates(cls, liste):
+        res = set()
+        for punkt in liste:
+            res.add((punkt[0],punkt[1]))
+        res = list(res)
+        out = [[punkt[0],punkt[1]] for punkt in res ]
+        return out 
 
     @classmethod
     def __gen_matrix(cls, x_koord: int, y_koord: int) -> list:
@@ -348,11 +359,7 @@ def check_save():
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
     test = Game(nodes=test_gleiter, board_x=10, board_y=10)
-    matrix = test.get_points()
-    Game.daten_speichern(matrix, "test.json")
-    data = Game.daten_laden("test.json")
-    print(data)
-
+    
 
 if __name__ == '__main__':
     # debug()
