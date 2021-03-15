@@ -59,12 +59,9 @@ class Game():
                 Iteration
         Besonders: nutzt get_num_neighbours()
         """
-        zelle = [x_koord, y_koord]
         num_nachbarn = self.get_num_neighbours(x_koord, y_koord)
-        if zelle in self.nodes:
-            return bool(num_nachbarn in [2, 3])
-        else:
-            return bool(num_nachbarn == 3)
+        return bool(num_nachbarn in [2, 3])
+
 
     def next_board(self) -> list:
         """Erzeugt das nächste Bord und gibt dieses zurück.
@@ -76,6 +73,7 @@ class Game():
         """
         new_board = []
         nachbarn: List[List[int]] = list()
+        nachbarn_set = []
         nodes = self.nodes
         for node in nodes:  # loop durch alle elemente von self.nodes
             x_koord = node[0]  # setzt x zur x-koordinate von node
@@ -84,15 +82,18 @@ class Game():
                               [x_koord - 1, y_koord + 1], [x_koord, y_koord - 1],
                               [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
                               [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
-            for zelle in nachbar_zellen:  # loop durch alle nachbar_zellen
-                if zelle not in nachbarn + nodes:  # wenn zelle nicht nodes und
-                    # nachbarn
+            for zelle in nachbar_zellen:
+                if zelle not in  nodes:
+                    if zelle not in nachbarn:
+                        nachbarn_set.append(zelle)
                     nachbarn.append(zelle)
-            if self.check_regeln(node[0], node[1]):
-                new_board.append(node)
-        for nachbar in nachbarn:  # loop durch nachbarn
-            if self.check_regeln(nachbar[0], nachbar[1]):
-                new_board.append(nachbar)
+            if node not in new_board:
+                if self.check_regeln(node[0], node[1]):
+                    new_board.append(node)
+        for nachbar in nachbarn_set:  # loop durch nachbarn
+            if nachbar not in new_board:
+                if nachbarn.count(nachbar) == 3:
+                    new_board.append(nachbar)
         self.nodes = new_board  # ersetzen der Knotenliste mit der neuen Liste
         self.iterations += 1
         return new_board
