@@ -90,15 +90,15 @@ class Game():
                               [x_koord, y_koord + 1], [x_koord + 1, y_koord - 1],
                               [x_koord + 1, y_koord], [x_koord + 1, y_koord + 1]]
             for zelle in nachbar_zellen:
-                if zelle not in nachbarn + nodes:
+                if zelle not in nodes:
                     nachbarn.append(zelle)
             if node not in new_board:
                 if self.check_regeln(node[0], node[1]):
                     new_board.append(node)
         for nachbar in nachbarn:  # loop durch nachbarn
-            if nachbar not in new_board:
-                if self.check_regeln(nachbar[0], nachbar[1]):
-                    new_board.append(nachbar)
+            if nachbarn.count(nachbar) == 3:
+                new_board.append(nachbar)
+                # if self.check_regeln(nachbar[0], nachbar[1]):
         self.replace_points(new_board)
         self.iterations += 1
         return new_board
@@ -112,10 +112,8 @@ class Game():
         Besonders: Keine Besonderheiten
         """
         # TODO: doku beenden
-        self.nodes = Game.remove_duplicates(nodes) 
+        self.nodes = Game.remove_duplicates(nodes)
         return self.nodes
-
-    
 
     def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
@@ -280,7 +278,7 @@ class Game():
         else:
             intersect = [item for item in list_a if item in list_b]
         return intersect
-    
+
     @classmethod
     def remove_duplicates(cls, liste):
         res = set()
@@ -288,7 +286,7 @@ class Game():
             res.add((punkt[0],punkt[1]))
         res = list(res)
         out = [[punkt[0],punkt[1]] for punkt in res ]
-        return out 
+        return out
 
     @classmethod
     def __gen_matrix(cls, x_koord: int, y_koord: int) -> list:
@@ -359,7 +357,7 @@ def check_save():
     test_pulse = [[1, 0], [1, 1], [1, 2]]
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
     test = Game(nodes=test_gleiter, board_x=10, board_y=10)
-    
+
 
 if __name__ == '__main__':
     # debug()

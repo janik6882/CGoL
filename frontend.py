@@ -2,19 +2,34 @@
 # pylint: disable=E1101
 # pylint: disable=C0301
 import sys
-import pygame
-import time
-# from pygame.locals import *
-import json
-from backend import Game
-from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
-import itertools
-import collections
+from tkinter.filedialog import asksaveasfilename, askopenfile
+import json
+import time
+import pygame
+# from pygame.locals import *
+from backend import Game
+# import itertools
+# import collections
+
 
 class Input:
+    """Klasse, welche ein Input Objekt erzeugt.
 
-    def __init__(self,x,y,width,hight,screen,text = '',mode = ''):
+    Kommentar: Klasse, erstellt Input Objekt für eingabe von Ziffern
+    Input: Keins, da Klasse. Input in init methode.
+    Output: Kein Output da Klasse
+    Besonders:
+    """
+    def __init__(self, x, y, width, hight, screen, text='', mode=''):
+        """Init Methode der Klasse Input
+
+        Kommentar: Init Methode von Input.
+        Input: Name der Instanz, x-koordinate, y-koordinate, breite, höhe,
+               display-objekt, optional: text, modus
+        Output: Kein Output (kein Return)
+        Besonders: Ruft self.update() auf
+        """
         self.x = x
         self.y = y
         self.hight = hight
