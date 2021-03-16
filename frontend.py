@@ -516,6 +516,29 @@ class Display:  # Zu Display ändern
             self.check_close()
             Display.check_close()
 
+    def spiel_verlassen(self):
+        self.master = Tk()
+
+        fensterBreite = self.master.winfo_reqwidth()
+        fensterHoehe = self.master.winfo_reqheight()
+        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
+
+        self.master.geometry("250x250")
+        self.master.title("")
+
+        self.frage = Label(self.master, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
+        self.frage.grid(row=0, column=0, columnspan="2")
+
+        self.quit_button = Button(self.master, text="Ja",
+        command=lambda: [Display.save_file(self.game.get_points(), True)])
+        self.quit_button.grid(row=1, column=0, sticky='ew')
+        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(),sys.exit()])
+        self.quit_button.grid(row=1, column=1, sticky='ew')
+        self.master.grid_rowconfigure(1, weight=1)
+
     @classmethod
     def check_close(cls):
         """Prüft, ob Close Button aktiviert wurde.
@@ -597,29 +620,6 @@ class Display:  # Zu Display ändern
         if schliessfrage == True:
             pygame.quit()
             sys.exit()
-
-    def spiel_verlassen(self):
-        self.master = Tk()
-
-        fensterBreite = self.master.winfo_reqwidth()
-        fensterHoehe = self.master.winfo_reqheight()
-        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
-        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
-
-        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
-
-        self.master.geometry("250x250")
-        self.master.title("")
-
-        self.frage = Label(self.master, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
-        self.frage.grid(row=0, column=0, columnspan="2")
-
-        self.quit_button = Button(self.master, text="Ja",
-                                 command=lambda: [Display.save_file(self.game.get_points(), True)])
-        self.quit_button.grid(row=1, column=0, sticky='ew')
-        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(),sys.exit()])
-        self.quit_button.grid(row=1, column=1, sticky='ew')
-        self.master.grid_rowconfigure(1, weight=1)
 
 
 def main():
