@@ -230,8 +230,8 @@ class Display:  # Zu Display ändern
         self.master = Tk()
 
         fensterBreite = self.master.winfo_reqwidth()
-        fensterHoehe= self.master.winfo_reqheight()
-        positionRechts=int(self.master.winfo_screenwidth()/2-fensterBreite/2)
+        fensterHoehe = self.master.winfo_reqheight()
+        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
         positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
 
         self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
@@ -243,7 +243,7 @@ class Display:  # Zu Display ändern
         self.title_label.grid(row=0, column=0, sticky='ew')
 
         self.save_button = Button(self.master, text="Speichern",
-                                  command=lambda: Display.save_file(self.game.get_points()))
+                                  command=lambda: Display.save_file(self.game.get_points(), False))
         self.save_button.grid(row=1, column=0, sticky='ew')
 
         self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
@@ -578,11 +578,11 @@ class Display:  # Zu Display ändern
         self.show_board(to_load)
 
     @classmethod
-    def save_file(cls, inhalt):
+    def save_file(cls, inhalt, schliessfrage):
         """Speichert gegebene Daten in eine Datei mit file browser.
 
         Kommentar: Speichert Daten in eine Datei
-        Input: Name der Klasse, Daten
+        Input: Name der Klasse, Daten, True - speichern und schließen oder False - nur speichern
         Output: Kein Output
         Besonders: Nutzt tkinter speicher-Modul, beliebiger Dateiort.
         """
@@ -593,6 +593,10 @@ class Display:  # Zu Display ändern
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
+
+        if schliessfrage == True:
+            pygame.quit()
+            sys.exit()
 
     @classmethod
     def spiel_verlassen(cls):
@@ -608,10 +612,11 @@ class Display:  # Zu Display ändern
         cls.master.geometry("250x250")
         cls.master.title("")
 
-        cls.frage= Label(cls.master, text="Ungespeicherter Fortschritt geht verloren.\nWillst du wirklich verlassen?")
+        cls.frage = Label(cls.master, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
         cls.frage.grid(row=0, column=0, columnspan="2")
 
-        cls.quit_button = Button(cls.master, text="Ja", command=lambda: [pygame.quit(), sys.exit()])
+        cls.quit_button = Button(cls.master, text="Ja",
+                                 command=lambda: [Display.save_file(Display.game.get_points(), True)])
         cls.quit_button.grid(row=1, column=0, sticky='ew')
         cls.quit_button = Button(cls.master, text="Nein", command=lambda: [cls.master.destroy()])
         cls.quit_button.grid(row=1, column=1, sticky='ew')
