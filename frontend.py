@@ -228,6 +228,13 @@ class Display:  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         self.master = Tk()
+
+        fensterBreite = self.master.winfo_reqwidth()
+        fensterHoehe = self.master.winfo_reqheight()
+        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
         self.master.geometry("250x250")
 
         self.master.title("Conways Game of Life")
@@ -236,7 +243,7 @@ class Display:  # Zu Display ändern
         self.title_label.grid(row=0, column=0, sticky='ew')
 
         self.save_button = Button(self.master, text="Speichern",
-                                  command=lambda: Display.save_file(self.game.get_points()))
+                                  command=lambda: Display.save_file(self.game.get_points(), False))
         self.save_button.grid(row=1, column=0, sticky='ew')
 
         self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
@@ -245,7 +252,7 @@ class Display:  # Zu Display ändern
         self.manual_button = Button(self.master, text="Anleitung")
         self.manual_button.grid(row=3, column=0, sticky='ew')
 
-        self.quit_button = Button(self.master, text="Quit", command=lambda: [pygame.quit(), sys.exit()])
+        self.quit_button = Button(self.master, text="Quit", command=lambda: [self.spiel_verlassen()])
         self.quit_button.grid(row=4, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
@@ -509,6 +516,29 @@ class Display:  # Zu Display ändern
             self.check_close()
             Display.check_close()
 
+    def spiel_verlassen(self):
+        self.master = Tk()
+
+        fensterBreite = self.master.winfo_reqwidth()
+        fensterHoehe = self.master.winfo_reqheight()
+        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
+
+        self.master.geometry("250x250")
+        self.master.title("")
+
+        self.frage = Label(self.master, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
+        self.frage.grid(row=0, column=0, columnspan="2")
+
+        self.quit_button = Button(self.master, text="Ja",
+        command=lambda: [Display.save_file(self.game.get_points(), True)])
+        self.quit_button.grid(row=1, column=0, sticky='ew')
+        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(),sys.exit()])
+        self.quit_button.grid(row=1, column=1, sticky='ew')
+        self.master.grid_rowconfigure(1, weight=1)
+
     @classmethod
     def check_close(cls):
         """Prüft, ob Close Button aktiviert wurde.
@@ -571,11 +601,11 @@ class Display:  # Zu Display ändern
         self.show_board(to_load)
 
     @classmethod
-    def save_file(cls, inhalt):
+    def save_file(cls, inhalt, schliessfrage):
         """Speichert gegebene Daten in eine Datei mit file browser.
 
         Kommentar: Speichert Daten in eine Datei
-        Input: Name der Klasse, Daten
+        Input: Name der Klasse, Daten, True - speichern und schließen oder False - nur speichern
         Output: Kein Output
         Besonders: Nutzt tkinter speicher-Modul, beliebiger Dateiort.
         """
@@ -586,6 +616,10 @@ class Display:  # Zu Display ändern
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
+
+        if schliessfrage == True:
+            pygame.quit()
+            sys.exit()
 
 
 def main():
