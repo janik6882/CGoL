@@ -480,10 +480,6 @@ class Display:  # Zu Display ändern
                         out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade()) + str(self)
                         print(out)
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
-                        mid_x = self.window_x//2
-                        mid_y = self.window_y//2
-                        verschiebung_x = (mid_x)//10
-                        verschiebung_y = (mid_y)//10
                         points = self.game.get_points()
                         for point in points:
                             point[0] -= self.verschiebung_ges[0]
@@ -491,8 +487,8 @@ class Display:  # Zu Display ändern
                         self.verschiebung_ges = [0, 0]
                         self.show_board(points)
 
-
     def autoplay(self):
+        Display.check_close()
         start_time = time.time()
         while time.time()-start_time < 0.6:
             for event in pygame.event.get():
@@ -504,12 +500,10 @@ class Display:  # Zu Display ändern
                     pos_x = pos[1]
                     pos_y = pos[0]
                     if self.play_but.rect.collidepoint(pos_y, pos_x):
-                            self.play_but.change_state()
-                            self.draw_menu()
-                            return True
+                        self.play_but.change_state()
+                        self.draw_menu()
+                        return True
         return False
-
-
 
     def mainloop(self):
         """Mainloop, läuft bis beendet.
