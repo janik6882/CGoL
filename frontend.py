@@ -12,21 +12,22 @@ from tkinter import Button, Label, Tk
 import itertools
 import collections
 
+
 class Input:
 
-    def __init__(self,x,y,width,hight,screen,text = '',mode = ''):
+    def __init__(self, x, y, width, hight, screen, text='', mode=''):
         self.x = x
         self.y = y
         self.hight = hight
         self.width = width
         self.origin_width = width
-        self.rect = pygame.Rect(self.x,self.y,width,hight)
-        self.font = pygame.font.Font(None,32)
+        self.rect = pygame.Rect(self.x, self.y, width, hight)
+        self.font = pygame.font.Font(None, 32)
         self.color_inactive = pygame.Color('lightskyblue3')
         self.color_active = pygame.Color('midnightblue')
         self.color = self.color_inactive
         self.text = text
-        self.text_surface = self.font.render(self.text, True ,self.color)
+        self.text_surface = self.font.render(self.text, True, self.color)
         self.active = False
         self.screen = screen
         self.mode = mode
@@ -39,15 +40,16 @@ class Input:
         if self.active:
             return self.mainloop()
 
-    def change_text(self,text):
+    def change_text(self, text):
         self.text = text
         self.update()
 
-    def update (self):
-        self.text_surface = self.font.render(self.text, True ,self.color)
-        width = max(self.origin_width,self.text_surface.get_width()+10)
-        pygame.draw.rect(self.screen,pygame.Color('white'),pygame.Rect(self.x,self.y,max(width,self.width+10),self.hight+10))
-        if width+10 + self.x < self.screen.get_size()[0]:
+    def update(self):
+        self.text_surface = self.font.render(self.text, True, self.color)
+        width = max(self.origin_width, self.text_surface.get_width() + 10)
+        pygame.draw.rect(self.screen, pygame.Color('white'),
+                         pygame.Rect(self.x, self.y, max(width, self.width + 10), self.hight + 10))
+        if width + 10 + self.x < self.screen.get_size()[0]:
             self.rect.width = width
             self.width = self.rect.width
         else:
@@ -55,10 +57,9 @@ class Input:
         self.draw()
 
     def draw(self):
-        self.screen.blit(self.text_surface,(self.x+5,self.y+5))
-        pygame.draw.rect(self.screen,self.color,self.rect,2)
+        self.screen.blit(self.text_surface, (self.x + 5, self.y + 5))
+        pygame.draw.rect(self.screen, self.color, self.rect, 2)
         pygame.display.flip()
-
 
     def mainloop(self):
         while self.active:
@@ -69,7 +70,7 @@ class Input:
                     elif event.key == pygame.K_ESCAPE:
                         self.change_text('')
                         self.change_state()
-                    elif event.key == pygame.K_RETURN :
+                    elif event.key == pygame.K_RETURN:
                         self.change_state()
                         return True
                     else:
@@ -83,11 +84,10 @@ class Input:
                         self.change_state()
 
 
-
 class Button_py:
     "Create a button, then blit the surface in the while loop"
 
-    def __init__(self,  x, y,states):
+    def __init__(self, x, y, states):
         self.x = x
         self.y = y
         self.states = states
@@ -100,10 +100,9 @@ class Button_py:
         self.update_button()
 
     def update_button(self):
-        self.surface = pygame.image.load('img/'+self.state+'.png')
+        self.surface = pygame.image.load('img/' + self.state + '.png')
         self.size = self.surface.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
-
 
 
 class Display:  # Zu Display ändern
@@ -125,8 +124,8 @@ class Display:  # Zu Display ändern
         """
         pygame.font.init()
         self.curr_num_premade = 0
-        self.curr_place_mode = "single"
-        self.place_modes = ["single", "draw", "erase", "premade"]
+        self.curr_place_mode = "Zelle"
+        self.place_modes = ["Zelle", "Spur", "Radieren", "Form"]
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -141,8 +140,8 @@ class Display:  # Zu Display ändern
         self.verschiebung_ges = [0, 0]
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
-        self.play_but = Button_py (self.window_x +10, 500,['play','pause'])
-        self.input_iterations = Input(self.window_x+10,600,100,40,self.display,mode = 'int')
+        self.play_but = Button_py(self.window_x + 10, 500, ['play', 'pause'])
+        self.input_iterations = Input(self.window_x + 10, 600, 100, 40, self.display, mode='int')
 
     def __str__(self):
         """Für Debugging (Infos etc.).
@@ -210,12 +209,12 @@ class Display:  # Zu Display ändern
     def change_place_mode(self):
         """Wechselt den Place mode.
 
-        Kommentar: Wechselt den Place mode zwischen 'single' und 'premade'
+        Kommentar: Wechselt den Place mode zwischen 'Zelle' und 'premade'
         Input: Name der Instanz
         Output: Kein Output
         Besonders: Verändert self.curr_place_mode
         """
-        place_index = self.place_modes.index(self.curr_place_mode)+1
+        place_index = self.place_modes.index(self.curr_place_mode) + 1
         if place_index >= len(self.place_modes):
             place_index -= len(self.place_modes)
         self.curr_place_mode = self.place_modes[place_index]
@@ -229,55 +228,38 @@ class Display:  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         self.master = Tk()
+
+        fensterBreite = self.master.winfo_reqwidth()
+        fensterHoehe = self.master.winfo_reqheight()
+        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
         self.master.geometry("250x250")
 
         self.master.title("Conways Game of Life")
 
-        self.title_label = Label(self.master, text="Main Menu")
+        self.title_label = Label(self.master, text="Spielmenü")
         self.title_label.grid(row=0, column=0, sticky='ew')
 
-        self.play_button = Button(self.master, text="Play")
-        self.play_button.grid(row=1, column=0, sticky='ew')
+        self.save_button = Button(self.master, text="Speichern",
+                                  command=lambda: Display.save_file(self.game.get_points(), False))
+        self.save_button.grid(row=1, column=0, sticky='ew')
 
-        self.pause_button = Button(self.master, text="Pause")
-        self.pause_button.grid(row=2, column=0, sticky='ew')
+        self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
+        self.load_button.grid(row=2, column=0, sticky='ew')
 
-        self.auto_button = Button(self.master, text="Auto")
-        self.auto_button.grid(row=3, column=0, sticky='ew')
+        self.manual_button = Button(self.master, text="Anleitung")
+        self.manual_button.grid(row=3, column=0, sticky='ew')
 
-        self.forms_button = Button(self.master, text="Forms")
-        self.forms_button.grid(row=4, column=0, sticky='ew')
-
-        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
-        self.save_button.grid(row=5, column=0, sticky='ew')
-
-        self.load_button = Button(self.master, text="Load", command=lambda: self.open_saved_board())
-        self.load_button.grid(row=6, column=0, sticky='ew')
-
-        self.rules_button = Button(self.master, text="Rules")
-        self.rules_button.grid(row=7, column=0, sticky='ew')
-
-
-
-        self.manual_button = Button(self.master, text="Manual")
-        self.manual_button.grid(row=8, column=0, sticky='ew')
-
-
-
-        self.quit_button = Button(self.master, text="Quit", command=lambda:[pygame.quit(), sys.exit()])
-        self.quit_button.grid(row=9, column=0, sticky='ew')
+        self.quit_button = Button(self.master, text="Quit", command=lambda: [self.spiel_verlassen()])
+        self.quit_button.grid(row=4, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
         self.master.columnconfigure(1, weight=5, uniform="commi")
         self.master.rowconfigure(1, weight=1, uniform="commi")
         self.master.rowconfigure(2, weight=1, uniform="commi")
         self.master.rowconfigure(3, weight=1, uniform="commi")
-        self.master.rowconfigure(4, weight=1, uniform="commi")
-        self.master.rowconfigure(5, weight=1, uniform="commi")
-        self.master.rowconfigure(6, weight=1, uniform="commi")
-        self.master.rowconfigure(7, weight=1, uniform="commi")
-        self.master.rowconfigure(8, weight=1, uniform="commi")
-        self.master.rowconfigure(9, weight=1, uniform="commi")
         self.master.mainloop()
 
     def draw_grid(self):
@@ -322,8 +304,8 @@ class Display:  # Zu Display ändern
             if y_koord < self.window_y:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         null = [(self.verschiebung_ges[1] * 10) + 1, (self.verschiebung_ges[0] * 10) + 1]
-        mid_x = (((self.window_x//20) + -1) * 10) + 1
-        mid_y = (((self.window_x//20) + -1) * 10) + 1
+        mid_x = (((self.window_x // 20) + -1) * 10) + 1
+        mid_y = (((self.window_x // 20) + -1) * 10) + 1
         pygame.draw.rect(self.display, self.red, pygame.Rect(null[0], null[1], 4.5, 5))
         pygame.draw.rect(self.display, self.green, pygame.Rect((mid_x, mid_y + 4.5, 4.5, 5)))
         Display.update_board()
@@ -341,15 +323,15 @@ class Display:  # Zu Display ändern
         node_y = pos_y // 10
         point_x = (node_x * 10) + 1
         point_y = (node_y * 10) + 1
-        if self.curr_place_mode == "single":
+        if self.curr_place_mode == "Zelle":
             exist = self.game.manipulate_point(node_x, node_y)
             if exist:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
             else:
                 pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
-        elif self.curr_place_mode == "premade":
+        elif self.curr_place_mode == "Form":
             name = self.game.list_premade()[self.curr_num_premade]
-            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y) if  cell [1]*10 < self.window_x)
+            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y) if cell[1] * 10 < self.window_x)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
@@ -367,16 +349,18 @@ class Display:  # Zu Display ändern
         self.clear_menu()
         # pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
         pygame.draw.line(self.display, self.black, (self.window_x, 0), (self.window_x, self.window_y), width=2)
-        pygame.draw.line(self.display, self.black, (self.window_x+3, 0), (self.window_x+3, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x + 3, 0), (self.window_x + 3, self.window_y), width=2)
         pygame.draw.line(self.display, self.black, (self.window_x, 300), (self.display_x, 300), width=1)
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
-        instructions = ['Esc - Programm beenden', 'm - Menü öffnen', 'f - nächste Iteration', '-> - nächstes Premade', '<- - letztes Premade', 'p - Toggle Zelle/Draw/Erase/Premade', '      platzieren',
-                        '', 'Maustaste 1 - platzieren', 'Maustaste 2 - Zelle zentrieren', '', f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
-                        f'Premade :  {self.game.list_premade()[self.curr_num_premade]}']
+        instructions = ['Esc - Programm beenden', 'M - Menü öffnen', 'F - Nächste Iteration', '-> - Nächste Form',
+                        '<- - Vorherige Form', 'P - Modus Zelle/Spur/Radieren/Form', '      platzieren',
+                        '', 'Linksklick - Interaktion', 'Rechtsklick - Zelle zentrieren', '',
+                        f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
+                        f'Form :  {self.game.list_premade()[self.curr_num_premade]}']
         for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
-            self.display.blit(textsurface, (self.window_x + 10, 10 + 30*counter))
+            self.display.blit(textsurface, (self.window_x + 10, 10 + 30 * counter))
 
         self.display.blit(self.play_but.surface, (self.play_but.x, self.play_but.y))
         self.input_iterations.update()
@@ -391,22 +375,25 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        while self.play_but.state=='play':
+        while self.play_but.state == 'play':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and pygame.mouse.get_pos()[0] < self.window_x:
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and \
+                        pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
-                    if self.curr_place_mode == "draw":
+                    if self.curr_place_mode == "Spur":
                         self.game.add_point(pos_y, pos_x)
-                        pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        pygame.draw.rect(self.display, self.black,
+                                         pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
-                    elif self.curr_place_mode == "erase":
+                    elif self.curr_place_mode == "Radieren":
                         self.game.remove_point(pos_y, pos_x)
-                        pygame.draw.rect(self.display, self.white, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        pygame.draw.rect(self.display, self.white,
+                                         pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
@@ -427,7 +414,7 @@ class Display:  # Zu Display ändern
                         if self.play_but.rect.collidepoint(pos_y, pos_x):
                             self.play_but.change_state()
                             self.draw_menu()
-                        if self.input_iterations.rect.collidepoint(pos_y,pos_x):
+                        if self.input_iterations.rect.collidepoint(pos_y, pos_x):
                             if self.input_iterations.change_state() == True:
                                 iterations = int(self.input_iterations.text)
                                 self.play_but.change_state()
@@ -471,7 +458,8 @@ class Display:  # Zu Display ändern
                         self.draw_menu()
                     if event.key == pygame.K_g:
                         # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
-                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade()) + str(self)
+                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(
+                            self.game.list_premade()) + str(self)
                         print(out)
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
                         # points = self.game.get_points()
@@ -510,7 +498,7 @@ class Display:  # Zu Display ändern
     def autoplay(self):
         Display.check_close()
         start_time = time.time()
-        while time.time()-start_time < 0.6:
+        while time.time() - start_time < 0.6:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -604,6 +592,29 @@ class Display:  # Zu Display ändern
             self.check_close()
             Display.check_close()
 
+    def spiel_verlassen(self):
+        self.master = Tk()
+
+        fensterBreite = self.master.winfo_reqwidth()
+        fensterHoehe = self.master.winfo_reqheight()
+        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
+
+        self.master.geometry("250x250")
+        self.master.title("")
+
+        self.frage = Label(self.master, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
+        self.frage.grid(row=0, column=0, columnspan="2")
+
+        self.quit_button = Button(self.master, text="Ja",
+        command=lambda: [Display.save_file(self.game.get_points(), True)])
+        self.quit_button.grid(row=1, column=0, sticky='ew')
+        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(),sys.exit()])
+        self.quit_button.grid(row=1, column=1, sticky='ew')
+        self.master.grid_rowconfigure(1, weight=1)
+
     @classmethod
     def check_close(cls):
         """Prüft, ob Close Button aktiviert wurde.
@@ -666,11 +677,11 @@ class Display:  # Zu Display ändern
         self.show_board(to_load)
 
     @classmethod
-    def save_file(cls, inhalt):
+    def save_file(cls, inhalt, schliessfrage):
         """Speichert gegebene Daten in eine Datei mit file browser.
 
         Kommentar: Speichert Daten in eine Datei
-        Input: Name der Klasse, Daten
+        Input: Name der Klasse, Daten, True - speichern und schließen oder False - nur speichern
         Output: Kein Output
         Besonders: Nutzt tkinter speicher-Modul, beliebiger Dateiort.
         """
@@ -681,6 +692,10 @@ class Display:  # Zu Display ändern
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
+
+        if schliessfrage == True:
+            pygame.quit()
+            sys.exit()
 
 
 def main():
