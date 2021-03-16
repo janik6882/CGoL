@@ -30,8 +30,8 @@ class Display:  # Zu Display ändern
                    game() klasse
         """
         self.curr_num_premade = 0
-        self.curr_place_mode = "single"
-        self.place_modes = ["single", "premade"]
+        self.curr_place_mode = "Zelle"
+        self.place_modes = ["Zelle", "Form"]
         nodes = nodes or []
         self.window_x = windowX
         self.window_y = windowY
@@ -58,7 +58,6 @@ class Display:  # Zu Display ändern
     def clear_menu(self):
         # TODO: Doku beenden
         pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
-
 
     def next_premade(self):
         """Geht zum nächsten Vorgefertigten Objekt.
@@ -92,7 +91,7 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Verändert self.curr_place_mode
         """
-        place_index = self.place_modes.index(self.curr_place_mode)+1
+        place_index = self.place_modes.index(self.curr_place_mode) + 1
         if place_index >= len(self.place_modes):
             place_index -= len(self.place_modes)
         self.curr_place_mode = self.place_modes[place_index]
@@ -110,10 +109,10 @@ class Display:  # Zu Display ändern
 
         self.master.title("Conways Game of Life")
 
-        self.title_label = Label(self.master, text="Main Menu")
+        self.title_label = Label(self.master, text="Conway's Menü")
         self.title_label.grid(row=0, column=0, sticky='ew')
 
-        self.play_button = Button(self.master, text="Play")
+        self.play_button = Button(self.master, text="Spielen")
         self.play_button.grid(row=1, column=0, sticky='ew')
 
         self.pause_button = Button(self.master, text="Pause")
@@ -122,26 +121,23 @@ class Display:  # Zu Display ändern
         self.auto_button = Button(self.master, text="Auto")
         self.auto_button.grid(row=3, column=0, sticky='ew')
 
-        self.forms_button = Button(self.master, text="Forms")
+        self.forms_button = Button(self.master, text="Formen")
         self.forms_button.grid(row=4, column=0, sticky='ew')
 
-        self.save_button = Button(self.master, text="Save", command=lambda: Display.save_file(self.game.get_points()))
+        self.save_button = Button(self.master, text="Speichern",
+                                  command=lambda: Display.save_file(self.game.get_points()))
         self.save_button.grid(row=5, column=0, sticky='ew')
 
-        self.load_button = Button(self.master, text="Load", command=lambda: self.open_saved_board())
+        self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
         self.load_button.grid(row=6, column=0, sticky='ew')
 
-        self.rules_button = Button(self.master, text="Rules")
+        self.rules_button = Button(self.master, text="Regeln")
         self.rules_button.grid(row=7, column=0, sticky='ew')
 
-
-
-        self.manual_button = Button(self.master, text="Manual")
+        self.manual_button = Button(self.master, text="Anleitung")
         self.manual_button.grid(row=8, column=0, sticky='ew')
 
-
-
-        self.quit_button = Button(self.master, text="Quit", command=lambda:[pygame.quit(), sys.exit()])
+        self.quit_button = Button(self.master, text="Spiel verlassen", command=lambda: [pygame.quit(), sys.exit()])
         self.quit_button.grid(row=9, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
@@ -194,7 +190,7 @@ class Display:  # Zu Display ändern
         for point in points:
             x_koord = (point[0] * 10) + 1
             y_koord = (point[1] * 10) + 1
-            if y_koord<self.window_y:
+            if y_koord < self.window_y:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
         Display.update_board()
 
@@ -211,15 +207,15 @@ class Display:  # Zu Display ändern
         node_y = pos_y // 10
         point_x = (node_x * 10) + 1
         point_y = (node_y * 10) + 1
-        if self.curr_place_mode == "single":
+        if self.curr_place_mode == "Zelle":
             exist = self.game.manipulate_point(node_x, node_y)
             if exist:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
             else:
                 pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
-        elif self.curr_place_mode == "premade":
+        elif self.curr_place_mode == "Form":
             name = self.game.list_premade()[self.curr_num_premade]
-            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y) if  cell [1]*10 < self.window_x)
+            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y) if cell[1] * 10 < self.window_x)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
@@ -236,20 +232,20 @@ class Display:  # Zu Display ändern
         """
         self.clear_menu()
         # pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
-        pygame.draw.line(self.display,self.black,(self.window_x, 0),(self.window_x,self.window_y),width = 2)
-        pygame.draw.line(self.display,self.black,(self.window_x+3,0),(self.window_x+3,self.window_y),width = 2)
-        pygame.draw.line(self.display,self.black,(self.window_x,300),(self.display_x,300),width = 1)
+        pygame.draw.line(self.display, self.black, (self.window_x, 0), (self.window_x, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x + 3, 0), (self.window_x + 3, self.window_y), width=2)
+        pygame.draw.line(self.display, self.black, (self.window_x, 300), (self.display_x, 300), width=1)
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
-        instructions = ['Esc - Programm beenden','m - Menü öffnen','f - nächste Iteration','-> - nächstes Premade','<- - letztes Premade','p - Toggle Zelle/Premade platzieren',
-                        '','Maustaste 1 - platzieren','Maustaste 2 - Zelle zentrieren','','Iterationen :  '+str(self.game.iterations),'Modus :  '+str(self.curr_place_mode),
-                        'Premade :  '+str(self.game.list_premade()[self.curr_num_premade])]
-        for counter,text in enumerate(instructions):
+        instructions = ['Esc - Programm beenden', 'M - Menü öffnen', 'F - Nächste Iteration', '-> - Nächste Form',
+                        '<- - Vorherige Form', 'P - Modus: Zelle/Form',
+                        '', 'Linksklick - Platzieren', 'Rechtsklick - Zelle zentrieren', '',
+                        'Iterationen :  ' + str(self.game.iterations), 'Modus :  ' + str(self.curr_place_mode),
+                        'Form :  ' + str(self.game.list_premade()[self.curr_num_premade])]
+        for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
-            self.display.blit(textsurface,(self.window_x+10,10+ 30*counter))
+            self.display.blit(textsurface, (self.window_x + 10, 10 + 30 * counter))
         self.update_board()
-
-
 
     def wait_keypress(self):
         """Wartet auf einen Tastendruck.
@@ -265,12 +261,14 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] == True and self.curr_place_mode=="single" and pygame.mouse.get_pos()[0]<self.window_x:
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[
+                    0] == True and self.curr_place_mode == "Zelle" and pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
                     self.game.add_point(pos_y, pos_x)
-                    pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                    pygame.draw.rect(self.display, self.black,
+                                     pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                     self.update_board()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -282,10 +280,10 @@ class Display:  # Zu Display ändern
                             self.manipulate_point(pos_x, pos_y)
                             # self.game.add_point(nodeX, nodeY)
                         if event.button == 3:
-                            mid_x = self.window_x//2
-                            mid_y = self.window_y//2
-                            verschiebung_x = (mid_x - pos_x)//10
-                            verschiebung_y = (mid_y - pos_y)//10
+                            mid_x = self.window_x // 2
+                            mid_y = self.window_y // 2
+                            verschiebung_x = (mid_x - pos_x) // 10
+                            verschiebung_y = (mid_y - pos_y) // 10
                             points = self.game.get_points()
                             for point in points:
                                 point[0] += verschiebung_x
@@ -326,7 +324,8 @@ class Display:  # Zu Display ändern
                         pass
                     if event.key == pygame.K_g:
                         # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
-                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade())
+                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(
+                            self.game.list_premade())
                         print(out)
 
     def mainloop(self):
@@ -408,6 +407,7 @@ class Display:  # Zu Display ändern
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
+
 
 def main():
     """Funktion zum testen."""
