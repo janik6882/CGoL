@@ -134,8 +134,11 @@ class Display:  # Zu Display ändern
         self.black = (0, 0, 0)
         self.white = (255, 255, 255)
         self.grey = (173, 173, 173)
+        self.green = (46, 218, 53)
+        self.red = (255, 0, 0)
         board_size_x = self.window_x // 10
         board_size_y = self.window_y // 10
+        self.verschiebung_ges = [0, 0]
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
         self.play_but = Button_py (self.window_x +10, 500,['play','pause'])
@@ -311,12 +314,18 @@ class Display:  # Zu Display ändern
         Besonders: Aktualisiert das Bord
         """
         points = points or self.game.get_points()
+        print(self.game.get_points())
         self.clear_board()
         for point in points:
             x_koord = (point[0] * 10) + 1
             y_koord = (point[1] * 10) + 1
             if y_koord < self.window_y:
                 pygame.draw.rect(self.display, self.black, pygame.Rect(y_koord, x_koord, 9, 9))  # noqa: E501
+        null = [(self.verschiebung_ges[1] * 10) + 1, (self.verschiebung_ges[0] * 10) + 1]
+        mid_x = (((self.window_x//20) + -1) * 10) + 1
+        mid_y = (((self.window_x//20) + -1) * 10) + 1
+        pygame.draw.rect(self.display, self.red, pygame.Rect(null[0], null[1], 4.5, 5))
+        pygame.draw.rect(self.display, self.green, pygame.Rect((mid_x, mid_y + 4.5, 4.5, 5)))
         Display.update_board()
 
     def manipulate_point(self, pos_x: int, pos_y: int):
@@ -413,6 +422,8 @@ class Display:  # Zu Display ändern
                             mid_y = self.window_y//2
                             verschiebung_x = (mid_x - pos_x)//10
                             verschiebung_y = (mid_y - pos_y)//10
+                            self.verschiebung_ges[0] += verschiebung_x
+                            self.verschiebung_ges[1] += verschiebung_y
                             points = self.game.get_points()
                             for point in points:
                                 point[0] += verschiebung_x
@@ -468,8 +479,16 @@ class Display:  # Zu Display ändern
                         # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
                         out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade()) + str(self)
                         print(out)
+                    if event.key == pygame.K_0 or event.key == pygame.K_KP0:
+                        points = self.game.get_points()
+                        for point in points:
+                            point[0] -= self.verschiebung_ges[0]
+                            point[1] -= self.verschiebung_ges[1]
+                        self.verschiebung_ges = [0, 0]
+                        self.show_board(points)
 
     def autoplay(self):
+        Display.check_close()
         start_time = time.time()
         while time.time()-start_time < 0.6:
             for event in pygame.event.get():
@@ -481,12 +500,10 @@ class Display:  # Zu Display ändern
                     pos_x = pos[1]
                     pos_y = pos[0]
                     if self.play_but.rect.collidepoint(pos_y, pos_x):
-                            self.play_but.change_state()
-                            self.draw_menu()
-                            return True
+                        self.play_but.change_state()
+                        self.draw_menu()
+                        return True
         return False
-
-
 
     def mainloop(self):
         """Mainloop, läuft bis beendet.
