@@ -422,13 +422,7 @@ class Display:  # Zu Display ändern
                             mid_y = self.window_y//2
                             verschiebung_x = (mid_x - pos_x)//10
                             verschiebung_y = (mid_y - pos_y)//10
-                            self.verschiebung_ges[0] += verschiebung_x
-                            self.verschiebung_ges[1] += verschiebung_y
-                            points = self.game.get_points()
-                            for point in points:
-                                point[0] += verschiebung_x
-                                point[1] += verschiebung_y
-                            self.show_board(points)
+                            self.show_board_verschoben(verschiebung_x, verschiebung_y)
                     else:
                         if self.play_but.rect.collidepoint(pos_y, pos_x):
                             self.play_but.change_state()
@@ -480,12 +474,31 @@ class Display:  # Zu Display ändern
                         out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(self.game.list_premade()) + str(self)
                         print(out)
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
-                        points = self.game.get_points()
-                        for point in points:
-                            point[0] -= self.verschiebung_ges[0]
-                            point[1] -= self.verschiebung_ges[1]
+                        # points = self.game.get_points()
+                        # for point in points:
+                        #     point[0] -= self.verschiebung_ges[0]
+                        #     point[1] -= self.verschiebung_ges[1]
+                        verschiebung_x = -int(self.verschiebung_ges[0])
+                        verschiebung_y = -int(self.verschiebung_ges[1])
+                        self.show_board_verschoben(verschiebung_x, verschiebung_y)
                         self.verschiebung_ges = [0, 0]
-                        self.show_board(points)
+                    if event.key == pygame.K_w:
+                        self.show_board_verschoben(10, 0)
+                    if event.key == pygame.K_a:
+                        self.show_board_verschoben(0, 10)
+                    if event.key == pygame.K_s:
+                        self.show_board_verschoben(-10, 0)
+                    if event.key == pygame.K_d:
+                        self.show_board_verschoben(0, -10)
+
+    def show_board_verschoben(self, verschiebung_x, verschiebung_y):
+        self.verschiebung_ges[0] += verschiebung_x
+        self.verschiebung_ges[1] += verschiebung_y
+        points = self.game.get_points()
+        for point in points:
+            point[0] += verschiebung_x
+            point[1] += verschiebung_y
+        self.show_board(points)
 
     def autoplay(self):
         Display.check_close()
@@ -495,14 +508,70 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and pygame.mouse.get_pos()[0] < self.window_x:
+                    mouse_pos = pygame.mouse.get_pos()
+                    pos_x = mouse_pos[0] // 10
+                    pos_y = mouse_pos[1] // 10
+                    if self.curr_place_mode == "draw":
+                        self.game.add_point(pos_y, pos_x)
+                        pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        self.update_board()
+                    elif self.curr_place_mode == "erase":
+                        self.game.remove_point(pos_y, pos_x)
+                        pygame.draw.rect(self.display, self.white, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        self.update_board()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
-                    if self.play_but.rect.collidepoint(pos_y, pos_x):
-                        self.play_but.change_state()
+                    if event.button == 1:
+                        if self.play_but.rect.collidepoint(pos_y, pos_x):
+                            self.play_but.change_state()
+                            self.draw_menu()
+                            return True
+                        if pos_y < self.window_x:
+                            if event.button == 1:
+                                self.manipulate_point(pos_x, pos_y)
+                                self.show_board()
+                    if event.button == 3:
+                        mid_x = self.window_x//2
+                        mid_y = self.window_y//2
+                        verschiebung_x = (mid_x - pos_x)//10
+                        verschiebung_y = (mid_y - pos_y)//10
+                        self.show_board_verschoben(verschiebung_x, verschiebung_y)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    if event.key == pygame.K_0 or event.key == pygame.K_KP0:
+                        # points = self.game.get_points()
+                        # for point in points:
+                        #     point[0] -= self.verschiebung_ges[0]
+                        #     point[1] -= self.verschiebung_ges[1]
+                        verschiebung_x = -int(self.verschiebung_ges[0])
+                        verschiebung_y = -int(self.verschiebung_ges[1])
+                        self.show_board_verschoben(verschiebung_x, verschiebung_y)
+                        self.verschiebung_ges = [0, 0]
+                    if event.key == pygame.K_w:
+                        self.show_board_verschoben(10, 0)
+                    if event.key == pygame.K_a:
+                        self.show_board_verschoben(0, 10)
+                    if event.key == pygame.K_s:
+                        self.show_board_verschoben(-10, 0)
+                    if event.key == pygame.K_d:
+                        self.show_board_verschoben(0, -10)
+                    if event.key == pygame.K_RIGHT:
+                        self.next_premade()
+                        # points = self.game.get_points()
+                        # self.show_board(points)
                         self.draw_menu()
-                        return True
+                    if event.key == pygame.K_LEFT:
+                        self.previous_premade()
+                        points = self.game.get_points()
+                        self.show_board(points)
+                        self.draw_menu()
+                    if event.key == pygame.K_p:
+                        self.change_place_mode()
         return False
 
     def mainloop(self):
