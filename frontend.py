@@ -14,8 +14,16 @@ import collections
 
 
 class Input:
+    """Klasse für ein Input Feld"""
 
     def __init__(self, x, y, width, hight, screen, text='', mode=''):
+        """Init Methode für Input Klasse
+
+        Kommentar: Standard Init Methode
+        Input: Name der Instanz, x, y, breite, höhe, display optional: text, modus
+        Output: Kein Direktes Output
+        Besonders: Keine Besonderheiten
+        """
         self.x = x
         self.y = y
         self.hight = hight
@@ -34,6 +42,13 @@ class Input:
         self.update()
 
     def change_state(self):
+        """Verändert status und Farbe
+
+        Kommentar: Verändert den Status von active auf das invertierte
+        Input: Name der Instanz
+        Output: Gibt return der Mainloop zurück
+        Besonders: Keine Besonderheiten
+        """
         self.active = not self.active
         self.color = self.color_active if self.active else self.color_inactive
         self.update()
