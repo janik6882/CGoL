@@ -228,6 +228,13 @@ class Display:  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         self.master = Tk()
+
+        fensterBreite = self.master.winfo_reqwidth()
+        fensterHoehe= self.master.winfo_reqheight()
+        positionRechts=int(self.master.winfo_screenwidth()/2-fensterBreite/2)
+        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
         self.master.geometry("250x250")
 
         self.master.title("Conways Game of Life")
@@ -245,7 +252,7 @@ class Display:  # Zu Display ändern
         self.manual_button = Button(self.master, text="Anleitung")
         self.manual_button.grid(row=3, column=0, sticky='ew')
 
-        self.quit_button = Button(self.master, text="Quit", command=lambda: [pygame.quit(), sys.exit()])
+        self.quit_button = Button(self.master, text="Quit", command=lambda: [self.spiel_verlassen()])
         self.quit_button.grid(row=4, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
@@ -586,6 +593,29 @@ class Display:  # Zu Display ändern
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
+
+    @classmethod
+    def spiel_verlassen(cls):
+        cls.master = Tk()
+
+        fensterBreite = cls.master.winfo_reqwidth()
+        fensterHoehe = cls.master.winfo_reqheight()
+        positionRechts = int(cls.master.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(cls.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        cls.master.geometry("+{}+{}".format(positionRechts, positionUnten))
+
+        cls.master.geometry("250x250")
+        cls.master.title("")
+
+        cls.frage= Label(cls.master, text="Ungespeicherter Fortschritt geht verloren.\nWillst du wirklich verlassen?")
+        cls.frage.grid(row=0, column=0, columnspan="2")
+
+        cls.quit_button = Button(cls.master, text="Ja", command=lambda: [pygame.quit(), sys.exit()])
+        cls.quit_button.grid(row=1, column=0, sticky='ew')
+        cls.quit_button = Button(cls.master, text="Nein", command=lambda: [cls.master.destroy()])
+        cls.quit_button.grid(row=1, column=1, sticky='ew')
+        cls.master.grid_rowconfigure(1, weight=1)
 
 
 def main():
