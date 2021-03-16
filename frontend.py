@@ -158,7 +158,7 @@ class Display:  # Zu Display ändern
         return res
 
     def __repr__(self):
-        # TODO: Doku beenden
+        """Gibt alle werte der Instanz zurück."""
         return self.__dict__
 
     def clear_board(self):
@@ -492,6 +492,13 @@ class Display:  # Zu Display ändern
                         self.show_board_verschoben(0, -10)
 
     def show_board_verschoben(self, verschiebung_x, verschiebung_y):
+        """Verschobenes Anzeigen des Boards in Funktion gebündelt.
+
+        Kommentar:
+        Input: Name der Instanz, verschiebung x, verschiebung y
+        Output: Kein return, visuelles Feedback
+        Besonders: Keine Besonderheiten
+        """
         self.verschiebung_ges[0] += verschiebung_x
         self.verschiebung_ges[1] += verschiebung_y
         points = self.game.get_points()
