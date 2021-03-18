@@ -80,12 +80,12 @@ class Input:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
                     pos_y = pos[0]
-                    if self.rect.collidepoint(pos_y, pos_x) == False:
+                    if not self.rect.collidepoint(pos_y, pos_x):
                         self.change_state()
 
 
 class Button_py:
-    "Create a button, then blit the surface in the while loop"
+    """Create a button, then blit the surface in the while loop"""
 
     def __init__(self, x, y, states):
         self.x = x
@@ -378,8 +378,7 @@ class Display:  # Zu Display ändern
         while self.play_but.state == 'play':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    self.spiel_verlassen()
                 if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and \
                         pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
@@ -443,8 +442,7 @@ class Display:  # Zu Display ändern
                         return None
                     if event.key == pygame.K_ESCAPE:
                         # Escape -> Close
-                        pygame.quit()
-                        sys.exit()
+                        self.spiel_verlassen()
                     if event.key == pygame.K_m:
                         self.open_menu()
                     if event.key == pygame.K_RIGHT:
@@ -481,8 +479,7 @@ class Display:  # Zu Display ändern
         while time.time() - start_time < 0.6:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    self.spiel_verlassen()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
                     pos_x = pos[1]
@@ -511,7 +508,7 @@ class Display:  # Zu Display ändern
                 self.wait_keypress()
             if self.play_but.state == 'pause':
                 stop = self.autoplay()
-            if stop == False:
+            if not stop:
                 self.game.next_board()
             self.check_close()
             Display.check_close()
@@ -550,12 +547,10 @@ class Display:  # Zu Display ändern
         """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                cls.spiel_verlassen(cls)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                        cls.spiel_verlassen(cls)
 
     @classmethod
     def update_board(cls):
@@ -617,7 +612,7 @@ class Display:  # Zu Display ändern
             with open(filename, 'w', encoding='utf-8') as file:
                 json.dump(inhalt, file)
 
-        if schliessfrage == True:
+        if schliessfrage:
             pygame.quit()
             sys.exit()
 
