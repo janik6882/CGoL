@@ -56,10 +56,12 @@ class Input:
             return self.mainloop()
 
     def change_text(self, text):
+        """Verändert den text zum Input und aktualisiert den Text."""
         self.text = text
         self.update()
 
     def update(self):
+        """Aktualisiert das Input Fenster und dessen Inhalt."""
         self.text_surface = self.font.render(self.text, True, self.color)
         width = max(self.origin_width, self.text_surface.get_width() + 10)
         pygame.draw.rect(self.screen, pygame.Color('white'),
@@ -72,6 +74,7 @@ class Input:
         self.draw()
 
     def draw(self):
+        """Zeichnet die Box für das Input-Feld."""
         self.screen.blit(self.text_surface, (self.x + 5, self.y + 5))
         pygame.draw.rect(self.screen, self.color, self.rect, 2)
         pygame.display.flip()
@@ -100,7 +103,7 @@ class Input:
 
 
 class Button_py:
-    "Create a button, then blit the surface in the while loop"
+    """Create a button, then blit the surface in the while loop"""
 
     def __init__(self, x, y, states):
         self.x = x
