@@ -1,5 +1,6 @@
 import pygame
 
+
 class Input:
     """Klasse für ein Input Feld"""
 

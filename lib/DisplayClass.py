@@ -8,6 +8,7 @@ from backend import Game
 import ButtonClass
 import InputClass
 
+
 class Display:  # Zu Display ändern
     """Display Klasse.
 
@@ -308,10 +309,10 @@ class Display:  # Zu Display ändern
                             self.show_board()
                             # self.game.add_point(nodeX, nodeY)
                         if event.button == 3:
-                            mid_x = self.window_x//2
-                            mid_y = self.window_y//2
-                            verschiebung_x = (mid_x - pos_x)//10
-                            verschiebung_y = (mid_y - pos_y)//10
+                            mid_x = self.window_x // 2
+                            mid_y = self.window_y // 2
+                            verschiebung_x = (mid_x - pos_x) // 10
+                            verschiebung_y = (mid_y - pos_y) // 10
                             self.show_board_verschoben(verschiebung_x, verschiebung_y)
                     else:
                         if self.play_but.rect.collidepoint(pos_y, pos_x):
@@ -406,17 +407,20 @@ class Display:  # Zu Display ändern
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and pygame.mouse.get_pos()[0] < self.window_x:
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and \
+                        pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
                     if self.curr_place_mode == "draw":
                         self.game.add_point(pos_y, pos_x)
-                        pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        pygame.draw.rect(self.display, self.black,
+                                         pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
                     elif self.curr_place_mode == "erase":
                         self.game.remove_point(pos_y, pos_x)
-                        pygame.draw.rect(self.display, self.white, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        pygame.draw.rect(self.display, self.white,
+                                         pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
@@ -432,10 +436,10 @@ class Display:  # Zu Display ändern
                                 self.manipulate_point(pos_x, pos_y)
                                 self.show_board()
                     if event.button == 3:
-                        mid_x = self.window_x//2
-                        mid_y = self.window_y//2
-                        verschiebung_x = (mid_x - pos_x)//10
-                        verschiebung_y = (mid_y - pos_y)//10
+                        mid_x = self.window_x // 2
+                        mid_y = self.window_y // 2
+                        verschiebung_x = (mid_x - pos_x) // 10
+                        verschiebung_y = (mid_y - pos_y) // 10
                         self.show_board_verschoben(verschiebung_x, verschiebung_y)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -512,9 +516,9 @@ class Display:  # Zu Display ändern
         self.frage.grid(row=0, column=0, columnspan="2")
 
         self.quit_button = Button(self.master, text="Ja",
-        command=lambda: [Display.save_file(self.game.get_points(), True)])
+                                  command=lambda: [Display.save_file(self.game.get_points(), True)])
         self.quit_button.grid(row=1, column=0, sticky='ew')
-        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(),sys.exit()])
+        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(), sys.exit()])
         self.quit_button.grid(row=1, column=1, sticky='ew')
         self.master.grid_rowconfigure(1, weight=1)
 

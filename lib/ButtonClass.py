@@ -1,5 +1,6 @@
 import pygame
 
+
 class Button_py:
     """Create a button, then blit the surface in the while loop"""
 
