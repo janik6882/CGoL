@@ -156,7 +156,7 @@ class Display:  # Zu Display ändern
         self.manual_button = Button(self.master, text="Anleitung")
         self.manual_button.grid(row=3, column=0, sticky='ew')
 
-        self.quit_button = Button(self.master, text="Quit", command=lambda: [self.spiel_verlassen()])
+        self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
         self.quit_button.grid(row=4, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
@@ -282,8 +282,9 @@ class Display:  # Zu Display ändern
         while self.play_but.state == 'play':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    self.spiel_verlassen()
+                    # pygame.quit()
+                    # sys.exit()
                 if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and \
                         pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
@@ -340,9 +341,10 @@ class Display:  # Zu Display ändern
                         # TODO: entfernen, geht zur nächsten Generation
                         return None
                     if event.key == pygame.K_ESCAPE:
+                        self.spiel_verlassen()
                         # Escape -> Close
-                        pygame.quit()
-                        sys.exit()
+                        # pygame.quit()
+                        # sys.exit()
                     if event.key == pygame.K_m:
                         self.open_menu()
                     if event.key == pygame.K_RIGHT:
@@ -400,13 +402,12 @@ class Display:  # Zu Display ändern
         self.show_board(points)
 
     def autoplay(self):
-        Display.check_close()
+        self.check_close()
         start_time = time.time()
         while time.time() - start_time < 0.6:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    self.spiel_verlassen()
                 if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and \
                         pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
@@ -443,8 +444,7 @@ class Display:  # Zu Display ändern
                         self.show_board_verschoben(verschiebung_x, verschiebung_y)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                        self.spiel_verlassen()
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
                         # points = self.game.get_points()
                         # for point in points:
@@ -494,36 +494,36 @@ class Display:  # Zu Display ändern
                 self.wait_keypress()
             if self.play_but.state == 'pause':
                 stop = self.autoplay()
-            if stop == False:
+            if stop is False:
                 self.game.next_board()
             self.check_close()
-            Display.check_close()
+            self.check_close()
 
     def spiel_verlassen(self):
-        self.master = Tk()
+        quit_box = Tk()
 
-        fensterBreite = self.master.winfo_reqwidth()
-        fensterHoehe = self.master.winfo_reqheight()
-        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
-        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+        fensterBreite = quit_box.winfo_reqwidth()
+        fensterHoehe = quit_box.winfo_reqheight()
+        positionRechts = int(quit_box.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(quit_box.winfo_screenheight() / 2 - fensterHoehe / 0.75)
 
-        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
+        quit_box.geometry("+{}+{}".format(positionRechts, positionUnten))
 
-        self.master.geometry("250x250")
-        self.master.title("")
+        quit_box.geometry("250x250")
+        quit_box.title("")
 
-        self.frage = Label(self.master, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
+        self.frage = Label(quit_box, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
         self.frage.grid(row=0, column=0, columnspan="2")
 
-        self.quit_button = Button(self.master, text="Ja",
+        self.quit_button_yes = Button(quit_box, text="Ja",
                                   command=lambda: [Display.save_file(self.game.get_points(), True)])
-        self.quit_button.grid(row=1, column=0, sticky='ew')
-        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(), sys.exit()])
-        self.quit_button.grid(row=1, column=1, sticky='ew')
-        self.master.grid_rowconfigure(1, weight=1)
+        self.quit_button_yes.grid(row=1, column=0, sticky='ew')
+        self.quit_button_no = Button(quit_box, text="Nein", command=lambda: [pygame.quit(), sys.exit()])
+        self.quit_button_no.grid(row=1, column=1, sticky='ew')
+        quit_box.grid_rowconfigure(1, weight=1)
+        quit_box.mainloop()
 
-    @classmethod
-    def check_close(cls):
+    def check_close(self):
         """Prüft, ob Close Button aktiviert wurde.
 
         Kommentar: Überprüft, ob der Close button aktiviert wurde
@@ -533,12 +533,10 @@ class Display:  # Zu Display ändern
         """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                self.spiel_verlassen()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.spiel_verlassen()
 
     @classmethod
     def update_board(cls):
