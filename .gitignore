@@ -7,3 +7,4 @@ implement.py
 !premade.json
 *.cfg
 /.idea/
+/lib/__pycache__/
