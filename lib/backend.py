@@ -212,7 +212,7 @@ class Game():
         if filename:
             data = Game.load_premade(filename)
         else:
-            pth = os.path.join("premade", "premade.json")
+            pth = os.path.join(".../../premade", "premade.json")
             data = Game.load_premade(pth)
         self.premade = Game.merge_dict(self.premade, data)
         return data
@@ -313,7 +313,7 @@ class Game():
         Output: Alle Top-Level Ordner
         Besonders: Nutzt das OS modul (anfangs importiert)
         """
-        top_dir = next(os.walk("."))[1]
+        top_dir = next(os.walk(".."))[1]
         return top_dir
 
     @classmethod

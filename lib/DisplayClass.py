@@ -1,126 +1,12 @@
-"""Projekt des Informatik LK."""
-# pylint: disable=E1101
-# pylint: disable=C0301
-import sys
 import pygame
-import time
-# from pygame.locals import *
+import sys
 import json
-from backend import Game
 from tkinter.filedialog import asksaveasfilename, askopenfile
 from tkinter import Button, Label, Tk
-import itertools
-import collections
-
-
-class Input:
-    """Klasse für ein Input Feld"""
-
-    def __init__(self, x, y, width, hight, screen, text='', mode=''):
-        """Init Methode für Input Klasse
-
-        Kommentar: Standard Init Methode
-        Input: Name der Instanz, x, y, breite, höhe, display optional: text, modus
-        Output: Kein Direktes Output
-        Besonders: Keine Besonderheiten
-        """
-        self.x = x
-        self.y = y
-        self.hight = hight
-        self.width = width
-        self.origin_width = width
-        self.rect = pygame.Rect(self.x, self.y, width, hight)
-        self.font = pygame.font.Font(None, 32)
-        self.color_inactive = pygame.Color('lightskyblue3')
-        self.color_active = pygame.Color('midnightblue')
-        self.color = self.color_inactive
-        self.text = text
-        self.text_surface = self.font.render(self.text, True, self.color)
-        self.active = False
-        self.screen = screen
-        self.mode = mode
-        self.update()
-
-    def change_state(self):
-        """Verändert status und Farbe
-
-        Kommentar: Verändert den Status von active auf das invertierte
-        Input: Name der Instanz
-        Output: Gibt return der Mainloop zurück
-        Besonders: Keine Besonderheiten
-        """
-        self.active = not self.active
-        self.color = self.color_active if self.active else self.color_inactive
-        self.update()
-        if self.active:
-            return self.mainloop()
-
-    def change_text(self, text):
-        """Verändert den text zum Input und aktualisiert den Text."""
-        self.text = text
-        self.update()
-
-    def update(self):
-        """Aktualisiert das Input Fenster und dessen Inhalt."""
-        self.text_surface = self.font.render(self.text, True, self.color)
-        width = max(self.origin_width, self.text_surface.get_width() + 10)
-        pygame.draw.rect(self.screen, pygame.Color('white'),
-                         pygame.Rect(self.x, self.y, max(width, self.width + 10), self.hight + 10))
-        if width + 10 + self.x < self.screen.get_size()[0]:
-            self.rect.width = width
-            self.width = self.rect.width
-        else:
-            self.change_text(self.text[:-1])
-        self.draw()
-
-    def draw(self):
-        """Zeichnet die Box für das Input-Feld."""
-        self.screen.blit(self.text_surface, (self.x + 5, self.y + 5))
-        pygame.draw.rect(self.screen, self.color, self.rect, 2)
-        pygame.display.flip()
-
-    def mainloop(self):
-        while self.active:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKSPACE:
-                        self.change_text(self.text[:-1])
-                    elif event.key == pygame.K_ESCAPE:
-                        self.change_text('')
-                        self.change_state()
-                    elif event.key == pygame.K_RETURN:
-                        self.change_state()
-                        return True
-                    else:
-                        if event.unicode.isnumeric() or self.mode != 'int':
-                            self.change_text(self.text + event.unicode)
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    pos = pygame.mouse.get_pos()
-                    pos_x = pos[1]
-                    pos_y = pos[0]
-                    if self.rect.collidepoint(pos_y, pos_x) == False:
-                        self.change_state()
-
-
-class Button_py:
-    """Create a button, then blit the surface in the while loop"""
-
-    def __init__(self, x, y, states):
-        self.x = x
-        self.y = y
-        self.states = states
-        self.state = self.states[0]
-        self.update_button()
-
-    def change_state(self):
-        self.states.append(self.states.pop(0))
-        self.state = self.states[0]
-        self.update_button()
-
-    def update_button(self):
-        self.surface = pygame.image.load('img/' + self.state + '.png')
-        self.size = self.surface.get_size()
-        self.rect = pygame.Rect(self.x, self.y, self.size[0], self.size[1])
+import time
+from backend import Game
+import ButtonClass
+import InputClass
 
 
 class Display:  # Zu Display ändern
@@ -158,8 +44,8 @@ class Display:  # Zu Display ändern
         self.verschiebung_ges = [0, 0]
         self.game = Game(nodes=nodes, board_x=board_size_x, board_y=board_size_y)  # noqa: E501
         self.display = pygame.display.set_mode((self.display_x, self.window_y))
-        self.play_but = Button_py(self.window_x + 10, 500, ['play', 'pause'])
-        self.input_iterations = Input(self.window_x + 10, 600, 100, 40, self.display, mode='int')
+        self.play_but = ButtonClass.Button_py(self.window_x + 10, 500, ['play', 'pause'])
+        self.input_iterations = InputClass.Input(self.window_x + 10, 600, 100, 40, self.display, mode='int')
 
     def __str__(self):
         """Für Debugging (Infos etc.).
@@ -270,7 +156,7 @@ class Display:  # Zu Display ändern
         self.manual_button = Button(self.master, text="Anleitung")
         self.manual_button.grid(row=3, column=0, sticky='ew')
 
-        self.quit_button = Button(self.master, text="Quit", command=lambda: [self.spiel_verlassen()])
+        self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
         self.quit_button.grid(row=4, column=0, sticky='ew')
 
         self.master.columnconfigure(0, weight=5, uniform="commi")
@@ -396,8 +282,9 @@ class Display:  # Zu Display ändern
         while self.play_but.state == 'play':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    self.spiel_verlassen()
+                    # pygame.quit()
+                    # sys.exit()
                 if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and \
                         pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
@@ -423,10 +310,10 @@ class Display:  # Zu Display ändern
                             self.show_board()
                             # self.game.add_point(nodeX, nodeY)
                         if event.button == 3:
-                            mid_x = self.window_x//2
-                            mid_y = self.window_y//2
-                            verschiebung_x = (mid_x - pos_x)//10
-                            verschiebung_y = (mid_y - pos_y)//10
+                            mid_x = self.window_x // 2
+                            mid_y = self.window_y // 2
+                            verschiebung_x = (mid_x - pos_x) // 10
+                            verschiebung_y = (mid_y - pos_y) // 10
                             self.show_board_verschoben(verschiebung_x, verschiebung_y)
                     else:
                         if self.play_but.rect.collidepoint(pos_y, pos_x):
@@ -454,9 +341,10 @@ class Display:  # Zu Display ändern
                         # TODO: entfernen, geht zur nächsten Generation
                         return None
                     if event.key == pygame.K_ESCAPE:
+                        self.spiel_verlassen()
                         # Escape -> Close
-                        pygame.quit()
-                        sys.exit()
+                        # pygame.quit()
+                        # sys.exit()
                     if event.key == pygame.K_m:
                         self.open_menu()
                     if event.key == pygame.K_RIGHT:
@@ -514,24 +402,26 @@ class Display:  # Zu Display ändern
         self.show_board(points)
 
     def autoplay(self):
-        Display.check_close()
+        self.check_close()
         start_time = time.time()
         while time.time() - start_time < 0.6:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and pygame.mouse.get_pos()[0] < self.window_x:
+                    self.spiel_verlassen()
+                if event.type == pygame.MOUSEMOTION and pygame.mouse.get_pressed()[0] is True and \
+                        pygame.mouse.get_pos()[0] < self.window_x:
                     mouse_pos = pygame.mouse.get_pos()
                     pos_x = mouse_pos[0] // 10
                     pos_y = mouse_pos[1] // 10
                     if self.curr_place_mode == "draw":
                         self.game.add_point(pos_y, pos_x)
-                        pygame.draw.rect(self.display, self.black, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        pygame.draw.rect(self.display, self.black,
+                                         pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
                     elif self.curr_place_mode == "erase":
                         self.game.remove_point(pos_y, pos_x)
-                        pygame.draw.rect(self.display, self.white, pygame.Rect((pos_x*10)+1, (pos_y*10)+1, 9, 9))  # noqa: E501
+                        pygame.draw.rect(self.display, self.white,
+                                         pygame.Rect((pos_x * 10) + 1, (pos_y * 10) + 1, 9, 9))  # noqa: E501
                         self.update_board()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
@@ -547,15 +437,14 @@ class Display:  # Zu Display ändern
                                 self.manipulate_point(pos_x, pos_y)
                                 self.show_board()
                     if event.button == 3:
-                        mid_x = self.window_x//2
-                        mid_y = self.window_y//2
-                        verschiebung_x = (mid_x - pos_x)//10
-                        verschiebung_y = (mid_y - pos_y)//10
+                        mid_x = self.window_x // 2
+                        mid_y = self.window_y // 2
+                        verschiebung_x = (mid_x - pos_x) // 10
+                        verschiebung_y = (mid_y - pos_y) // 10
                         self.show_board_verschoben(verschiebung_x, verschiebung_y)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                        self.spiel_verlassen()
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
                         # points = self.game.get_points()
                         # for point in points:
@@ -605,36 +494,36 @@ class Display:  # Zu Display ändern
                 self.wait_keypress()
             if self.play_but.state == 'pause':
                 stop = self.autoplay()
-            if stop == False:
+            if stop is False:
                 self.game.next_board()
             self.check_close()
-            Display.check_close()
+            self.check_close()
 
     def spiel_verlassen(self):
-        self.master = Tk()
+        quit_box = Tk()
 
-        fensterBreite = self.master.winfo_reqwidth()
-        fensterHoehe = self.master.winfo_reqheight()
-        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
-        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+        fensterBreite = quit_box.winfo_reqwidth()
+        fensterHoehe = quit_box.winfo_reqheight()
+        positionRechts = int(quit_box.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(quit_box.winfo_screenheight() / 2 - fensterHoehe / 0.75)
 
-        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
+        quit_box.geometry("+{}+{}".format(positionRechts, positionUnten))
 
-        self.master.geometry("250x250")
-        self.master.title("")
+        quit_box.geometry("250x250")
+        quit_box.title("")
 
-        self.frage = Label(self.master, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
+        self.frage = Label(quit_box, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
         self.frage.grid(row=0, column=0, columnspan="2")
 
-        self.quit_button = Button(self.master, text="Ja",
-        command=lambda: [Display.save_file(self.game.get_points(), True)])
-        self.quit_button.grid(row=1, column=0, sticky='ew')
-        self.quit_button = Button(self.master, text="Nein", command=lambda: [pygame.quit(),sys.exit()])
-        self.quit_button.grid(row=1, column=1, sticky='ew')
-        self.master.grid_rowconfigure(1, weight=1)
+        self.quit_button_yes = Button(quit_box, text="Ja",
+                                  command=lambda: [Display.save_file(self.game.get_points(), True)])
+        self.quit_button_yes.grid(row=1, column=0, sticky='ew')
+        self.quit_button_no = Button(quit_box, text="Nein", command=lambda: [pygame.quit(), sys.exit()])
+        self.quit_button_no.grid(row=1, column=1, sticky='ew')
+        quit_box.grid_rowconfigure(1, weight=1)
+        quit_box.mainloop()
 
-    @classmethod
-    def check_close(cls):
+    def check_close(self):
         """Prüft, ob Close Button aktiviert wurde.
 
         Kommentar: Überprüft, ob der Close button aktiviert wurde
@@ -644,12 +533,10 @@ class Display:  # Zu Display ändern
         """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                self.spiel_verlassen()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.spiel_verlassen()
 
     @classmethod
     def update_board(cls):
@@ -714,24 +601,3 @@ class Display:  # Zu Display ändern
         if schliessfrage == True:
             pygame.quit()
             sys.exit()
-
-
-def main():
-    """Funktion zum testen."""
-    glider_top_left = [[1, 2], [1, 3], [1, 4], [1, 5], [2, 1], [2, 5], [3, 5],
-                       [4, 1], [4, 4]]
-    test = Display(1000, 1000, glider_top_left)
-    # print(test.game.list_premade())
-    # test.game.add_premade("Middle-weight spaceship", 5, 5)
-    test.mainloop()
-
-
-def debug():
-    """Funktion zum Debugging."""
-    fenster = Display(700, 700)
-    fenster.mainloop()
-
-
-if __name__ == '__main__':
-    debug()
-    # main()

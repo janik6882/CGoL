@@ -1,9 +1,11 @@
 implement.py
 *.txt
 /saves/
+/lib/__pycache__/
 /__pycache__/
 *.json
 *.docx
 !premade.json
 *.cfg
 /.idea/
+*.pyc
