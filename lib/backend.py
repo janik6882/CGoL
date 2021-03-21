@@ -370,7 +370,7 @@ class Game():
         curr_nodes = nodes
         print(curr_nodes)
         for i in range(iter):
-            curr_nodes = cls.rotate_obj(nodes = curr_nodes)
+            curr_nodes = cls.rotate_obj(nodes=curr_nodes)
             print(curr_nodes)
         return curr_nodes
 
