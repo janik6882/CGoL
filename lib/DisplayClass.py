@@ -39,6 +39,7 @@ class Display:  # Zu Display ändern
         self.grey = (173, 173, 173)
         self.green = (46, 218, 53)
         self.red = (255, 0, 0)
+        self.curr_rotation = 0
         board_size_x = self.window_x // 10
         board_size_y = self.window_y // 10
         self.verschiebung_ges = [0, 0]
@@ -63,6 +64,11 @@ class Display:  # Zu Display ändern
     def __repr__(self):
         """Gibt alle werte der Instanz zurück."""
         return self.__dict__
+
+    def change_rotatation(self):
+        self.curr_rotation += 90
+        while self.curr_rotation >= 360:
+            self.curr_rotation -= 360
 
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
@@ -235,7 +241,8 @@ class Display:  # Zu Display ändern
                 pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
         elif self.curr_place_mode == "Form":
             name = self.game.list_premade()[self.curr_num_premade]
-            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y) if cell[1] * 10 < self.window_x)
+            obj_select = self.game.add_premade(name, node_x, node_y, self.curr_rotation//90)
+            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y, self.curr_rotation//90) if cell[1] * 10 < self.window_x)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
@@ -261,7 +268,7 @@ class Display:  # Zu Display ändern
                         '<- - Vorherige Form', 'P - Modus Zelle/Spur/Radieren/Form', '      platzieren',
                         '', 'Linksklick - Interaktion', 'Rechtsklick - Zelle zentrieren', '',
                         f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
-                        f'Form :  {self.game.list_premade()[self.curr_num_premade]}']
+                        f'Form :  {self.game.list_premade()[self.curr_num_premade]}', f"Rotation : {self.curr_rotation}"]
         for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface, (self.window_x + 10, 10 + 30 * counter))
@@ -384,6 +391,9 @@ class Display:  # Zu Display ändern
                         self.show_board_verschoben(-10, 0)
                     if event.key == pygame.K_d:
                         self.show_board_verschoben(0, -10)
+                    if event.key == pygame.K_r:
+                        self.change_rotatation()
+                        self.draw_menu()
 
     def show_board_verschoben(self, verschiebung_x, verschiebung_y):
         """Verschobenes Anzeigen des Boards in Funktion gebündelt.
@@ -474,6 +484,9 @@ class Display:  # Zu Display ändern
                         self.draw_menu()
                     if event.key == pygame.K_p:
                         self.change_place_mode()
+                    if event.key == pygame.K_r:
+                        self.change_rotatation()
+                        self.draw_menu()
         return False
 
     def mainloop(self):

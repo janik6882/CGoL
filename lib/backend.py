@@ -112,10 +112,10 @@ class Game():
         Besonders: Keine Besonderheiten
         """
         # TODO: doku beenden
-        self.nodes = Game.remove_duplicates(nodes) 
+        self.nodes = Game.remove_duplicates(nodes)
         return self.nodes
 
-    
+
 
     def get_points(self) -> list:
         """Gibt die Knotenliste zurück.
@@ -217,7 +217,7 @@ class Game():
         self.premade = Game.merge_dict(self.premade, data)
         return data
 
-    def add_premade(self, name: str, pos_x: int, pos_y: int) -> list:
+    def add_premade(self, name: str, pos_x: int, pos_y: int, rotation=None) -> list:
         """Fügt ein vorgefertigtes Element zur Knotenliste hinzu.
 
         Kommentar: fuegt an einer gegebenen Position ein vorgefertigtes Objekt
@@ -226,7 +226,9 @@ class Game():
         Output: Kein Output, Knoten werden an Knotenliste angehängt
         Besonders: Kein Output, anfügen an Knotenliste
         """
-        to_add = self.premade[name]
+        rotation = rotation or 0
+        select = self.premade[name]
+        to_add = self.multirotate(rotation, select)
         new_point = []
         for point in to_add:
             new_point.append([point[0]+pos_x, point[1]+pos_y])
@@ -280,7 +282,7 @@ class Game():
         else:
             intersect = [item for item in list_a if item in list_b]
         return intersect
-    
+
     @classmethod
     def remove_duplicates(cls, liste):
         res = set()
@@ -288,7 +290,7 @@ class Game():
             res.add((punkt[0],punkt[1]))
         res = list(res)
         out = [[punkt[0],punkt[1]] for punkt in res ]
-        return out 
+        return out
 
     @classmethod
     def __gen_matrix(cls, x_koord: int, y_koord: int) -> list:
@@ -333,6 +335,45 @@ class Game():
             os.system(command)
         return None
 
+    @classmethod
+    def find_center(cls, nodes):
+        x_vals = list()
+        y_vals = list()
+        for node in nodes:
+            x_vals.append(node[1])
+            y_vals.append(node[0])
+        extreme = [max(y_vals), max(x_vals)]
+        mid = [int((extreme[0]/float(2))+0.49), int((extreme[1]/float(2))+.049)]
+        return mid
+
+    @classmethod
+    def rotate_point(cls, mid, point):
+        """Vektoroperationen um Punkt um 90° mit dem Uhrzeigersin zu rotieren."""
+        v_mid_point = [point[0]-mid[0], point[1]-mid[1]]
+        # print(point)
+        # print(v_mid_point)
+        v_mid_res = [v_mid_point[1], -v_mid_point[0]]
+        v_res = [mid[0]+v_mid_res[0], mid[1]+v_mid_res[1]]
+        return v_res
+
+    @classmethod
+    def rotate_obj(cls, nodes):
+        mid = cls.find_center(nodes)
+        res = []
+        for node in nodes:
+            rot = cls.rotate_point(mid, node)
+            res.append([int(rot[0]), int(rot[1])])
+        return res
+
+    @classmethod
+    def multirotate(cls, iter, nodes):
+        curr_nodes = nodes
+        print(curr_nodes)
+        for i in range(iter):
+            curr_nodes = cls.rotate_obj(nodes = curr_nodes)
+            print(curr_nodes)
+        return curr_nodes
+
 
 def debug():
     """Debug Funktion."""
@@ -354,13 +395,31 @@ def debug():
             print(row)
 
 
-def check_save():
+def check_center():
     """Testfunktion für das Speichern und Laden."""
-    test_pulse = [[1, 0], [1, 1], [1, 2]]
-    test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
-    test = Game(nodes=test_gleiter, board_x=10, board_y=10)
-    
+    test_pulse = [[0, 0], [1, 0], [1, 1]]
+    # print(0)
+    # print(test_pulse)
+    (Game.multirotate(4, test_pulse))
+    # print(1)
+    # print(test_pulse)
+    # (Game.multirotate(1, test_pulse))
+    # print(2)
+    # print(test_pulse)
+    # (Game.multirotate(2, test_pulse))
+    # print(3)
+    # print(test_pulse)
+    # (Game.multirotate(3, test_pulse))
+    # print(4)
+    # print(test_pulse)
+    # (Game.multirotate(4, test_pulse))
+    # test_2 = [[0, 0], [0, 1], [1, 1]]
+    # test_2 = [[1, 0], [0, 0], [0, 1]]
+    # print("")
+    # print(Game.rotate_obj(test_2))
+    # print(Game.rotate_point([1, 2], [0, 0]))
+
 
 if __name__ == '__main__':
     # debug()
-    check_save()
+    check_center()
