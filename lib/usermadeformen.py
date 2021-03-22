@@ -1,10 +1,12 @@
 import json
 
-usermade = {}
 
-
-def add_item(name, nodes):
-    usermade[name] = nodes
+def writetofile(data, name):
+    with open('../usermade/usermade.json', 'r') as f:
+        config = json.load(f)
+    config[name] = data
+    with open('../usermade/usermade.json', 'w') as f:
+        json.dump(config, f)
 
 
 def umwandeln(nodes):
@@ -18,5 +20,4 @@ def umwandeln(nodes):
     for i in range(len(nodes)):
         nodes[i][1] = nodes[i][1] - minx
         nodes[i][0] = nodes[i][0] - miny
-
     return nodes
