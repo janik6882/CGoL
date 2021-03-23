@@ -92,14 +92,24 @@ class Display:  # Zu Display ändern
 
         minx = nodes[0][1]
         miny = nodes[0][0]
+        maxx = minx
+        maxy = miny
         for i in range(len(nodes)):
             if nodes[i][1] < minx:
                 minx = nodes[i][1]
             if nodes[i][0] < miny:
                 miny = nodes[i][0]
         for i in range(len(nodes)):
-            nodes[i][1] = nodes[i][1] - minx
-            nodes[i][0] = nodes[i][0] - miny
+            if nodes[i][1] > maxx:
+                maxx = nodes[i][1]
+            if nodes[i][0] > maxy:
+                maxy = nodes[i][0]
+        y = ((maxy - miny) / 2) + miny
+        x = ((maxx - minx) / 2) + minx
+        print(minx,x,maxx)
+        for i in range(len(nodes)):
+            nodes[i][1] = nodes[i][1] - x
+            nodes[i][0] = nodes[i][0] - y
 
         with open('./premade/premade.json', 'r') as f:
             config = json.load(f)
@@ -211,11 +221,11 @@ class Display:  # Zu Display ändern
         self.quit_button = Button(self.fenster, text="Quit", command=lambda: self.spiel_verlassen())
         self.quit_button.grid(row=5,sticky='nesw')
 
-        self.fenster.rowconfigure(1, weight=2, uniform="commi")
-        self.fenster.rowconfigure(2, weight=2, uniform="commi")
-        self.fenster.rowconfigure(3, weight=2, uniform="commi")
-        self.fenster.rowconfigure(4, weight=2, uniform="commi")
-        self.fenster.rowconfigure(5, weight=2, uniform="commi")
+        self.fenster.rowconfigure(1, weight=1, uniform="commi")
+        self.fenster.rowconfigure(2, weight=1, uniform="commi")
+        self.fenster.rowconfigure(3, weight=1, uniform="commi")
+        self.fenster.rowconfigure(4, weight=1, uniform="commi")
+        self.fenster.rowconfigure(5, weight=1, uniform="commi")
         self.fenster.mainloop()
 
     def draw_grid(self):
