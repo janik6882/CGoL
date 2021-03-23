@@ -68,10 +68,10 @@ class Display:  # Zu Display ändern
     def weltformnamefenster(self):
         fenster = Tk()
 
-        fensterBreite = self.master.winfo_reqwidth()
-        fensterHoehe = self.master.winfo_reqheight()
-        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
-        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+        fensterBreite = self.fenster.winfo_reqwidth()
+        fensterHoehe = self.fenster.winfo_reqheight()
+        positionRechts = int(self.fenster.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.fenster.winfo_screenheight() / 2 - fensterHoehe / 0.75)
 
         fenster.geometry("+{}+{}".format(positionRechts, positionUnten))
 
