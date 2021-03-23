@@ -1,12 +1,19 @@
 import json
 
 
-def writetofile(data, name):
+def writetofile(nodes, name):
     with open('../usermade/usermade.json', 'r') as f:
         config = json.load(f)
-    config[name] = data
+    config[name] = nodes
     with open('../usermade/usermade.json', 'w') as f:
         json.dump(config, f)
+
+
+def loadfromfile(name):
+    with open('../usermade/usermade.json', 'r') as f:
+        data = json.load(f)
+        nodes = data[name]
+    return nodes
 
 
 def umwandeln(nodes):
