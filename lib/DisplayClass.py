@@ -159,7 +159,7 @@ class Display:  # Zu Display ändern
         self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
         self.load_button.grid(row=2, column=0, sticky='ew')
 
-        self.manual_button = Button(self.master, text="Anleitung")
+        self.manual_button = Button(self.master, text="Anleitung", command=lambda: open(Projekt_Bedienungsanleitung.py))
         self.manual_button.grid(row=3, column=0, sticky='ew')
 
         self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
