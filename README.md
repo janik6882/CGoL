@@ -1,3 +1,6 @@
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/janik6882/CGoL)](https://GitHub.com/Janik6882/CGoL/pull/)
+[![GitHub issues](https://img.shields.io/github/issues/Janik6882/CGoL)](https://GitHub.com/Janik6882/CGoL/issues/)
+[![Projects](
 # CGoL
 ## Das Kanban Projekt bord
 [Kanban Bord für dieses Projekt](https://github.com/janik6882/CGoL/projects/1) <br />
