@@ -6,8 +6,6 @@ import os
 from typing import List
 
 # Vorerst Datei fuer alles Backend stuff.
-# DEBUG: Funktions counter:
-funk_counter = 0
 
 
 class Game():
@@ -126,6 +124,12 @@ class Game():
         Besonders: Rückgabe mittels return
         """
         return self.nodes
+
+    def deepcopy_points(self):
+        res = []
+        for node in self.nodes:
+            res.append([int(node[0]), int(node[1])])
+        return res
 
     def add_point(self, x_koord: int, y_koord: int) -> list:
         """Fügt einen Punkt zur Knotenliste hinzu.
@@ -273,10 +277,6 @@ class Game():
         Output: Überschneidung der Listen
         Besonders: Keine Besonderheiten
         """
-        # DEBUG: funk_counter entfernen
-        global funk_counter
-        funk_counter += 1
-        print(funk_counter)
         if len(list_a) > len(list_b):
             intersect = [item for item in list_b if item in list_a]
         else:
@@ -350,8 +350,6 @@ class Game():
     def rotate_point(cls, mid, point):
         """Vektoroperationen um Punkt um 90° mit dem Uhrzeigersin zu rotieren."""
         v_mid_point = [point[0]-mid[0], point[1]-mid[1]]
-        # print(point)
-        # print(v_mid_point)
         v_mid_res = [v_mid_point[1], -v_mid_point[0]]
         v_res = [mid[0]+v_mid_res[0], mid[1]+v_mid_res[1]]
         return v_res
@@ -368,10 +366,8 @@ class Game():
     @classmethod
     def multirotate(cls, iter, nodes):
         curr_nodes = nodes
-        print(curr_nodes)
         for i in range(iter):
             curr_nodes = cls.rotate_obj(nodes=curr_nodes)
-            print(curr_nodes)
         return curr_nodes
 
 
@@ -381,7 +377,6 @@ def debug():
     test_gleiter = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]
     test = Game(nodes=test_pulse, board_x=10, board_y=10)
     # test.add_premade("Toad", 0, 0)
-    print(test.list_premade())
     matrix = test.get_matrix()
     for row in matrix:
         print(row)
@@ -398,26 +393,7 @@ def debug():
 def check_center():
     """Testfunktion für das Speichern und Laden."""
     test_pulse = [[0, 0], [1, 0], [1, 1]]
-    # print(0)
-    # print(test_pulse)
     (Game.multirotate(4, test_pulse))
-    # print(1)
-    # print(test_pulse)
-    # (Game.multirotate(1, test_pulse))
-    # print(2)
-    # print(test_pulse)
-    # (Game.multirotate(2, test_pulse))
-    # print(3)
-    # print(test_pulse)
-    # (Game.multirotate(3, test_pulse))
-    # print(4)
-    # print(test_pulse)
-    # (Game.multirotate(4, test_pulse))
-    # test_2 = [[0, 0], [0, 1], [1, 1]]
-    # test_2 = [[1, 0], [0, 0], [0, 1]]
-    # print("")
-    # print(Game.rotate_obj(test_2))
-    # print(Game.rotate_point([1, 2], [0, 0]))
 
 
 if __name__ == '__main__':

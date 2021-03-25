@@ -8,6 +8,7 @@ from backend import Game
 import ButtonClass
 import InputClass
 from Projekt_Bedienungsanleitung import *
+import os
 
 
 class Display:  # Zu Display ändern
@@ -82,10 +83,14 @@ class Display:  # Zu Display ändern
         frage = Label(fenster, text="Was soll der Name der Form sein?")
         namefeld = Entry(fenster)
         weiterbutton = Button(fenster, text="weiter", command=lambda: [
-            Display.weltalsformspeichern(self.game.get_points(), namefeld.get()), fenster.destroy()])
+            Display.weltalsformspeichern(self.game.deepcopy_points(), namefeld.get()), fenster.destroy()])
         frage.grid(row=0, column=0, sticky="nesw")
         namefeld.grid(row=1, column=0, sticky="nesw")
         weiterbutton.grid(row=3, column=0, pady="10", sticky="nesw")
+
+    @classmethod
+    def is_file(cls, fname):
+        return os.path.isfile(fname)
 
     @classmethod
     def ask_file(cls):
@@ -96,6 +101,8 @@ class Display:  # Zu Display ändern
 
     @classmethod
     def weltalsformspeichern(cls, nodes, name):
+        if len(nodes) == 0:
+            return
         pth = cls.ask_file()
         minx = nodes[0][1]
         miny = nodes[0][0]
@@ -113,13 +120,15 @@ class Display:  # Zu Display ändern
                 maxy = nodes[i][0]
         y = ((maxy - miny) / 2) + miny
         x = ((maxx - minx) / 2) + minx
-        print(minx,x,maxx)
         for i in range(len(nodes)):
             nodes[i][1] = nodes[i][1] - x
             nodes[i][0] = nodes[i][0] - y
 
-        with open(pth, 'r') as f:
-            config = json.load(f)
+        file_exist = cls.is_file(pth)
+        config = dict()
+        if file_exist:
+            with open(pth, 'r') as f:
+                config = json.load(f)
         config[name] = nodes
         with open(pth, 'w') as f:
             json.dump(config, f)
@@ -240,23 +249,23 @@ class Display:  # Zu Display ändern
         self.title_label = Label(self.fenster, text="Spielmenü")
         self.title_label.grid(row=0,sticky='nesw')
 
-        self.save_button = Button(self.master, text="Speichern",
+        self.save_button = Button(self.fenster, text="Speichern",
                                   command=lambda: self.save_file(self.game.get_points(), False))
         self.save_button.grid(row=1, column=0, sticky='ew')
 
-        self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
+        self.load_button = Button(self.fenster, text="Laden", command=lambda: self.open_saved_board())
         self.load_button.grid(row=2, column=0, sticky='ew')
-        self.manual_button = Button(self.master, text="Anleitung", command=lambda: anleitung())
+        self.manual_button = Button(self.fenster, text="Anleitung", command=lambda: anleitung())
         self.manual_button.grid(row=3, column=0, sticky='ew')
 
         self.save_as_premade_button = Button(self.fenster, text="Welt als Form speichern",
-        command=lambda: self.weltformnamefenster())
+                                            command=lambda: self.weltformnamefenster())
         self.save_as_premade_button.grid(row=2,sticky='nesw')
 
-        self.import_button = Button(self.master, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
+        self.import_button = Button(self.fenster, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
         self.import_button.grid(row=4, column=0, sticky="ew")
 
-        self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
+        self.quit_button = Button(self.fenster, text="Quit", command= lambda: self.spiel_verlassen())
         self.quit_button.grid(row=5, column=0, sticky='ew')
 
         self.fenster.rowconfigure(1, weight=1, uniform="commi")
@@ -300,7 +309,6 @@ class Display:  # Zu Display ändern
         Besonders: Aktualisiert das Bord
         """
         points = points or self.game.get_points()
-        print(self.game.get_points())
         self.clear_board()
         for point in points:
             x_koord = (point[0] * 10) + 1
@@ -360,8 +368,7 @@ class Display:  # Zu Display ändern
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
         instructions = ['Esc - Programm beenden', 'M - Menü öffnen', 'F - Nächste Iteration', '-> - Nächste Form',
-                        '<- - Vorherige Form', 'P - Modus Zelle/Spur/Radieren/Form', '      platzieren',
-                        '', 'Linksklick - Interaktion', 'Rechtsklick - Zelle zentrieren', '',
+                        '<- - Vorherige Form', 'P - Modus Zelle/Spur/Radieren/Form', '      platzieren', 'Linksklick - Interaktion', 'Rechtsklick - Zelle zentrieren', "r--rotieren (im Uhrzeigersinn 90°)" , '',
                         f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
                         f'Form :  {self.game.list_premade()[self.curr_num_premade]}',
                         f"Rotation : {self.curr_rotation}"]
@@ -465,12 +472,6 @@ class Display:  # Zu Display ändern
                         # points = self.game.get_points()
                         # self.show_board(points)
                         self.draw_menu()
-                    if event.key == pygame.K_g:
-                        # DEBUG: Zeigt Debug Infos an, nur für Testzwecke
-                        out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(
-                            self.game.list_premade()) + str(self)
-                        print(out)
-                        print(self.verschiebung_ges)
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
                         # points = self.game.get_points()
                         # for point in points:
