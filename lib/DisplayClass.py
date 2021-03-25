@@ -230,23 +230,23 @@ class Display:  # Zu Display ändern
         self.title_label = Label(self.fenster, text="Spielmenü")
         self.title_label.grid(row=0,sticky='nesw')
 
-        self.save_button = Button(self.master, text="Speichern",
+        self.save_button = Button(self.fenster, text="Speichern",
                                   command=lambda: self.save_file(self.game.get_points(), False))
         self.save_button.grid(row=1, column=0, sticky='ew')
 
-        self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
+        self.load_button = Button(self.fenster, text="Laden", command=lambda: self.open_saved_board())
         self.load_button.grid(row=2, column=0, sticky='ew')
-        self.manual_button = Button(self.master, text="Anleitung", command=lambda: anleitung())
+        self.manual_button = Button(self.fenster, text="Anleitung", command=lambda: anleitung())
         self.manual_button.grid(row=3, column=0, sticky='ew')
 
         self.save_as_premade_button = Button(self.fenster, text="Welt als Form speichern",
         command=lambda: self.weltformnamefenster())
         self.save_as_premade_button.grid(row=2,sticky='nesw')
 
-        self.import_button = Button(self.master, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
+        self.import_button = Button(self.fenster, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
         self.import_button.grid(row=4, column=0, sticky="ew")
 
-        self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
+        self.quit_button = Button(self.fenster, text="Quit", command= lambda: self.spiel_verlassen())
         self.quit_button.grid(row=5, column=0, sticky='ew')
 
         self.fenster.rowconfigure(1, weight=1, uniform="commi")
