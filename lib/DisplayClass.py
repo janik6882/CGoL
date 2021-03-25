@@ -7,6 +7,7 @@ import time
 from backend import Game
 import ButtonClass
 import InputClass
+from Projekt_Bedienungsanleitung import *
 
 
 class Display:  # Zu Display ändern
@@ -187,12 +188,10 @@ class Display:  # Zu Display ändern
 
         self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
         self.load_button.grid(row=2, column=0, sticky='ew')
-
+        self.manual_button = Button(self.master, text="Anleitung", command=lambda: anleitung())
+        self.manual_button.grid(row=3, column=0, sticky='ew')
         self.import_button = Button(self.master, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
-        self.import_button.grid(row=3, column=0, sticky="ew")
-
-        self.manual_button = Button(self.master, text="Anleitung")
-        self.manual_button.grid(row=4, column=0, sticky='ew')
+        self.import_button.grid(row=4, column=0, sticky="ew")
 
         self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
         self.quit_button.grid(row=5, column=0, sticky='ew')
