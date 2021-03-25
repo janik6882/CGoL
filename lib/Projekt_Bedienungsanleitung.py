@@ -7,6 +7,7 @@ def anleitung():
     fensterHoehe = tkFenster.winfo_reqheight()
     positionRechts = int(tkFenster.winfo_screenwidth() / 2 - fensterBreite / 2)
     positionUnten = int(tkFenster.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+    tkFenster.focus_force()
     tkFenster.title('Bedienungsanleitung: Zum weiter spielen muss zuerst dieses Fenster geschlossen werden.')
     tkFenster.geometry('1500x750')
     labelText = Label(master=tkFenster, text='Das Spielfeld ist in Zeilen und Spalten unterteilt und unendlich groß. '
