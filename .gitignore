@@ -9,3 +9,4 @@ implement.py
 *.cfg
 /.idea/
 *.pyc
+/venv/

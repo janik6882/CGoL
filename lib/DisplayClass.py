@@ -99,24 +99,14 @@ class Display:  # Zu Display ändern
         pth = cls.ask_file()
         minx = nodes[0][1]
         miny = nodes[0][0]
-        maxx = minx
-        maxy = miny
         for i in range(len(nodes)):
             if nodes[i][1] < minx:
                 minx = nodes[i][1]
             if nodes[i][0] < miny:
                 miny = nodes[i][0]
         for i in range(len(nodes)):
-            if nodes[i][1] > maxx:
-                maxx = nodes[i][1]
-            if nodes[i][0] > maxy:
-                maxy = nodes[i][0]
-        y = ((maxy - miny) / 2) + miny
-        x = ((maxx - minx) / 2) + minx
-        print(minx,x,maxx)
-        for i in range(len(nodes)):
-            nodes[i][1] = nodes[i][1] - x
-            nodes[i][0] = nodes[i][0] - y
+            nodes[i][1] = nodes[i][1] - minx
+            nodes[i][0] = nodes[i][0] - miny
 
         with open(pth, 'r') as f:
             config = json.load(f)
