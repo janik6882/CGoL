@@ -82,14 +82,20 @@ class Display:  # Zu Display ändern
         namefeld = Entry(fenster)
         weiterbutton = Button(fenster, text="weiter", command=lambda: [
             Display.weltalsformspeichern(self.game.get_points(), namefeld.get()), fenster.destroy()])
-
         frage.grid(row=0, column=0, sticky="nesw")
         namefeld.grid(row=1, column=0, sticky="nesw")
         weiterbutton.grid(row=3, column=0, pady="10", sticky="nesw")
 
     @classmethod
-    def weltalsformspeichern(cls, nodes, name):
+    def ask_file(cls):
+        # ask_window = Tk()
+        # ask_window.mainloop()
+        return asksaveasfilename(filetypes=[('JSON files', '.json')], initialfile='',
+        defaultextension=".json")
 
+    @classmethod
+    def weltalsformspeichern(cls, nodes, name):
+        pth = cls.ask_file()
         minx = nodes[0][1]
         miny = nodes[0][0]
         maxx = minx
@@ -111,10 +117,10 @@ class Display:  # Zu Display ändern
             nodes[i][1] = nodes[i][1] - x
             nodes[i][0] = nodes[i][0] - y
 
-        with open('./premade/premade.json', 'r') as f:
+        with open(pth, 'r') as f:
             config = json.load(f)
         config[name] = nodes
-        with open('./premade/premade.json', 'w') as f:
+        with open(pth, 'w') as f:
             json.dump(config, f)
 
     def change_rotatation(self):
