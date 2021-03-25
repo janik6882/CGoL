@@ -70,23 +70,28 @@ class Display:  # Zu Display ändern
     def weltformnamefenster(self):
         fenster = Tk()
 
-        fensterBreite = self.fenster.winfo_reqwidth()
-        fensterHoehe = self.fenster.winfo_reqheight()
-        positionRechts = int(self.fenster.winfo_screenwidth() / 2 - fensterBreite / 2)
-        positionUnten = int(self.fenster.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+        fensterBreite = fenster.winfo_reqwidth()
+        fensterHoehe = fenster.winfo_reqheight()
+        positionRechts = int(fenster.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(fenster.winfo_screenheight() / 2 - fensterHoehe / 0.75)
 
         fenster.geometry("+{}+{}".format(positionRechts, positionUnten))
 
-        fenster.geometry("200x150")
+        fenster.geometry("300x300")
         fenster.title("")
 
-        frage = Label(fenster, text="Was soll der Name der Form sein?")
-        namefeld = Entry(fenster)
-        weiterbutton = Button(fenster, text="weiter", command=lambda: [
+        frage = Label(fenster, text="Wie soll der Name der Form sein?")
+        namefeld = Entry(fenster, bg="goldenrod", fg="black")
+        weiterbutton = Button(fenster, bg="goldenrod", fg="black", text="In Datei Speichern", command=lambda: [
             Display.weltalsformspeichern(self.game.deepcopy_points(), namefeld.get()), fenster.destroy()])
         frage.grid(row=0, column=0, sticky="nesw")
-        namefeld.grid(row=1, column=0, sticky="nesw")
-        weiterbutton.grid(row=3, column=0, pady="10", sticky="nesw")
+        namefeld.grid(row=1, column=0, padx=5, pady=5, sticky="nesw")
+        weiterbutton.grid(row=2, column=0, padx=5, pady=5, sticky="nesw")
+
+        fenster.grid_columnconfigure(0, weight=1)
+        fenster.grid_rowconfigure(0, weight=1)
+        fenster.grid_rowconfigure(1, weight=1)
+        fenster.grid_rowconfigure(2, weight=1)
 
     @classmethod
     def is_file(cls, fname):
@@ -97,7 +102,7 @@ class Display:  # Zu Display ändern
         # ask_window = Tk()
         # ask_window.mainloop()
         return asksaveasfilename(filetypes=[('JSON files', '.json')], initialfile='',
-        defaultextension=".json")
+                                 defaultextension=".json")
 
     @classmethod
     def weltalsformspeichern(cls, nodes, name):
@@ -188,7 +193,6 @@ class Display:  # Zu Display ändern
         self.game.premade = merged
         return True
 
-
     def next_premade(self):
         """Geht zum nächsten Vorgefertigten Objekt.
 
@@ -228,7 +232,6 @@ class Display:  # Zu Display ändern
 
     def open_menu(self):
         """Öffnet ein TKinter Menü.
-
         Kommentar: Erstelt ein TKInter Menü und öffnet dieses
         Input: Name der Instanz
         Output: Kein Output
@@ -236,43 +239,55 @@ class Display:  # Zu Display ändern
         """
         self.fenster = Tk()
 
-        fensterBreite = self.fenster.winfo_reqwidth()
-        fensterHoehe = self.fenster.winfo_reqheight()
-        positionRechts = int(self.fenster.winfo_screenwidth() / 2 - fensterBreite / 2)
-        positionUnten = int(self.fenster.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+        self.fensterBreite = self.fenster.winfo_reqwidth()
+        self.fensterHoehe = self.fenster.winfo_reqheight()
+        positionRechts = int(self.fenster.winfo_screenwidth() / 2 - self.fensterBreite / 2)
+        positionUnten = int(self.fenster.winfo_screenheight() / 2 - self.fensterHoehe / 0.75)
 
         self.fenster.geometry("+{}+{}".format(positionRechts, positionUnten))
-        self.fenster.geometry("250x250")
 
-        self.fenster.title("Conways Game of Life")
+        self.fenster.geometry("200x300")
+        self.fenster.resizable(0, 0)
+
+        self.fenster.title("CGoL")
 
         self.title_label = Label(self.fenster, text="Spielmenü")
-        self.title_label.grid(row=0,sticky='nesw')
+        self.title_label.grid(row=0, sticky='nesw', padx=5, pady=5)
 
-        self.save_button = Button(self.fenster, text="Speichern",
-                                  command=lambda: self.save_file(self.game.get_points(), False))
-        self.save_button.grid(row=1, column=0, sticky='ew')
+        self.fortsetzen = Button(self.fenster, bg="goldenrod", fg="black", text="Spiel fortsetzen",
+                                 command=lambda: self.fenster.destroy())
+        self.fortsetzen.grid(row=1, sticky=' nesw', padx=5, pady=5)
 
-        self.load_button = Button(self.fenster, text="Laden", command=lambda: self.open_saved_board())
-        self.load_button.grid(row=2, column=0, sticky='ew')
-        self.manual_button = Button(self.fenster, text="Anleitung", command=lambda: anleitung())
-        self.manual_button.grid(row=3, column=0, sticky='ew')
+        self.save_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt speichern",
+                                  command=lambda: [self.save_file(self.game.get_points(), False)])
+        self.save_button.grid(row=2, sticky=' nesw', padx=5, pady=5)
 
-        self.save_as_premade_button = Button(self.fenster, text="Welt als Form speichern",
-                                            command=lambda: self.weltformnamefenster())
-        self.save_as_premade_button.grid(row=2,sticky='nesw')
+        self.save_as_premade_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt als Form speichern",
+                                             command=lambda: [self.fenster.destroy(),self.weltformnamefenster()])
+        self.save_as_premade_button.grid(row=3, sticky=' nesw', padx=5, pady=5)
 
-        self.import_button = Button(self.fenster, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
-        self.import_button.grid(row=4, column=0, sticky="ew")
+        self.load_button = Button(self.fenster, bg="goldenrod", fg="black", text="Welt laden", command=lambda: [self.open_saved_board()])
+        self.load_button.grid(row=4, sticky=' nesw', padx=5, pady=5)
 
-        self.quit_button = Button(self.fenster, text="Quit", command= lambda: self.spiel_verlassen())
-        self.quit_button.grid(row=5, column=0, sticky='ew')
+        self.import_button = Button(self.fenster, bg="goldenrod", fg="black", text="Objekte laden", command=lambda: [self.import_premade()])
+        self.import_button.grid(row=5, sticky="nesw", padx=5, pady=5)
 
-        self.fenster.rowconfigure(1, weight=1, uniform="commi")
-        self.fenster.rowconfigure(2, weight=1, uniform="commi")
-        self.fenster.rowconfigure(3, weight=1, uniform="commi")
-        self.fenster.rowconfigure(4, weight=1, uniform="commi")
-        self.fenster.rowconfigure(5, weight=1, uniform="commi")
+        self.manual_button = Button(self.fenster, bg="goldenrod", fg="black", text="Anleitung")
+        self.manual_button.grid(row=6, sticky=' nesw', padx=5, pady=5)
+
+        self.quit_button = Button(self.fenster, bg="goldenrod", fg="black", text="Spiel verlassen", command=lambda: self.spiel_verlassen())
+        self.quit_button.grid(row=7, sticky=' nesw', padx=5, pady=5)
+
+        self.fenster.grid_columnconfigure(0, weight=1)
+        self.fenster.grid_rowconfigure(0, weight=1)
+        self.fenster.grid_rowconfigure(1, weight=1)
+        self.fenster.grid_rowconfigure(2, weight=1)
+        self.fenster.grid_rowconfigure(3, weight=1)
+        self.fenster.grid_rowconfigure(4, weight=1)
+        self.fenster.grid_rowconfigure(5, weight=1)
+        self.fenster.grid_rowconfigure(6, weight=1)
+        self.fenster.grid_rowconfigure(7, weight=1)
+
         self.fenster.mainloop()
 
     def draw_grid(self):
@@ -364,11 +379,13 @@ class Display:  # Zu Display ändern
         # pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, self.window_y, self.display_x-self.window_x, self.window_y))
         pygame.draw.line(self.display, self.black, (self.window_x, 0), (self.window_x, self.window_y), width=2)
         pygame.draw.line(self.display, self.black, (self.window_x + 3, 0), (self.window_x + 3, self.window_y), width=2)
-        pygame.draw.line(self.display, self.black, (self.window_x, 300), (self.display_x, 300), width=1)
+        pygame.draw.line(self.display, self.black, (self.window_x, 325), (self.display_x, 325), width=1)
 
         myfont = pygame.font.SysFont('Comic Sans MS', 15)
         instructions = ['Esc - Programm beenden', 'M - Menü öffnen', 'F - Nächste Iteration', '-> - Nächste Form',
-                        '<- - Vorherige Form', 'P - Modus Zelle/Spur/Radieren/Form', '      platzieren', 'Linksklick - Interaktion', 'Rechtsklick - Zelle zentrieren', "r--rotieren (im Uhrzeigersinn 90°)" , '',
+                        '<- - Vorherige Form', 'P - Modus Zelle/Spur/Radieren/Form', '      platzieren',
+                        'Linksklick - Interaktion', 'Rechtsklick - Zelle zentrieren',
+                        "R - rotieren (im Uhrzeigersinn 90°)", '',
                         f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
                         f'Form :  {self.game.list_premade()[self.curr_num_premade]}',
                         f"Rotation : {self.curr_rotation}"]
@@ -620,18 +637,21 @@ class Display:  # Zu Display ändern
 
         quit_box.geometry("+{}+{}".format(positionRechts, positionUnten))
 
-        quit_box.geometry("250x250")
+        quit_box.geometry("250x90")
         quit_box.title("")
 
-        self.frage = Label(quit_box, text="Willst Du deinen Fortschritt vor dem Schließen speichern?")
+        self.frage = Label(quit_box, text="Willst Du deinen Fortschritt\n vor dem Schließen speichern?")
         self.frage.grid(row=0, column=0, columnspan="2")
 
-        self.quit_button_yes = Button(quit_box, text="Ja",
-                                  command=lambda: [self.save_file(self.game.get_points(), True)])
-        self.quit_button_yes.grid(row=1, column=0, sticky='ew')
-        self.quit_button_no = Button(quit_box, text="Nein", command=lambda: [pygame.quit(), sys.exit()])
-        self.quit_button_no.grid(row=1, column=1, sticky='ew')
-        quit_box.grid_rowconfigure(1, weight=1)
+        self.quit_button_yes = Button(quit_box, text="Ja", bg="goldenrod", fg="black",
+                                      command=lambda: [self.save_file(self.game.get_points(), True)])
+        self.quit_button_yes.grid(row=1, column=0, sticky='nesw', padx=5, pady=5)
+        self.quit_button_no = Button(quit_box, bg="goldenrod", fg="black", text="Nein", command=lambda: [pygame.quit(), sys.exit()])
+        self.quit_button_no.grid(row=1, column=1, sticky='nesw', padx=5, pady=5)
+        quit_box.grid_rowconfigure(0, weight=1)
+        quit_box.grid_rowconfigure(1, weight=3)
+        quit_box.grid_columnconfigure(0, weight=1, uniform="commi")
+        quit_box.grid_columnconfigure(1, weight=1, uniform="commi")
         quit_box.mainloop()
 
     def check_close(self):
@@ -688,7 +708,7 @@ class Display:  # Zu Display ändern
         if nodes is not False:
             nodes.sort()
             # to_load = list(nodes for nodes, _ in itertools.groupby(nodes))
-            to_load = [[node[0]+self.verschiebung_ges[0], node[1]+self.verschiebung_ges[1]] for node in nodes]
+            to_load = [[node[0] + self.verschiebung_ges[0], node[1] + self.verschiebung_ges[1]] for node in nodes]
             self.game.replace_points(to_load)
         self.show_board(to_load)
 
@@ -702,7 +722,7 @@ class Display:  # Zu Display ändern
         """
         res = list()
         for node in inhalt:
-            res.append([node[0]-self.verschiebung_ges[0], node[1]-self.verschiebung_ges[1]])
+            res.append([node[0] - self.verschiebung_ges[0], node[1] - self.verschiebung_ges[1]])
         filename = asksaveasfilename(
             filetypes=[('JSON files', '.json')], initialfile='',
             defaultextension=".json"
