@@ -2,7 +2,7 @@ import pygame
 import sys
 import json
 from tkinter.filedialog import asksaveasfilename, askopenfile
-from tkinter import Button, Label, Tk
+from tkinter import Button, Label, Tk, Entry
 import time
 from backend import Game
 import ButtonClass
@@ -65,6 +65,64 @@ class Display:  # Zu Display ändern
     def __repr__(self):
         """Gibt alle werte der Instanz zurück."""
         return self.__dict__
+
+    def weltformnamefenster(self):
+        fenster = Tk()
+
+        fensterBreite = self.fenster.winfo_reqwidth()
+        fensterHoehe = self.fenster.winfo_reqheight()
+        positionRechts = int(self.fenster.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.fenster.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+
+        fenster.geometry("+{}+{}".format(positionRechts, positionUnten))
+
+        fenster.geometry("200x150")
+        fenster.title("")
+
+        frage = Label(fenster, text="Was soll der Name der Form sein?")
+        namefeld = Entry(fenster)
+        weiterbutton = Button(fenster, text="weiter", command=lambda: [
+            Display.weltalsformspeichern(self.game.get_points(), namefeld.get()), fenster.destroy()])
+        frage.grid(row=0, column=0, sticky="nesw")
+        namefeld.grid(row=1, column=0, sticky="nesw")
+        weiterbutton.grid(row=3, column=0, pady="10", sticky="nesw")
+
+    @classmethod
+    def ask_file(cls):
+        # ask_window = Tk()
+        # ask_window.mainloop()
+        return asksaveasfilename(filetypes=[('JSON files', '.json')], initialfile='',
+        defaultextension=".json")
+
+    @classmethod
+    def weltalsformspeichern(cls, nodes, name):
+        pth = cls.ask_file()
+        minx = nodes[0][1]
+        miny = nodes[0][0]
+        maxx = minx
+        maxy = miny
+        for i in range(len(nodes)):
+            if nodes[i][1] < minx:
+                minx = nodes[i][1]
+            if nodes[i][0] < miny:
+                miny = nodes[i][0]
+        for i in range(len(nodes)):
+            if nodes[i][1] > maxx:
+                maxx = nodes[i][1]
+            if nodes[i][0] > maxy:
+                maxy = nodes[i][0]
+        y = ((maxy - miny) / 2) + miny
+        x = ((maxx - minx) / 2) + minx
+        print(minx,x,maxx)
+        for i in range(len(nodes)):
+            nodes[i][1] = nodes[i][1] - x
+            nodes[i][0] = nodes[i][0] - y
+
+        with open(pth, 'r') as f:
+            config = json.load(f)
+        config[name] = nodes
+        with open(pth, 'w') as f:
+            json.dump(config, f)
 
     def change_rotatation(self):
         self.curr_rotation += 90
@@ -167,20 +225,20 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Keine Besonderheiten
         """
-        self.master = Tk()
+        self.fenster = Tk()
 
-        fensterBreite = self.master.winfo_reqwidth()
-        fensterHoehe = self.master.winfo_reqheight()
-        positionRechts = int(self.master.winfo_screenwidth() / 2 - fensterBreite / 2)
-        positionUnten = int(self.master.winfo_screenheight() / 2 - fensterHoehe / 0.75)
+        fensterBreite = self.fenster.winfo_reqwidth()
+        fensterHoehe = self.fenster.winfo_reqheight()
+        positionRechts = int(self.fenster.winfo_screenwidth() / 2 - fensterBreite / 2)
+        positionUnten = int(self.fenster.winfo_screenheight() / 2 - fensterHoehe / 0.75)
 
-        self.master.geometry("+{}+{}".format(positionRechts, positionUnten))
-        self.master.geometry("250x250")
+        self.fenster.geometry("+{}+{}".format(positionRechts, positionUnten))
+        self.fenster.geometry("250x250")
 
-        self.master.title("Conways Game of Life")
+        self.fenster.title("Conways Game of Life")
 
-        self.title_label = Label(self.master, text="Spielmenü")
-        self.title_label.grid(row=0, column=0, sticky='ew')
+        self.title_label = Label(self.fenster, text="Spielmenü")
+        self.title_label.grid(row=0,sticky='nesw')
 
         self.save_button = Button(self.master, text="Speichern",
                                   command=lambda: self.save_file(self.game.get_points(), False))
@@ -190,18 +248,23 @@ class Display:  # Zu Display ändern
         self.load_button.grid(row=2, column=0, sticky='ew')
         self.manual_button = Button(self.master, text="Anleitung", command=lambda: anleitung())
         self.manual_button.grid(row=3, column=0, sticky='ew')
+
+        self.save_as_premade_button = Button(self.fenster, text="Welt als Form speichern",
+        command=lambda: self.weltformnamefenster())
+        self.save_as_premade_button.grid(row=2,sticky='nesw')
+
         self.import_button = Button(self.master, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
         self.import_button.grid(row=4, column=0, sticky="ew")
 
         self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
         self.quit_button.grid(row=5, column=0, sticky='ew')
 
-        self.master.columnconfigure(0, weight=5, uniform="commi")
-        self.master.columnconfigure(1, weight=5, uniform="commi")
-        self.master.rowconfigure(1, weight=1, uniform="commi")
-        self.master.rowconfigure(2, weight=1, uniform="commi")
-        self.master.rowconfigure(3, weight=1, uniform="commi")
-        self.master.mainloop()
+        self.fenster.rowconfigure(1, weight=1, uniform="commi")
+        self.fenster.rowconfigure(2, weight=1, uniform="commi")
+        self.fenster.rowconfigure(3, weight=1, uniform="commi")
+        self.fenster.rowconfigure(4, weight=1, uniform="commi")
+        self.fenster.rowconfigure(5, weight=1, uniform="commi")
+        self.fenster.mainloop()
 
     def draw_grid(self):
         """Zeichnet ein Gitter.
@@ -272,8 +335,9 @@ class Display:  # Zu Display ändern
                 pygame.draw.rect(self.display, self.white, pygame.Rect(point_y, point_x, 9, 9))  # noqa: E501
         elif self.curr_place_mode == "Form":
             name = self.game.list_premade()[self.curr_num_premade]
-            obj_select = self.game.add_premade(name, node_x, node_y, self.curr_rotation//90)
-            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y, self.curr_rotation//90) if cell[1] * 10 < self.window_x)
+            obj_select = self.game.add_premade(name, node_x, node_y, self.curr_rotation // 90)
+            to_draw = (cell for cell in self.game.add_premade(name, node_x, node_y, self.curr_rotation // 90) if
+                       cell[1] * 10 < self.window_x)
             for point in to_draw:
                 point_x = (point[0] * 10) + 1
                 point_y = (point[1] * 10) + 1
@@ -299,7 +363,8 @@ class Display:  # Zu Display ändern
                         '<- - Vorherige Form', 'P - Modus Zelle/Spur/Radieren/Form', '      platzieren',
                         '', 'Linksklick - Interaktion', 'Rechtsklick - Zelle zentrieren', '',
                         f'Iterationen :  {self.game.iterations}', f'Modus :  {self.curr_place_mode}',
-                        f'Form :  {self.game.list_premade()[self.curr_num_premade]}', f"Rotation : {self.curr_rotation}"]
+                        f'Form :  {self.game.list_premade()[self.curr_num_premade]}',
+                        f"Rotation : {self.curr_rotation}"]
         for counter, text in enumerate(instructions):
             textsurface = myfont.render(text, False, (0, 0, 0))
             self.display.blit(textsurface, (self.window_x + 10, 10 + 30 * counter))
