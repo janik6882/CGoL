@@ -68,6 +68,13 @@ class Display:  # Zu Display ändern
         return self.__dict__
 
     def weltformnamefenster(self):
+        """Fragt Name für benutzerdefiniertes Objekt ab.
+
+        Kommentar: Öffnet Fenster mit tkinter.
+        Input: Kein Input
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         fenster = Tk()
 
         fensterBreite = self.fenster.winfo_reqwidth()
@@ -101,28 +108,26 @@ class Display:  # Zu Display ändern
 
     @classmethod
     def weltalsformspeichern(cls, nodes, name):
+        """Welt als form speichern.
+
+        Kommentar: Passt Weltpunkte an und speichert diese als json.
+        Input: Weltpunkte, Name des Objektes
+        Output: Kein Output
+        Besonders: Keine Besonderheiten
+        """
         if len(nodes) == 0:
             return
         pth = cls.ask_file()
         minx = nodes[0][1]
         miny = nodes[0][0]
-        maxx = minx
-        maxy = miny
         for i in range(len(nodes)):
             if nodes[i][1] < minx:
                 minx = nodes[i][1]
             if nodes[i][0] < miny:
                 miny = nodes[i][0]
         for i in range(len(nodes)):
-            if nodes[i][1] > maxx:
-                maxx = nodes[i][1]
-            if nodes[i][0] > maxy:
-                maxy = nodes[i][0]
-        y = ((maxy - miny) / 2) + miny
-        x = ((maxx - minx) / 2) + minx
-        for i in range(len(nodes)):
-            nodes[i][1] = nodes[i][1] - x
-            nodes[i][0] = nodes[i][0] - y
+            nodes[i][1] = nodes[i][1]
+            nodes[i][0] = nodes[i][0]
 
         file_exist = cls.is_file(pth)
         config = dict()
@@ -141,7 +146,7 @@ class Display:  # Zu Display ändern
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
 
-        Kommentar: leert das Bord und erzeugt ein Gitter
+        Kommentar: leert das Bord und erzeugt ein Gitter.
         Input: Name der Instanz
         Output: Kein Output
         Besonders: Keine Besonderheiten
