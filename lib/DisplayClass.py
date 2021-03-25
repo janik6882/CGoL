@@ -76,6 +76,7 @@ class Display:  # Zu Display ändern
         Besonders: Keine Besonderheiten
         """
         fenster = Tk()
+        fenster.focus_force()
 
         fensterBreite = self.fenster.winfo_reqwidth()
         fensterHoehe = self.fenster.winfo_reqheight()
@@ -118,6 +119,8 @@ class Display:  # Zu Display ändern
         if len(nodes) == 0:
             return
         pth = cls.ask_file()
+        if pth is None or name is None:
+            return
         minx = nodes[0][1]
         miny = nodes[0][0]
         for i in range(len(nodes)):
@@ -617,6 +620,7 @@ class Display:  # Zu Display ändern
 
     def spiel_verlassen(self):
         quit_box = Tk()
+        quit_box.focus_force()
 
         fensterBreite = quit_box.winfo_reqwidth()
         fensterHoehe = quit_box.winfo_reqheight()
