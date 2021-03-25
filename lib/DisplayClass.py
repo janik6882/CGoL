@@ -2,7 +2,7 @@ import pygame
 import sys
 import json
 from tkinter.filedialog import asksaveasfilename, askopenfile
-from tkinter import Button, Label, Tk, Entry
+from tkinter import Button, Label, Tk, Entry, Checkbutton
 import time
 from backend import Game
 import ButtonClass
@@ -78,39 +78,43 @@ class Display:  # Zu Display ändern
         fenster.geometry("200x150")
         fenster.title("")
 
-        frage = Label(fenster, text="Was soll der Name der Form sein?")
-        namefeld = Entry(fenster)
-        weiterbutton = Button(fenster, text="weiter", command=lambda: [
-            Display.weltalsformspeichern(self.game.get_points(), namefeld.get()), fenster.destroy()])
 
-        frage.grid(row=0, column=0, sticky="nesw")
-        namefeld.grid(row=1, column=0, sticky="nesw")
-        weiterbutton.grid(row=3, column=0, pady="10", sticky="nesw")
+
+        def formen_import():
+            filename = askopenfile(mode='r', filetypes=[('Json files', '*.json')])
+            inhalt = json.load(filename)
+            objekte = []
+            for i in range(len(inhalt)):
+                objektname = "feld" + str(i)
+                objekte.append(objektname)
+                objektname = Checkbutton(fenster, text=list(inhalt.keys)[i])
+                objektname.grid(row=2+i)
+            return inhalt
+
+
+
+        #namefeld = Entry(fenster)
+        formen_import_button = Button(fenster, text="Objekte aus Datei importieren", command=lambda: [formen_import()])
+        """weiterbutton = Button(fenster, text="weiter", command=lambda: [
+            Display.weltalsformspeichern(self.game.get_points(), namefeld.get()), fenster.destroy()])
+        weiterbutton = Button(fenster, text="weiter", command=lambda: [
+            Display.weltalsformspeichern(self.game.get_points(), namefeld.get()), fenster.destroy()])"""
+
+        formen_import_button.grid(row=1, column=0, sticky="nesw")
+        #weiterbutton.grid(row=-1, column=0, pady="10", sticky="nesw")
 
     @classmethod
     def weltalsformspeichern(cls, nodes, name):
-
         minx = nodes[0][1]
         miny = nodes[0][0]
-        maxx = minx
-        maxy = miny
         for i in range(len(nodes)):
             if nodes[i][1] < minx:
                 minx = nodes[i][1]
             if nodes[i][0] < miny:
                 miny = nodes[i][0]
         for i in range(len(nodes)):
-            if nodes[i][1] > maxx:
-                maxx = nodes[i][1]
-            if nodes[i][0] > maxy:
-                maxy = nodes[i][0]
-        y = ((maxy - miny) / 2) + miny
-        x = ((maxx - minx) / 2) + minx
-        print(minx,x,maxx)
-        for i in range(len(nodes)):
-            nodes[i][1] = nodes[i][1] - x
-            nodes[i][0] = nodes[i][0] - y
-
+            nodes[i][1] = nodes[i][1] - minx
+            nodes[i][0] = nodes[i][0] - miny
         with open('./premade/premade.json', 'r') as f:
             config = json.load(f)
         config[name] = nodes
