@@ -146,7 +146,7 @@ class Display:  # Zu Display ändern
     def clear_board(self):
         """Entfernt alle Objekte vom Bord.
 
-        Kommentar: leert das Bord und erzeugt ein Gitter
+        Kommentar: leert das Bord und erzeugt ein Gitter.
         Input: Name der Instanz
         Output: Kein Output
         Besonders: Keine Besonderheiten
