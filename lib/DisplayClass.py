@@ -280,7 +280,7 @@ class Display:  # Zu Display ändern
         self.import_button = Button(self.fenster, bg="goldenrod", fg="black", text="Objekte laden", command=lambda: [self.import_premade()])
         self.import_button.grid(row=5, sticky="nesw", padx=5, pady=5)
 
-        self.manual_button = Button(self.fenster, bg="goldenrod", fg="black", text="Anleitung")
+        self.manual_button = Button(self.fenster, bg="goldenrod", fg="black", text="Anleitung", command=lambda:anleitung())
         self.manual_button.grid(row=6, sticky=' nesw', padx=5, pady=5)
 
         self.quit_button = Button(self.fenster, bg="goldenrod", fg="black", text="Spiel verlassen", command=lambda: self.spiel_verlassen())
