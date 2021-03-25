@@ -7,6 +7,7 @@ import time
 from backend import Game
 import ButtonClass
 import InputClass
+from Projekt_Bedienungsanleitung import *
 
 
 class Display:  # Zu Display ändern
@@ -150,6 +151,35 @@ class Display:  # Zu Display ändern
         """
         pygame.draw.rect(self.display, self.white, pygame.Rect(self.window_x, 0, 300, self.window_y))
 
+    def import_premade(self):
+        # TODO: Doku beenden
+        if new_premade := self.open_file():
+            if isinstance(new_premade, dict):
+                for key in list(new_premade.keys()):
+                    if isinstance(new_premade[key], list):
+                        for object in new_premade[key]:
+                            if isinstance(object, list):
+                                if len(object) == 2:
+                                    if isinstance(object[0], (int, float)) and isinstance(object[1], (int, float)):
+                                        pass
+                                    else:
+                                        return False
+                                else:
+                                    return False
+                            else:
+                                return False
+                    else:
+                        return False
+            else:
+                return False
+        else:
+            return False
+        old_premade = self.game.premade
+        merged = self.game.merge_dict(old_premade, new_premade)
+        self.game.premade = merged
+        return True
+
+
     def next_premade(self):
         """Geht zum nächsten Vorgefertigten Objekt.
 
@@ -210,22 +240,24 @@ class Display:  # Zu Display ändern
         self.title_label = Label(self.fenster, text="Spielmenü")
         self.title_label.grid(row=0,sticky='nesw')
 
-        self.save_button = Button(self.fenster, text="Speichern",
-                                  command=lambda: Display.save_file(self.game.get_points(), False))
-        self.save_button.grid(row=1,sticky='nesw')
+        self.save_button = Button(self.master, text="Speichern",
+                                  command=lambda: self.save_file(self.game.get_points(), False))
+        self.save_button.grid(row=1, column=0, sticky='ew')
+
+        self.load_button = Button(self.master, text="Laden", command=lambda: self.open_saved_board())
+        self.load_button.grid(row=2, column=0, sticky='ew')
+        self.manual_button = Button(self.master, text="Anleitung", command=lambda: anleitung())
+        self.manual_button.grid(row=3, column=0, sticky='ew')
 
         self.save_as_premade_button = Button(self.fenster, text="Welt als Form speichern",
-                                             command=lambda: self.weltformnamefenster())
+        command=lambda: self.weltformnamefenster())
         self.save_as_premade_button.grid(row=2,sticky='nesw')
 
-        self.load_button = Button(self.fenster, text="Laden", command=lambda: self.open_saved_board())
-        self.load_button.grid(row=3,sticky='nesw')
+        self.import_button = Button(self.master, text="Vorgefertigte Objekte laden", command=lambda: self.import_premade())
+        self.import_button.grid(row=4, column=0, sticky="ew")
 
-        self.manual_button = Button(self.fenster, text="Anleitung")
-        self.manual_button.grid(row=4,sticky='nesw')
-
-        self.quit_button = Button(self.fenster, text="Quit", command=lambda: self.spiel_verlassen())
-        self.quit_button.grid(row=5,sticky='nesw')
+        self.quit_button = Button(self.master, text="Quit", command= lambda: self.spiel_verlassen())
+        self.quit_button.grid(row=5, column=0, sticky='ew')
 
         self.fenster.rowconfigure(1, weight=1, uniform="commi")
         self.fenster.rowconfigure(2, weight=1, uniform="commi")
@@ -438,6 +470,7 @@ class Display:  # Zu Display ändern
                         out = str(self.curr_place_mode) + str(self.game.list_premade()[self.curr_num_premade]) + str(
                             self.game.list_premade()) + str(self)
                         print(out)
+                        print(self.verschiebung_ges)
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
                         # points = self.game.get_points()
                         # for point in points:
@@ -593,7 +626,7 @@ class Display:  # Zu Display ändern
         self.frage.grid(row=0, column=0, columnspan="2")
 
         self.quit_button_yes = Button(quit_box, text="Ja",
-                                      command=lambda: [Display.save_file(self.game.get_points(), True)])
+                                  command=lambda: [self.save_file(self.game.get_points(), True)])
         self.quit_button_yes.grid(row=1, column=0, sticky='ew')
         self.quit_button_no = Button(quit_box, text="Nein", command=lambda: [pygame.quit(), sys.exit()])
         self.quit_button_no.grid(row=1, column=1, sticky='ew')
@@ -654,12 +687,11 @@ class Display:  # Zu Display ändern
         if nodes is not False:
             nodes.sort()
             # to_load = list(nodes for nodes, _ in itertools.groupby(nodes))
-            to_load = nodes
+            to_load = [[node[0]+self.verschiebung_ges[0], node[1]+self.verschiebung_ges[1]] for node in nodes]
             self.game.replace_points(to_load)
         self.show_board(to_load)
 
-    @classmethod
-    def save_file(cls, inhalt, schliessfrage):
+    def save_file(self, inhalt, schliessfrage):
         """Speichert gegebene Daten in eine Datei mit file browser.
 
         Kommentar: Speichert Daten in eine Datei
@@ -667,13 +699,16 @@ class Display:  # Zu Display ändern
         Output: Kein Output
         Besonders: Nutzt tkinter speicher-Modul, beliebiger Dateiort.
         """
+        res = list()
+        for node in inhalt:
+            res.append([node[0]-self.verschiebung_ges[0], node[1]-self.verschiebung_ges[1]])
         filename = asksaveasfilename(
             filetypes=[('JSON files', '.json')], initialfile='',
             defaultextension=".json"
         )
         if filename:
             with open(filename, 'w', encoding='utf-8') as file:
-                json.dump(inhalt, file)
+                json.dump(res, file)
 
         if schliessfrage == True:
             pygame.quit()
